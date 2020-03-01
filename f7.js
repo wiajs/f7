@@ -189,15 +189,15 @@ function addAppModule(components) {
 async function makeApp(cb) {
   const components = [];
   // 通过项目配置获取组件样式
+	
   cfg.components.forEach(name => {
     const dir = path.resolve(__dirname, `./components/${name}`);
-    console.log('makeApp:', {dir, name});
-
     if (fs.existsSync(`${dir}/${name}.js`)) {
       const cap = capitalized(name);
       components.push({name, cap});
     }
   });
+  console.log('makeApp:', {components});
 
   // 根据项目配置生成 转换 less 文件
   const appContent = addAppModule(components);
@@ -211,13 +211,13 @@ async function buildPart(cb) {
   // 通过项目配置获取组件样式
   cfg.components.forEach(name => {
     const dir = path.resolve(__dirname, `./components/${name}`);
-    console.log('buildPart:', {dir, name});
 
     if (fs.existsSync(`${dir}/${name}.less`)) {
       components.push(name);
     }
   });
 
+  console.log('buildPart:', {components});
   // 根据项目配置生成 转换 less 文件
   const lessContent = createPartLess(components);
   const outputFileName = `f7.${_prj}${cfg.rtl ? '.rtl' : ''}`;
@@ -266,8 +266,8 @@ function buildF7(dir, name, cb) {
   }
 
   makeApp(onCb);
-  // buildBase(onCb);
-  // buildPart(onCb);
+  buildBase(onCb);
+  buildPart(onCb);
 }
 
 module.exports = buildF7;
