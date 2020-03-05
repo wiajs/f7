@@ -189,7 +189,7 @@ function addAppModule(components) {
 async function makeApp(cb) {
   const components = [];
   // 通过项目配置获取组件样式
-	
+
   cfg.components.forEach(name => {
     const dir = path.resolve(__dirname, `./components/${name}`);
     if (fs.existsSync(`${dir}/${name}.js`)) {
@@ -251,6 +251,12 @@ async function buildPart(cb) {
   if (cb) cb();
 }
 
+/**
+ * 根据f7.config.js 配置，修改项目 app.js，生成项目css文件
+ * @param {*} dir
+ * @param {*} name
+ * @param {*} cb
+ */
 function buildF7(dir, name, cb) {
   _prj = name;
   _dir = dir;

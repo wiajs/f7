@@ -32,7 +32,7 @@ module.exports = {
     "quotes": [1, "single"],
     "no-alert": 0,
     "no-trailing-spaces": 0,
-    "nonblock-statement-body-position": [2, "beside"], // if else 强制单行
+    "nonblock-statement-body-position": 0, //[2, "beside"], // if else 强制单行
     "block-spacing": 0, // 对象空格
     "function-paren-newline": 0, // 函数参数换行
     "linebreak-style": 0,
