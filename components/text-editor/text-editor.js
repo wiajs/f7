@@ -1,5 +1,4 @@
-import {Utils} from '@wiajs/core';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import TextEditor from './text-editor-class';
 
 export default {
@@ -29,7 +28,7 @@ export default {
   create() {
     const app = this;
     app.textEditor = Utils.extend(
-      ConstructorMethods({
+      Constructors({
         defaultSelector: '.text-editor',
         constructor: TextEditor,
         app,

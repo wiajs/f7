@@ -1,6 +1,4 @@
-import $ from '../../utils/dom';
-import Support from '@wiajs/core/support';
-import {Utils} from '@wiajs/core';
+import {Utils, Support} from '@wiajs/core';
 
 const Coverflow = {
   setTranslate() {

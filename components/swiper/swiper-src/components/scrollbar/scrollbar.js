@@ -1,7 +1,4 @@
-import { document } from 'ssr-window';
-import $ from '../../utils/dom';
-import {Utils} from '@wiajs/core';
-import Support from '@wiajs/core/support';
+import {Utils, Support} from '@wiajs/core';
 
 const Scrollbar = {
   setTranslate() {

@@ -1,10 +1,7 @@
 /* eslint no-param-reassign: "off" */
-import $ from '../../utils/dom';
-import {Utils} from '@wiajs/core';
-import Support from '@wiajs/core/support';
+import {Utils, Support} from '@wiajs/core';
 
 import SwiperClass from '../../utils/class';
-
 import update from './update/index';
 import translate from './translate/index';
 import transition from './transition/index';

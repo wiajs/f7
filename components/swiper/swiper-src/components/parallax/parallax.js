@@ -1,4 +1,3 @@
-import $ from '../../utils/dom';
 import {Utils} from '@wiajs/core';
 
 const Parallax = {

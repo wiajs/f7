@@ -1,6 +1,6 @@
 /* eslint no-bitwise: ["error", { "allow": [">>"] }] */
-import Swiper from '../core/core-class';
 import {Utils} from '@wiajs/core';
+import Swiper from '../core/core-class';
 
 const Controller = {
   LinearSpline: function LinearSpline(x, y) {

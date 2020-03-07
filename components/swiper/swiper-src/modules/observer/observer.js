@@ -1,6 +1,4 @@
-import { window } from 'ssr-window';
-import {Utils} from '@wiajs/core';
-import Support from '@wiajs/core/support';
+import {Utils, Support} from '@wiajs/core';
 
 const Observer = {
   func: window.MutationObserver || window.WebkitMutationObserver,

@@ -1,7 +1,4 @@
-import $ from '../../utils/dom';
-import {Utils} from '@wiajs/core';
-import Device from '@wiajs/core/device';
-import Support from '@wiajs/core/support';
+import {Utils, Device, Support} from '@wiajs/core';
 
 const Zoom = {
   // Calc Scale From Multi-touches

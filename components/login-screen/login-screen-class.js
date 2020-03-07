@@ -1,4 +1,5 @@
-import {Utils, Modal} from '@wiajs/core';
+import {Utils} from '@wiajs/core';
+import Modal from '../modal/modal-class';
 
 class LoginScreen extends Modal {
   constructor(app, params) {
