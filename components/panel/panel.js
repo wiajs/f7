@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import Panel from './panel-class';
 
 export default {

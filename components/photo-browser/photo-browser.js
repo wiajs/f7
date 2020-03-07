@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import PhotoBrowser from './photo-browser-class';
 
 export default {
@@ -58,7 +58,7 @@ export default {
   },
   create() {
     const app = this;
-    app.photoBrowser = ConstructorMethods({
+    app.photoBrowser = Constructors({
       defaultSelector: '.photo-browser-popup, .photo-browser-page',
       constructor: PhotoBrowser,
       app,

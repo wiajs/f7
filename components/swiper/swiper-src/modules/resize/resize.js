@@ -1,5 +1,5 @@
 import { window } from 'ssr-window';
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 export default {
   name: 'resize',

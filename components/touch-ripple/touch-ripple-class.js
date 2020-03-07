@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 export default class TouchRipple {
   constructor($el, x, y) {

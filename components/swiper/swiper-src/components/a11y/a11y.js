@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 const a11y = {
   makeElFocusable($el) {

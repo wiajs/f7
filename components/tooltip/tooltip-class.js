@@ -1,6 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Support from '@wiajs/core/support';
-import Event from '@wiajs/core/class';
+import {Utils, Support, Event} from '@wiajs/core';
 
 class Tooltip extends Event {
   constructor(app, params = {}) {

@@ -1,6 +1,6 @@
-import $ from 'dom7';
-import { window, document } from 'ssr-window';
-import Utils from '@wiajs/core/utils';
+/** wia not use f7's app, This file is useless */
+
+import {Utils} from '@wiajs/core';
 
 const fetchedModules = [];
 function loadModule(moduleToLoad) {

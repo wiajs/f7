@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors{} from '@wiajs/core';
 import Calendar from './calendar-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.calendar = ConstructorMethods({
+    app.calendar = Constructors({
       defaultSelector: '.calendar',
       constructor: Calendar,
       app,

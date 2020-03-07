@@ -1,6 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
-import Support from '@wiajs/core/support';
+import {Utils, Event, Support} from '@wiajs/core';
 
 class Range extends Event {
   constructor(app, params) {

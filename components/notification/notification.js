@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ModalMethods from '@wiajs/core/modals';
+import {Utils, Modals} from '@wiajs/core';
 import Notification from './notification-class';
 
 export default {
@@ -11,7 +10,7 @@ export default {
     const app = this;
     app.notification = Utils.extend(
       {},
-      ModalMethods({
+      Modals({
         app,
         constructor: Notification,
         defaultSelector: '.notification.modal-in',

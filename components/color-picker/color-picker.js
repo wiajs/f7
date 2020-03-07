@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import ColorPicker from './color-picker-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.colorPicker = ConstructorMethods({
+    app.colorPicker = Constructors({
       defaultSelector: '.color-picker',
       constructor: ColorPicker,
       app,

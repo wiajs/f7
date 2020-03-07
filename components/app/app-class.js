@@ -1,15 +1,16 @@
-import $ from 'dom7';
-import Template7 from 'template7';
-import { window, document } from 'ssr-window';
-import Utils from '@wiajs/core/utils';
-import Device from '@wiajs/core/device';
-import Framework7Class from '../../utils/class';
+/** wia not use f7's app, This file is useless */
+import {
+  Utils,
+  Device,
+  Constructors,
+  Module,
+  Modals,
+  loadModule,
+  Event,
+} from '@wiajs/core';
 import EventsClass from '../../utils/events-class';
-import ConstructorMethods from '@wiajs/core/constructors';
-import ModalMethods from '../../utils/modal-methods';
-import loadModule from './load-module';
 
-class Framework7 extends Framework7Class {
+class Framework7 extends Module {
   constructor(params) {
     super(params);
     if (Framework7.instance) {
@@ -271,34 +272,26 @@ class Framework7 extends Framework7Class {
   get $() {
     return $;
   }
-  // eslint-disable-next-line
-  get t7() {
-    return Template7;
-  }
 
-  static get Dom7() {
-    return $;
+  static get Dom() {
+    return $.Dom;
   }
 
   static get $() {
     return $;
   }
 
-  static get Template7() {
-    return Template7;
-  }
-
   static get Class() {
-    return Framework7Class;
+    return Module;
   }
 
   static get Events() {
-    return EventsClass;
+    return Event;
   }
 }
 
-Framework7.ModalMethods = ModalMethods;
-Framework7.ConstructorMethods = ConstructorMethods;
+Framework7.ModalMethods = Modals;
+Framework7.ConstructorMethods = Constructors;
 
 Framework7.loadModule = loadModule;
 Framework7.loadModules = function loadModules(modules) {

@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ModalMethods from '@wiajs/core/modals';
+import {Utils, Modals} from '@wiajs/core';
 import Dialog from './dialog-class';
 
 export default {
@@ -40,7 +39,7 @@ export default {
     } : {});
 
     app.dialog = Utils.extend(
-      ModalMethods({
+      Modals({
         app,
         constructor: Dialog,
         defaultSelector: '.dialog.modal-in',

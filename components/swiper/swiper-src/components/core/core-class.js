@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: "off" */
 import $ from '../../utils/dom';
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import Support from '@wiajs/core/support';
 
 import SwiperClass from '../../utils/class';

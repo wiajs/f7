@@ -1,5 +1,5 @@
+import {Constructors} from '@wiajs/core';
 import Swiper from './swiper-class';
-import ConstructorMethods from '@wiajs/core/constructors';
 
 if (process.env.FORMAT !== 'es') {
   if (!window.Swiper) {
@@ -88,7 +88,7 @@ export default {
   },
   create() {
     const app = this;
-    app.swiper = ConstructorMethods({
+    app.swiper = Constructors({
       defaultSelector: '.swiper-container',
       constructor: Swiper,
       domProp: 'swiper',

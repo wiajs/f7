@@ -1,5 +1,5 @@
 /* eslint no-underscore-dangle: "off" */
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 const Autoplay = {
   run() {

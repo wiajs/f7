@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Support from '@wiajs/core/support';
+import {Utils, Support} from '@wiajs/core';
 
 const Lazy = {
   destroy(pageEl) {

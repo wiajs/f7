@@ -1,6 +1,5 @@
 /* eslint no-nested-ternary: off */
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
 
 class Gauge extends Event {
   constructor(app, params = {}) {

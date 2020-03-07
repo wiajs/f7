@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 export default function (colEl, updateItems) {
   const picker = this;

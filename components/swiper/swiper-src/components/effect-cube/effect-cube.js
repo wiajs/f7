@@ -1,5 +1,5 @@
 import $ from '../../utils/dom';
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import Browser from '../../utils/browser';
 
 const Cube = {

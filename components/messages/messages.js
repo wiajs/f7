@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import Messages from './messages-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.messages = ConstructorMethods({
+    app.messages = Constructors({
       defaultSelector: '.messages',
       constructor: Messages,
       app,

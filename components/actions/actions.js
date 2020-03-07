@@ -1,4 +1,4 @@
-import ModalMethods from '@wiajs/core/modals';
+import {Modals} from '@wiajs/core';
 import Actions from './actions-class';
 
 export default {
@@ -20,7 +20,7 @@ export default {
   },
   create() {
     const app = this;
-    app.actions = ModalMethods({
+    app.actions = Modals({
       app,
       constructor: Actions,
       defaultSelector: '.actions-modal.modal-in',

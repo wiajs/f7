@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
 
 const textEditorButtonsMap = {
   // f7-icon, material-icon, command

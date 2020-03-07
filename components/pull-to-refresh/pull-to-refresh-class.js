@@ -1,7 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
-import Support from '@wiajs/core/support';
-import Device from '@wiajs/core/device';
+import {Utils, Event, Support, Device} from '@wiajs/core';
 
 class PullToRefresh extends Event {
   constructor(app, el) {

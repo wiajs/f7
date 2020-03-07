@@ -1,6 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
-import Device from '@wiajs/core/device';
+import {Utils, Event, Device} from '@wiajs/core';
 
 class VirtualList extends Event {
   constructor(app, params = {}) {

@@ -1,5 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
-import Utils from '@wiajs/core/utils';
+import {Utils, Constructors} from '@wiajs/core';
 import Gauge from './gauge-class';
 
 export default {
@@ -9,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.gauge = ConstructorMethods({
+    app.gauge = Constructors({
       defaultSelector: '.gauge',
       constructor: Gauge,
       app,

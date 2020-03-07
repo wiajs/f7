@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import Range from './range-class';
 
 export default {
@@ -7,7 +6,7 @@ export default {
   create() {
     const app = this;
     app.range = Utils.extend(
-      ConstructorMethods({
+      Constructors({
         defaultSelector: '.range-slider',
         constructor: Range,
         app,

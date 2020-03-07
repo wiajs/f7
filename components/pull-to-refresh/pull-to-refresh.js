@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import PullToRefresh from './pull-to-refresh-class';
 
 export default {
@@ -7,7 +6,7 @@ export default {
   create() {
     const app = this;
     app.ptr = Utils.extend(
-      ConstructorMethods({
+      Constructors({
         defaultSelector: '.ptr-content',
         constructor: PullToRefresh,
         app,

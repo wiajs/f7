@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import Messagebar from './messagebar-class';
 
 export default {
@@ -9,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.messagebar = ConstructorMethods({
+    app.messagebar = Constructors({
       defaultSelector: '.messagebar',
       constructor: Messagebar,
       app,

@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import Modal from './modal-class';
 
 class CustomModal extends Modal {

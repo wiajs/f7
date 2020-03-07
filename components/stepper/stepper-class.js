@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/class';
+import {Utils, Event} from '@wiajs/core';
 
 class Stepper extends Event {
   constructor(app, params) {

@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import Picker from './picker-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.picker = ConstructorMethods({
+    app.picker = Constructors({
       defaultSelector: '.picker',
       constructor: Picker,
       app,

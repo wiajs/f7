@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import VirtualList from './virtual-list-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.virtualList = ConstructorMethods({
+    app.virtualList = Constructors({
       defaultSelector: '.virtual-list',
       constructor: VirtualList,
       app,

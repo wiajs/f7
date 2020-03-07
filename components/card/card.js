@@ -1,6 +1,5 @@
 /* eslint no-param-reassign: "off" */
-import Utils from '@wiajs/core/utils';
-import Support from '@wiajs/core/support';
+import {Utils, Support} from '@wiajs/core';
 
 const CardExpandable = {
   open(cardEl = '.card-expandable', animate = true) {

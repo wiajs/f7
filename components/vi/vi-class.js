@@ -1,6 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Device from '@wiajs/core/device';
-import Event from '@wiajs/core/event';
+import {Utils, Device, Event} from '@wiajs/core';
 
 class ViAd extends Event {
   constructor(app, params = {}) {

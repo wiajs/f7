@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ModalMethods from '@wiajs/core/modals';
+import {Utils, Modals} from '@wiajs/core';
 import Sheet from './sheet-class';
 
 export default {
@@ -24,7 +23,7 @@ export default {
     const app = this;
     app.sheet = Utils.extend(
       {},
-      ModalMethods({
+      Modals({
         app,
         constructor: Sheet,
         defaultSelector: '.sheet-modal.modal-in',

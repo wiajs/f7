@@ -1,4 +1,4 @@
-import ModalMethods from '@wiajs/core/modals';
+import {Modals} from '@wiajs/core';
 import LoginScreen from './login-screen-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.loginScreen = ModalMethods({
+    app.loginScreen = Modals({
       app,
       constructor: LoginScreen,
       defaultSelector: '.login-screen.modal-in',

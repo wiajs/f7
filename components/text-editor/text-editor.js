@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import ConstructorMethods from '@wiajs/core/constructors';
 import TextEditor from './text-editor-class';
 

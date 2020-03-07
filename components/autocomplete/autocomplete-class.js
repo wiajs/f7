@@ -1,6 +1,5 @@
 /* eslint "no-useless-escape": "off" */
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
 
 class Autocomplete extends Event {
   constructor(app, params = {}) {

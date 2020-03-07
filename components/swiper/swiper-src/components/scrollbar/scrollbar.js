@@ -1,6 +1,6 @@
 import { document } from 'ssr-window';
 import $ from '../../utils/dom';
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 import Support from '@wiajs/core/support';
 
 const Scrollbar = {

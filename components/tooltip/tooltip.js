@@ -1,4 +1,4 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import Tooltip from './tooltip-class';
 
 export default {
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.tooltip = ConstructorMethods({
+    app.tooltip = Constructors({
       defaultSelector: '.tooltip',
       constructor: Tooltip,
       app,

@@ -1,5 +1,4 @@
-import Event from '@wiajs/core/event';
-import Utils from '@wiajs/core/utils';
+import {Utils, Event} from '@wiajs/core';
 
 const openedModals = [];
 const dialogsQueue = [];

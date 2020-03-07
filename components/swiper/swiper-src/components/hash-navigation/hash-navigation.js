@@ -1,6 +1,6 @@
 import { window, document } from 'ssr-window';
 import $ from '../../utils/dom';
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 const HashNavigation = {
   onHashCange() {

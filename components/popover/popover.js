@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ModalMethods from '@wiajs/core/modals';
+import {Utils, Modals} from '@wiajs/core';
 import Popover from './popover-class';
 
 export default {
@@ -19,7 +18,7 @@ export default {
   create() {
     const app = this;
     app.popover = Utils.extend(
-      ModalMethods({
+      Modals({
         app,
         constructor: Popover,
         defaultSelector: '.popover.modal-in',

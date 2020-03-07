@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Device from '@wiajs/core/device';
+import {Utils, Device} from '@wiajs/core';
 
 const Statusbar = {
   hide() {

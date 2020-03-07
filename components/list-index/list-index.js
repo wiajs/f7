@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import ListIndex from './list-index-class';
 
 export default {
@@ -9,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.listIndex = ConstructorMethods({
+    app.listIndex = Constructors({
       defaultSelector: '.list-index',
       constructor: ListIndex,
       app,

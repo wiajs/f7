@@ -1,6 +1,5 @@
-import Utils from '@wiajs/core/utils';
-import Router from '@wiajs/cor/router';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
+import Router from '@wiajs/router';
 
 class View extends Event {
   constructor(appInstance, router, el, viewParams = {}) {

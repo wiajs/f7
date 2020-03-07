@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import SmartSelect from './smart-select-class';
 
 export default {
@@ -51,7 +50,7 @@ export default {
   create() {
     const app = this;
     app.smartSelect = Utils.extend(
-      ConstructorMethods({
+      Constructors({
         defaultSelector: '.smart-select',
         constructor: SmartSelect,
         app,

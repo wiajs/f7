@@ -1,4 +1,4 @@
-import Utils from '@wiajs/core/utils';
+import {Utils} from '@wiajs/core';
 
 function getElMinSize(dimension, $el) {
   let minSize = $el.css(`min-${dimension}`);

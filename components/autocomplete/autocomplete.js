@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Utils, Constructors} from '@wiajs/core';
 import Autocomplete from './autocomplete-class';
 
 export default {
@@ -73,7 +72,7 @@ export default {
   create() {
     const app = this;
     app.autocomplete = Utils.extend(
-      ConstructorMethods({
+      Constructors({
         defaultSelector: undefined,
         constructor: Autocomplete,
         app,

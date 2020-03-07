@@ -1,5 +1,5 @@
+import {Modals} from '@wiajs/core';
 import Popup from './popup-class';
-import ModalMethods from '../../utils/modal-methods';
 
 export default {
   name: 'popup',
@@ -19,7 +19,7 @@ export default {
   },
   create() {
     const app = this;
-    app.popup = ModalMethods({
+    app.popup = Modals({
       app,
       constructor: Popup,
       defaultSelector: '.popup.modal-in',

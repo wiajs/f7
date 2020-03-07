@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import ModalMethods from '@wiajs/core/modals';
+import {Utils, Modals} from '@wiajs/core';
 import Toast from './toast-class';
 
 export default {
@@ -11,7 +10,7 @@ export default {
     const app = this;
     app.toast = Utils.extend(
       {},
-      ModalMethods({
+      Modals({
         app,
         constructor: Toast,
         defaultSelector: '.toast.modal-in',

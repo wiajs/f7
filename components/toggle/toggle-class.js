@@ -1,8 +1,6 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
-import Support from '@wiajs/core/support';
+import {Utils, Event, Support} from '@wiajs/core';
 
-class Toggle extends Framework7Class {
+class Toggle extends Event {
   constructor(app, params = {}) {
     super(params, [app]);
     const toggle = this;
@@ -27,7 +25,11 @@ class Toggle extends Framework7Class {
       el: $el[0],
       $inputEl,
       inputEl: $inputEl[0],
-      disabled: $el.hasClass('disabled') || $inputEl.hasClass('disabled') || $inputEl.attr('disabled') || $inputEl[0].disabled,
+      disabled:
+        $el.hasClass('disabled') ||
+        $inputEl.hasClass('disabled') ||
+        $inputEl.attr('disabled') ||
+        $inputEl[0].disabled,
     });
 
     Object.defineProperty(toggle, 'checked', {
@@ -55,8 +57,10 @@ class Toggle extends Framework7Class {
     let touchStartChecked;
     function handleTouchStart(e) {
       if (isTouched || toggle.disabled) return;
-      touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
-      touchesStart.y = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
+      touchesStart.x =
+        e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
+      touchesStart.y =
+        e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
       touchesDiff = 0;
 
       isTouched = true;
@@ -78,7 +82,10 @@ class Toggle extends Framework7Class {
       const inverter = app.rtl ? -1 : 1;
 
       if (typeof isScrolling === 'undefined') {
-        isScrolling = !!(isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x));
+        isScrolling = !!(
+          isScrolling ||
+          Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
+        );
       }
       if (isScrolling) {
         isTouched = false;
@@ -88,12 +95,19 @@ class Toggle extends Framework7Class {
 
       touchesDiff = pageX - touchesStart.x;
 
-
       let changed;
-      if (touchesDiff * inverter < 0 && Math.abs(touchesDiff) > toggleWidth / 3 && touchStartChecked) {
+      if (
+        touchesDiff * inverter < 0 &&
+        Math.abs(touchesDiff) > toggleWidth / 3 &&
+        touchStartChecked
+      ) {
         changed = true;
       }
-      if (touchesDiff * inverter > 0 && Math.abs(touchesDiff) > toggleWidth / 3 && !touchStartChecked) {
+      if (
+        touchesDiff * inverter > 0 &&
+        Math.abs(touchesDiff) > toggleWidth / 3 &&
+        !touchStartChecked
+      ) {
         changed = true;
       }
       if (changed) {
@@ -114,7 +128,7 @@ class Toggle extends Framework7Class {
       $el.removeClass('toggle-active-state');
 
       let changed;
-      if ((Utils.now() - touchStartTime) < 300) {
+      if (Utils.now() - touchStartTime < 300) {
         if (touchesDiff * inverter < 0 && touchStartChecked) {
           changed = true;
         }
@@ -131,14 +145,14 @@ class Toggle extends Framework7Class {
       toggle.emit('local::change toggleChange', toggle);
     }
     toggle.attachEvents = function attachEvents() {
-      const passive = Support.passiveListener ? { passive: true } : false;
+      const passive = Support.passiveListener ? {passive: true} : false;
       $el.on(app.touchEvents.start, handleTouchStart, passive);
       app.on('touchmove', handleTouchMove);
       app.on('touchend:passive', handleTouchEnd);
       toggle.$inputEl.on('change', handleInputChange);
     };
     toggle.detachEvents = function detachEvents() {
-      const passive = Support.passiveListener ? { passive: true } : false;
+      const passive = Support.passiveListener ? {passive: true} : false;
       $el.off(app.touchEvents.start, handleTouchStart, passive);
       app.off('touchmove', handleTouchMove);
       app.off('touchend:passive', handleTouchEnd);

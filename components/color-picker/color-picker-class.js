@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
 
 import moduleAlphaSlider from './modules/alpha-slider';
 import moduleCurrentColor from './modules/current-color';

@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Modal from '../modal/modal-class';
+import {Utils, Modal} from '@wiajs/core';
 
 class Dialog extends Modal {
   constructor(app, params) {

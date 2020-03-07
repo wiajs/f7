@@ -1,5 +1,4 @@
-import Utils from '@wiajs/core/utils';
-import Event from '@wiajs/core/event';
+import {Utils, Event} from '@wiajs/core';
 import SwipePanel from './swipe-panel';
 import ResizablePanel from './resizable-panel';
 

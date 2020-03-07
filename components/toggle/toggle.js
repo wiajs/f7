@@ -1,11 +1,11 @@
-import ConstructorMethods from '@wiajs/core/constructors';
+import {Constructors} from '@wiajs/core';
 import Toggle from './toggle-class';
 
 export default {
   name: 'toggle',
   create() {
     const app = this;
-    app.toggle = ConstructorMethods({
+    app.toggle = Constructors({
       defaultSelector: '.toggle',
       constructor: Toggle,
       app,

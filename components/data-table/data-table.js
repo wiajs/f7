@@ -1,5 +1,5 @@
+import {Constructors} from '@wiajs/core';
 import DataTable from './data-table-class';
-import ConstructorMethods from '@wiajs/core/constructors';
 
 export default {
   name: 'dataTable',
@@ -8,7 +8,7 @@ export default {
   },
   create() {
     const app = this;
-    app.dataTable = ConstructorMethods({
+    app.dataTable = Constructors({
       defaultSelector: '.data-table',
       constructor: DataTable,
       app,
