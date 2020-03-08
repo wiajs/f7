@@ -98,6 +98,45 @@ function createBaseLess() {
   return lessContent;
 }
 
+function createPartLess(components) {
+  const colors = `{\n${Object.keys(cfg.colors)
+    .map(colorName => `  ${colorName}: ${cfg.colors[colorName]};`)
+    .join('\n')}\n}`;
+  const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
+  const includeMdTheme = cfg.themes.indexOf('md') >= 0;
+  const includeAuroraTheme = cfg.themes.indexOf('aurora') >= 0;
+  const includeDarkTheme = cfg.darkTheme;
+  const includeLightTheme = cfg.lightTheme;
+  const {rtl} = cfg;
+
+  // Part LESS
+  let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.part.less'));
+  lessContent = `${banner}\n${lessContent}`;
+  lessContent = lessContent
+    .replace('$includeIosTheme', includeIosTheme)
+    .replace('$includeMdTheme', includeMdTheme)
+    .replace('$includeAuroraTheme', includeAuroraTheme)
+    .replace('$includeDarkTheme', includeDarkTheme)
+    .replace('$includeLightTheme', includeLightTheme)
+    .replace('$colors', colors)
+    .replace('$themeColor', cfg.themeColor)
+    .replace('$rtl', rtl);
+
+  // Bundle LESS，加入项目选择组件 less
+  const lessBundleContent = lessContent.replace(
+    '//IMPORT_COMPONENTS',
+    components
+      .map(
+        component =>
+          `@import url('./components/${component}/${component}.less');`
+      )
+      .join('\n')
+  );
+  fs.writeFileSync(`${output}/f7.${_prj}.less`, lessBundleContent);
+
+  return lessBundleContent;
+}
+
 /**
  * Build CSS Core，根据配置，生成基本 css
  * @param {string} themes
