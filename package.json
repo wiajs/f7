@@ -40,6 +40,9 @@
     "url": "https://github.com/wiajs/f7/issues"
   },
   "homepage": "https://www.wia.pub/f7",
+  "publishConfig": {
+    "access": "public"
+  },
   "funding": {
     "type": "patreon",
     "url": "https://www.patreon.com/vladimirkharlampidi"
