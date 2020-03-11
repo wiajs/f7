@@ -1,7 +1,7 @@
 {
   "name": "@wiajs/f7",
   "version": "5.4.5",
-  "description": "Fork from framework7. Full featured mobile HTML framework for building iOS & Android apps",
+  "description": "Fork from framework7. HTML Components for the Wia framework.",
   "main": "js/framework7.js",
   "typings": "js/framework7.d.ts",
   "jsnext:main": "framework7.esm.js",
@@ -14,6 +14,7 @@
     "url": "https://github.com/wiajs/f7.git"
   },
   "keywords": [
+    "f7",
     "mobile",
     "framework",
     "framework7",
@@ -36,9 +37,12 @@
   "author": "Vladimir Kharlampidi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/framework7io/framework7/issues"
+    "url": "https://github.com/wiajs/f7/issues"
   },
-  "homepage": "https://wia.pub/f7",
+  "homepage": "https://www.wia.pub/f7",
+  "publishConfig": {
+    "access": "public"
+  },
   "funding": {
     "type": "patreon",
     "url": "https://www.patreon.com/vladimirkharlampidi"
