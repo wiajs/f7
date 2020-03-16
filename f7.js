@@ -11,7 +11,7 @@ const fs = require('./utils/fs-extra');
 let cfg = require('./config.js');
 const pkg = require('./package.json');
 
-const env = process.env.NODE_ENV || 'prod'; //'dev'; // 默认开发环境
+const env = process.env.NODE_ENV || 'production'; // 'dev'; // 默认开发环境
 const dev = !env.startsWith('prod'); // production
 const banner = getBanner();
 
@@ -24,7 +24,9 @@ function getConfig() {
   // Overwrite with local config
   try {
     // eslint-disable-next-line
-    const prjConfig = require(`${_dir}/src/f7.config.js`);
+    // let lessContent = fs.readFileSync(`${_dir}/src/f7.config.js`);
+    delete require.cache[require.resolve(`${_dir}/src/config/f7.js`)];
+    const prjConfig = require(`${_dir}/src/config/f7.js`);
     cfg = Object.assign({}, cfg, prjConfig);
     console.log(cfg);
   } catch (err) {
