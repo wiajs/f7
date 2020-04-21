@@ -278,10 +278,10 @@ async function buildPart(cb) {
     `${banner}\n${cssContent}`
   );
 
-  if (dev) {
-    if (cb) cb();
-    return;
-  }
+  // if (dev) {
+  //   if (cb) cb();
+  //   return;
+  // }
 
   // Minified
   const minifiedContent = await cleanCSS(cssContent);
