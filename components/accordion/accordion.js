@@ -29,10 +29,15 @@ const Accordion = {
     $contentEl.removeAttr('aria-hidden');
     if ($contentEl.length === 0) $contentEl = $el.find('.accordion-item-content');
     if ($contentEl.length === 0) return;
-    const $openedItem = $list.length > 0 && $el.parent().children('.accordion-item-opened');
-    if ($openedItem.length > 0) {
-      app.accordion.close($openedItem);
-    }
+    let $openedItem = $list.length > 0 && $el.parent().children('.accordion-item-opened');
+    
+    $openedItem = $openedItem.filter((i, n) => {
+      n = $(n);
+      return !n.hasAttr('close') || n.attr('close') !== '0';
+    });
+
+    if ($openedItem.length > 0) app.accordion.close($openedItem);
+
     $contentEl.transitionEnd(() => {
       if ($el.hasClass('accordion-item-opened')) {
         $contentEl.transition(0);

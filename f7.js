@@ -166,10 +166,10 @@ async function buildBase(cb) {
   // Write file
   fs.writeFileSync(`${output}/f7${cfg.rtl ? '.rtl' : ''}.css`, `${cssContent}`);
 
-  if (dev) {
-    if (cb) cb();
-    return;
-  }
+  //if (dev) {
+  //  if (cb) cb();
+  //  return;
+  //}
 
   // Minified
   const minifiedContent = await cleanCSS(cssContent);

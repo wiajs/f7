@@ -14,10 +14,15 @@ class ListIndex extends Event {
       auroraItemHeight: 14,
       scrollList: true,
       label: false,
+      // set i attrbute, faster
       // eslint-disable-next-line
       renderItem(itemContent, itemIndex) {
+        const rg = /\((\S+)\)/gi.exec(itemContent);
+        if (rg)
+					itemContent = rg[1];
+				
         return `
-          <li>${itemContent}</li>
+          <li i="${itemIndex}">${itemContent}</li>
         `.trim();
       },
       renderSkipPlaceholder() {
@@ -96,7 +101,9 @@ class ListIndex extends Event {
       const $clickedLi = $(e.target).closest('li');
       if (!$clickedLi.length) return;
 
-      let itemIndex = $clickedLi.index();
+      let itemIndex = $clickedLi.attr('i'); // $clickedLi.index();
+      // console.log('handleClick', {li: $clickedLi, itemIndex, html: $clickedLi.html(), skipRate: index.skipRate});
+
       if (index.skipRate > 0) {
         const percentage = itemIndex / ($clickedLi.siblings('li').length - 1);
         itemIndex = Math.round((index.indexes.length - 1) * percentage);
@@ -274,6 +281,7 @@ class ListIndex extends Event {
       return itemHtml;
     }).join('');
 
+    // console.log('render', {ul: $ul, html});
     $ul.html(html);
 
     return index;
