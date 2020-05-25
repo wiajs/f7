@@ -24,7 +24,14 @@ const Tab = {
     }
     if (typeof animate === 'undefined') animate = true;
 
-    const $newTabEl = $(tabEl);
+    tabLinkEl.addClass('tab-link-active', true);
+    let tabs = '';
+    const links = tabLinkEl.parentNode('.tab-links').clases('tab-link-active');
+    if (links) tabs = links.toArray().reduce((prev, v) => prev ? `${prev}-${$(v).data('tab')}` : $(v).data('tab'), '');
+
+    // const $newTabEl = $(tabEl);
+    const $newTabEl = tabLinkEl.parentNode('.page').name(tabs);
+
     if (tabRoute && $newTabEl[0]) {
       $newTabEl[0].f7TabRoute = tabRoute;
     }
@@ -211,7 +218,7 @@ export default {
       },
     });
   },
-  clicks: {
+  clicks: {    
     '.tab-link': function tabLinkClick($clickedEl, data = {}) {
       const app = this;
       if (($clickedEl.attr('href') && $clickedEl.attr('href').indexOf('#') === 0) || $clickedEl.attr('data-tab')) {

@@ -102,8 +102,6 @@ class ListIndex extends Event {
       if (!$clickedLi.length) return;
 
       let itemIndex = $clickedLi.attr('i'); // $clickedLi.index();
-      // console.log('handleClick', {li: $clickedLi, itemIndex, html: $clickedLi.html(), skipRate: index.skipRate});
-
       if (index.skipRate > 0) {
         const percentage = itemIndex / ($clickedLi.siblings('li').length - 1);
         itemIndex = Math.round((index.indexes.length - 1) * percentage);
@@ -281,7 +279,6 @@ class ListIndex extends Event {
       return itemHtml;
     }).join('');
 
-    // console.log('render', {ul: $ul, html});
     $ul.html(html);
 
     return index;
