@@ -1,5 +1,22 @@
 # Change Log
 
+## 2020-06-03
+
+f7.js
+
+- \+ buildVars
+- \+ createVarsLess
+  根据配置创建其他组件需要的 less 变量，用于脱离 f7 组件架构，
+  在页面中可单独引用组件或 f7 样式。
+  f7 组件架构，在 app 创建时，所有样式集中打包。
+  wia 架构是每个页面独立打包、独立运行，因此需将 less 引用变量分拆出来，
+  在页面 less 中单独引用，比如：
+  `@import '../config/f7.vars.less';`
+
+\+ f7.vars.less
+
+f7 组件 less 所需要的变量、函数
+
 ## 2020-05-24
 
 ### tabs
