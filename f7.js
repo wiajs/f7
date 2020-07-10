@@ -84,7 +84,7 @@ function createBaseLess() {
 
   // Core LESS
   let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.less'));
-  lessContent = `${banner}\n${lessContent}`;
+  // lessContent = `${banner}\n${lessContent}`;
   lessContent = lessContent
     .replace('$includeIosTheme', includeIosTheme)
     .replace('$includeMdTheme', includeMdTheme)
@@ -113,7 +113,7 @@ function createPartLess(components) {
 
   // Part LESS
   let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.part.less'));
-  lessContent = `${banner}\n${lessContent}`;
+  // lessContent = `${banner}\n${lessContent}`;
   lessContent = lessContent
     .replace('$includeIosTheme', includeIosTheme)
     .replace('$includeMdTheme', includeMdTheme)
@@ -137,6 +137,36 @@ function createPartLess(components) {
   fs.writeFileSync(`${output}/f7.${_prj}.less`, lessBundleContent);
 
   return lessBundleContent;
+}
+
+function createVarsLess() {
+  const colors = `{\n${Object.keys(cfg.colors)
+    .map(colorName => `  ${colorName}: ${cfg.colors[colorName]};`)
+    .join('\n')}\n}`;
+  const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
+  const includeMdTheme = cfg.themes.indexOf('md') >= 0;
+  const includeAuroraTheme = cfg.themes.indexOf('aurora') >= 0;
+  const includeDarkTheme = cfg.darkTheme;
+  const includeLightTheme = cfg.lightTheme;
+  const {rtl} = cfg;
+
+  // Part LESS
+  let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.vars.less'));
+  // lessContent = `${banner}\n${lessContent}`;
+  lessContent = lessContent
+    .replace('$includeIosTheme', includeIosTheme)
+    .replace('$includeMdTheme', includeMdTheme)
+    .replace('$includeAuroraTheme', includeAuroraTheme)
+    .replace('$includeDarkTheme', includeDarkTheme)
+    .replace('$includeLightTheme', includeLightTheme)
+    .replace('$colors', colors)
+    .replace('$themeColor', cfg.themeColor)
+    .replace('$rtl', rtl);
+
+  const dir = path.resolve(__dirname, `${_dir}/src/config`);
+  fs.writeFileSync(`${dir}/f7.vars.less`, lessContent);
+
+  return lessContent;
 }
 
 /**
@@ -246,7 +276,7 @@ async function makeApp(cb) {
   if (cb) cb();
 }
 
-// Build CSS Bundle
+// Build App's Part CSS Bundle
 async function buildPart(cb) {
   const components = [];
   // 通过项目配置获取组件样式
@@ -262,6 +292,41 @@ async function buildPart(cb) {
   // 根据项目配置生成 转换 less 文件
   const lessContent = createPartLess(components);
   const outputFileName = `f7.${_prj}${cfg.rtl ? '.rtl' : ''}`;
+
+  let cssContent;
+  try {
+    cssContent = await autoprefixer(
+      await less(lessContent, path.resolve(__dirname, '.'))
+    );
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Write file
+  fs.writeFileSync(
+    `${output}/${outputFileName}.css`,
+    `${banner}\n${cssContent}`
+  );
+
+  // if (dev) {
+  //   if (cb) cb();
+  //   return;
+  // }
+
+  // Minified
+  const minifiedContent = await cleanCSS(cssContent);
+
+  // Write file
+  fs.writeFileSync(`${output}/${outputFileName}.min.css`, `${minifiedContent}`);
+
+  if (cb) cb();
+}
+
+// Build F7 Vars CSS Bundle
+async function buildVars(cb) {
+  // 根据项目配置生成 转换 less 文件
+  const lessContent = createVarsLess();
+  const outputFileName = `f7.vars${cfg.rtl ? '.rtl' : ''}`;
 
   let cssContent;
   try {
@@ -309,12 +374,13 @@ function buildF7(dir, name, cb) {
   function onCb() {
     cbs += 1;
     // 最后一次回调
-    if (cbs === 3 && cb) cb();
+    if (cbs === 4 && cb) cb();
   }
 
   makeApp(onCb);
   buildBase(onCb);
   buildPart(onCb);
+  buildVars(onCb);
 }
 
 module.exports = buildF7;
