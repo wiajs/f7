@@ -227,7 +227,7 @@ export default {
           tabLinkEl: $clickedEl,
           animate: data.animate,
         });
-      }
+      } else $clickedEl.addClass('tab-link-active', true);        
     },
   },
 };
