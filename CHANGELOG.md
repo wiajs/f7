@@ -1,5 +1,13 @@
 # Change Log
 
+## 2020-07-10
+
+dialog\dialog.js
+  弹出中文对话框
+	
+tabs\tabs.js
+  激活点击的 .tab-link
+
 ## 2020-06-03
 
 f7.js

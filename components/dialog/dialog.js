@@ -6,12 +6,12 @@ export default {
   params: {
     dialog: {
       title: undefined,
-      buttonOk: 'OK',
-      buttonCancel: 'Cancel',
-      usernamePlaceholder: 'Username',
-      passwordPlaceholder: 'Password',
-      preloaderTitle: 'Loading... ',
-      progressTitle: 'Loading... ',
+      buttonOk: '确认',
+      buttonCancel: '取消',
+      usernamePlaceholder: '用户名称',
+      passwordPlaceholder: '密码',
+      preloaderTitle: '努力加载中... ',
+      progressTitle: '努力加载中... ',
       backdrop: true,
       closeByBackdropClick: false,
       destroyPredefinedDialogs: true,
@@ -30,13 +30,15 @@ export default {
     const destroyOnClose = app.params.dialog.destroyPredefinedDialogs;
     const keyboardActions = app.params.dialog.keyboardActions;
     const autoFocus = app.params.dialog.autoFocus;
-    const autoFocusHandler = (autoFocus ? {
-      on: {
-        opened(dialog) {
-          dialog.$el.find('input').eq(0).focus();
-        },
-      },
-    } : {});
+    const autoFocusHandler = autoFocus
+      ? {
+          on: {
+            opened(dialog) {
+              dialog.$el.find('input').eq(0).focus();
+            },
+          },
+        }
+      : {};
 
     app.dialog = Utils.extend(
       Modals({
@@ -54,12 +56,14 @@ export default {
           return new Dialog(app, {
             title: typeof title === 'undefined' ? defaultDialogTitle() : title,
             text,
-            buttons: [{
-              text: app.params.dialog.buttonOk,
-              bold: true,
-              onClick: callbackOk,
-              keyCodes: keyboardActions ? [13, 27] : null,
-            }],
+            buttons: [
+              {
+                text: app.params.dialog.buttonOk,
+                bold: true,
+                onClick: callbackOk,
+                keyCodes: keyboardActions ? [13, 27] : null,
+              },
+            ],
             destroyOnClose,
           }).open();
         },
@@ -68,7 +72,10 @@ export default {
           if (typeof args[1] === 'function') {
             [text, callbackOk, callbackCancel, defaultValue, title] = args;
           }
-          defaultValue = typeof defaultValue === 'undefined' || defaultValue === null ? '' : defaultValue;
+          defaultValue =
+            typeof defaultValue === 'undefined' || defaultValue === null
+              ? ''
+              : defaultValue;
           return new Dialog(app, {
             title: typeof title === 'undefined' ? defaultDialogTitle() : title,
             text,
@@ -147,9 +154,14 @@ export default {
               },
             ],
             onClick(dialog, index) {
-              const username = dialog.$el.find('[name="dialog-username"]').val();
-              const password = dialog.$el.find('[name="dialog-password"]').val();
-              if (index === 0 && callbackCancel) callbackCancel(username, password);
+              const username = dialog.$el
+                .find('[name="dialog-username"]')
+                .val();
+              const password = dialog.$el
+                .find('[name="dialog-password"]')
+                .val();
+              if (index === 0 && callbackCancel)
+                callbackCancel(username, password);
               if (index === 1 && callbackOk) callbackOk(username, password);
             },
             destroyOnClose,
@@ -181,7 +193,9 @@ export default {
               },
             ],
             onClick(dialog, index) {
-              const password = dialog.$el.find('[name="dialog-password"]').val();
+              const password = dialog.$el
+                .find('[name="dialog-password"]')
+                .val();
               if (index === 0 && callbackCancel) callbackCancel(password);
               if (index === 1 && callbackOk) callbackOk(password);
             },
@@ -192,8 +206,13 @@ export default {
         preloader(title, color) {
           const preloaderInner = Utils[`${app.theme}PreloaderContent`] || '';
           return new Dialog(app, {
-            title: typeof title === 'undefined' || title === null ? app.params.dialog.preloaderTitle : title,
-            content: `<div class="preloader${color ? ` color-${color}` : ''}">${preloaderInner}</div>`,
+            title:
+              typeof title === 'undefined' || title === null
+                ? app.params.dialog.preloaderTitle
+                : title,
+            content: `<div class="preloader${
+              color ? ` color-${color}` : ''
+            }">${preloaderInner}</div>`,
             cssClass: 'dialog-preloader',
             destroyOnClose,
           }).open();
@@ -203,7 +222,10 @@ export default {
           if (args.length === 2) {
             if (typeof args[0] === 'number') {
               [progress, color, title] = args;
-            } else if (typeof args[0] === 'string' && typeof args[1] === 'string') {
+            } else if (
+              typeof args[0] === 'string' &&
+              typeof args[1] === 'string'
+            ) {
               [title, color, progress] = args;
             }
           } else if (args.length === 1) {
@@ -213,10 +235,15 @@ export default {
           }
           const infinite = typeof progress === 'undefined';
           const dialog = new Dialog(app, {
-            title: typeof title === 'undefined' ? app.params.dialog.progressTitle : title,
+            title:
+              typeof title === 'undefined'
+                ? app.params.dialog.progressTitle
+                : title,
             cssClass: 'dialog-progress',
             content: `
-              <div class="progressbar${infinite ? '-infinite' : ''}${color ? ` color-${color}` : ''}">
+              <div class="progressbar${infinite ? '-infinite' : ''}${
+              color ? ` color-${color}` : ''
+            }">
                 ${!infinite ? '<span></span>' : ''}
               </div>
             `,
