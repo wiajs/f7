@@ -1,4 +1,4 @@
-import {Constructors{} from '@wiajs/core';
+import {Constructors} from '@wiajs/core';
 import Calendar from './calendar-class';
 
 export default {
