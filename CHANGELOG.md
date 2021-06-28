@@ -1,5 +1,15 @@
 # Change Log
 
+## 2021-06-10
+
+- grid\grid.less
+	更新到 v6.0.21
+
+## 2020-09-01
+	dialog\dialog.js 文件编码恢复为UTF8
+	calendar\calendar.js 修正bug
+	
+
 ## 2020-07-10
 
 dialog\dialog.js
