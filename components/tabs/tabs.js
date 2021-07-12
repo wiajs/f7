@@ -218,10 +218,22 @@ export default {
       },
     });
   },
+  on: {
+    'pageInit tabMounted': function onInit(pageOrTabEl) {
+      const $el = $(pageOrTabEl.el || pageOrTabEl);
+      const animatedTabEl = $el.find('.tabs-animated-wrap > .tabs > .tab-active')[0];
+      if (!animatedTabEl) return;
+      const app = this;
+      app.tab.show({ tabEl: animatedTabEl, animatedInit: true, animate: false });
+    },
+  },
   clicks: {    
     '.tab-link': function tabLinkClick($clickedEl, data = {}) {
+      if (
+        ($clickedEl.attr('href') && $clickedEl.attr('href').indexOf('#') === 0) ||
+        $clickedEl.attr('data-tab')
+      ) {
       const app = this;
-      if (($clickedEl.attr('href') && $clickedEl.attr('href').indexOf('#') === 0) || $clickedEl.attr('data-tab')) {
         app.tab.show({
           tabEl: data.tab || $clickedEl.attr('href'),
           tabLinkEl: $clickedEl,

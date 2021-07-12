@@ -1,22 +1,47 @@
 # Change Log
 
+## 2021-07-12
+
+部分组件更新到 F7 的 6.00.10 版本。
+
+- accordion
+- actions
+- app
+- block
+- button
+- card
+- checkBox
+- chip
+- data-table
+- dialog
+- grid
+- icon
+- input
+- list
+- navbar
+- preloader
+- radio
+- tabs
+- toggle
+- toolbar
+- view
+
 ## 2021-06-10
 
 - grid\grid.less
-	更新到 v6.0.21
+  更新到 v6.0.21
 
 ## 2020-09-01
-	dialog\dialog.js 文件编码恢复为UTF8
-	calendar\calendar.js 修正bug
-	
+
+    dialog\dialog.js 文件编码恢复为UTF8
+    calendar\calendar.js 修正bug
 
 ## 2020-07-10
 
 dialog\dialog.js
-  弹出中文对话框
-	
+弹出中文对话框
 tabs\tabs.js
-  激活点击的 .tab-link
+激活点击的 .tab-link
 
 ## 2020-06-03
 

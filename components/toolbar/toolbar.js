@@ -3,11 +3,15 @@ import {Utils} from '@wiajs/core';
 const Toolbar = {
   setHighlight(tabbarEl) {
     const app = this;
-    if (app.theme !== 'md') return;
+    if (app.theme === 'ios') return;
 
     const $tabbarEl = $(tabbarEl);
 
-    if ($tabbarEl.length === 0 || !($tabbarEl.hasClass('tabbar') || $tabbarEl.hasClass('tabbar-labels'))) return;
+    if (
+      $tabbarEl.length === 0 ||
+      !($tabbarEl.hasClass('tabbar') || $tabbarEl.hasClass('tabbar-labels'))
+    )
+      return;
 
     let $highlightEl = $tabbarEl.find('.tab-link-highlight');
     const tabLinksCount = $tabbarEl.find('.tab-link').length;
@@ -37,9 +41,7 @@ const Toolbar = {
     }
 
     Utils.nextFrame(() => {
-      $highlightEl
-        .css('width', highlightWidth)
-        .transform(`translate3d(${highlightTranslate},0,0)`);
+      $highlightEl.css('width', highlightWidth).transform(`translate3d(${highlightTranslate},0,0)`);
     });
   },
   init(tabbarEl) {
@@ -72,7 +74,7 @@ const Toolbar = {
     $el.trigger('toolbar:show');
     app.emit('toolbarShow', $el[0]);
   },
-  initHideToolbarOnScroll(pageEl) {
+  initToolbarOnScroll(pageEl) {
     const app = this;
     const $pageEl = $(pageEl);
     let $toolbarEl = $pageEl.parents('.view').children('.toolbar');
@@ -95,11 +97,12 @@ const Toolbar = {
     let action;
     let toolbarHidden;
     function handleScroll(e) {
+      if ($pageEl.hasClass('page-with-card-opened')) return;
+      if ($pageEl.hasClass('page-previous')) return;
       const scrollContent = this;
       if (e && e.target && e.target !== scrollContent) {
         return;
       }
-      if ($pageEl.hasClass('page-previous')) return;
       currentScrollTop = scrollContent.scrollTop;
       scrollHeight = scrollContent.scrollHeight;
       offsetHeight = scrollContent.offsetHeight;
@@ -140,14 +143,8 @@ export default {
   name: 'toolbar',
   create() {
     const app = this;
-    Utils.extend(app, {
-      toolbar: {
-        hide: Toolbar.hide.bind(app),
-        show: Toolbar.show.bind(app),
-        setHighlight: Toolbar.setHighlight.bind(app),
-        initHideToolbarOnScroll: Toolbar.initHideToolbarOnScroll.bind(app),
-        init: Toolbar.init.bind(app),
-      },
+    Utils.bindMethods(app, {
+      toolbar: Toolbar,
     });
   },
   params: {
@@ -187,21 +184,21 @@ export default {
         app.toolbar.init(tabbarEl);
       });
       if (
-        app.params.toolbar.hideOnPageScroll
-        || page.$el.find('.hide-toolbar-on-scroll').length
-        || page.$el.hasClass('hide-toolbar-on-scroll')
-        || page.$el.find('.hide-bars-on-scroll').length
-        || page.$el.hasClass('hide-bars-on-scroll')
+        app.params.toolbar.hideOnPageScroll ||
+        page.$el.find('.hide-toolbar-on-scroll').length ||
+        page.$el.hasClass('hide-toolbar-on-scroll') ||
+        page.$el.find('.hide-bars-on-scroll').length ||
+        page.$el.hasClass('hide-bars-on-scroll')
       ) {
         if (
-          page.$el.find('.keep-toolbar-on-scroll').length
-          || page.$el.hasClass('keep-toolbar-on-scroll')
-          || page.$el.find('.keep-bars-on-scroll').length
-          || page.$el.hasClass('keep-bars-on-scroll')
+          page.$el.find('.keep-toolbar-on-scroll').length ||
+          page.$el.hasClass('keep-toolbar-on-scroll') ||
+          page.$el.find('.keep-bars-on-scroll').length ||
+          page.$el.hasClass('keep-bars-on-scroll')
         ) {
           return;
         }
-        app.toolbar.initHideToolbarOnScroll(page.el);
+        app.toolbar.initToolbarOnScroll(page.el);
       }
     },
     init() {

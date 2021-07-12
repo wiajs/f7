@@ -1,7 +1,8 @@
 /* === Card === */
 @import url('./card-vars.less');
 
-.cards-list, .card .list {
+.cards-list,
+.card .list {
   > ul {
     .hairline-remove-top-bottom();
   }
@@ -19,7 +20,8 @@
   margin-left: calc(var(--f7-card-margin-horizontal) + var(--f7-safe-area-left));
   margin-right: calc(var(--f7-card-margin-horizontal) + var(--f7-safe-area-right));
   box-shadow: var(--f7-card-box-shadow);
-  .list, .block {
+  .list,
+  .block {
     margin: 0;
   }
   .row:not(.no-gap) .col > & {
@@ -36,7 +38,8 @@
 .aurora .card-outline-aurora {
   box-shadow: none;
   border: 1px solid var(--f7-card-outline-border-color);
-  &.no-border, &.no-hairlines {
+  &.no-border,
+  &.no-hairlines {
     border: none;
   }
 }
@@ -46,8 +49,10 @@
 .card-content-padding {
   position: relative;
   padding: var(--f7-card-content-padding-vertical) var(--f7-card-content-padding-horizontal);
-  > .list, > .block {
-    margin: calc(-1 * var(--f7-card-content-padding-vertical)) calc(-1 * var(--f7-card-content-padding-horizontal));
+  > .list,
+  > .block {
+    margin: calc(-1 * var(--f7-card-content-padding-vertical))
+      calc(-1 * var(--f7-card-content-padding-horizontal));
   }
   > p:first-child {
     margin-top: 0;
@@ -73,16 +78,17 @@
     overflow: hidden;
   }
 }
-.card-header, .card-footer {
+.card-header,
+.card-footer {
   position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  &[valign="top"] {
+  &[valign='top'] {
     align-items: flex-start;
   }
-  &[valign="bottom"] {
+  &[valign='bottom'] {
     align-items: flex-end;
   }
   a.link {
@@ -128,6 +134,9 @@
   margin-bottom: var(--f7-card-expandable-margin-vertical);
   box-shadow: var(--f7-card-expandable-box-shadow);
   font-size: var(--f7-card-expandable-font-size);
+  &:not(.card-opened) {
+    user-select: none;
+  }
   &.card-no-transition {
     transition-duration: 0ms;
   }
@@ -188,10 +197,13 @@
       transition-duration: 500ms;
     }
   }
-  &.card-opening, &.card-opened, &.card-closing {
+  &.card-opening,
+  &.card-opened,
+  &.card-closing {
     z-index: 300;
   }
-  &.card-opening, &.card-opened {
+  &.card-opening,
+  &.card-opened {
     border-radius: 0;
     .card-opened-fade-in {
       opacity: 1;
@@ -231,7 +243,8 @@
 @media (min-width: 768px) and (min-height: 670px) {
   .card-expandable:not(.card-tablet-fullscreen) {
     max-width: var(--f7-card-expandable-tablet-width);
-    &.card-opened, &.card-opening {
+    &.card-opened,
+    &.card-opening {
       border-radius: var(--f7-card-expandable-tablet-border-radius);
     }
     &:not(.card-expandable-animate-width) .card-content {
@@ -269,13 +282,7 @@
 @supports (backdrop-filter: blur(15px)) {
   .card-backdrop {
     background: transparent;
-    opacity: 1;
-  }
-  .card-backdrop-in {
-    animation: card-backdrop-blur-in 400ms forwards;
-  }
-  .card-backdrop-out {
-    animation: card-backdrop-blur-out 400ms forwards;
+    backdrop-filter: blur(15px);
   }
 }
 @keyframes card-backdrop-fade-in {
@@ -294,22 +301,7 @@
     opacity: 0;
   }
 }
-@keyframes card-backdrop-blur-in {
-  from {
-    backdrop-filter: blur(0px);
-  }
-  to {
-    backdrop-filter: blur(15px);
-  }
-}
-@keyframes card-backdrop-blur-out {
-  from {
-    backdrop-filter: blur(15px);
-  }
-  to {
-    backdrop-filter: blur(0px);
-  }
-}
+
 .if-ios-theme({
   @import url('./card-ios.less');
 });

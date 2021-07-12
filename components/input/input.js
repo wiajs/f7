@@ -1,4 +1,4 @@
-import {Utils, Device} from '@wiajs/core';
+import {Utils} from '@wiajs/core';
 
 const Input = {
   ignoreTypes: ['checkbox', 'button', 'submit', 'range', 'radio', 'image'],
@@ -26,9 +26,11 @@ const Input = {
     }
 
     const styles = window.getComputedStyle($textareaEl[0]);
-    ('padding-top padding-bottom padding-left padding-right margin-left margin-right margin-top margin-bottom width font-size font-family font-style font-weight line-height font-variant text-transform letter-spacing border box-sizing display').split(' ').forEach((style) => {
+    'padding-top padding-bottom padding-left padding-right margin-left margin-right margin-top margin-bottom width font-size font-family font-style font-weight line-height font-variant text-transform letter-spacing border box-sizing display'
+      .split(' ')
+      .forEach((style) => {
       let styleValue = styles[style];
-      if (('font-size line-height letter-spacing width').split(' ').indexOf(style) >= 0) {
+        if ('font-size line-height letter-spacing width'.split(' ').indexOf(style) >= 0) {
         styleValue = styleValue.replace(',', '.');
       }
       $shadowEl.css(style, styleValue);
@@ -56,17 +58,36 @@ const Input = {
   },
   validate(inputEl) {
     const $inputEl = $(inputEl);
-    if (!$inputEl.length) return;
+    if (!$inputEl.length) return true;
     const $itemInputEl = $inputEl.parents('.item-input');
     const $inputWrapEl = $inputEl.parents('.input');
+    function unsetReadonly() {
+      if ($inputEl[0].f7ValidateReadonly) {
+        $inputEl[0].readOnly = false;
+      }
+    }
+    function setReadonly() {
+      if ($inputEl[0].f7ValidateReadonly) {
+        $inputEl[0].readOnly = true;
+      }
+    }
+    unsetReadonly();
     const validity = $inputEl[0].validity;
-    const validationMessage = $inputEl.dataset().errorMessage || $inputEl[0].validationMessage || '';
-    if (!validity) return;
+    const validationMessage =
+      $inputEl.dataset().errorMessage || $inputEl[0].validationMessage || '';
+    if (!validity) {
+      setReadonly();
+      return true;
+    }
     if (!validity.valid) {
       let $errorEl = $inputEl.nextAll('.item-input-error-message, .input-error-message');
       if (validationMessage) {
         if ($errorEl.length === 0) {
-          $errorEl = $(`<div class="${$inputWrapEl.length ? 'input-error-message' : 'item-input-error-message'}"></div>`);
+          $errorEl = $(
+            `<div class="${
+              $inputWrapEl.length ? 'input-error-message' : 'item-input-error-message'
+            }"></div>`,
+          );
           $errorEl.insertAfter($inputEl);
         }
         $errorEl.text(validationMessage);
@@ -78,17 +99,21 @@ const Input = {
       $itemInputEl.addClass('item-input-invalid');
       $inputWrapEl.addClass('input-invalid');
       $inputEl.addClass('input-invalid');
-    } else {
+      setReadonly();
+      return false;
+    }
       $itemInputEl.removeClass('item-input-invalid item-input-with-error-message');
       $inputWrapEl.removeClass('input-invalid input-with-error-message');
       $inputEl.removeClass('input-invalid');
-    }
+    setReadonly();
+    return true;
   },
   validateInputs(el) {
     const app = this;
-    $(el).find('input, textarea, select').each((index, inputEl) => {
-      app.input.validate(inputEl);
-    });
+    const validates = $(el)
+      .find('input, textarea, select')
+      .map((inputEl) => app.input.validate(inputEl));
+    return validates.indexOf(false) < 0;
   },
   focus(inputEl) {
     const $inputEl = $(inputEl);
@@ -121,7 +146,10 @@ const Input = {
     }
     const $itemInputEl = $inputEl.parents('.item-input');
     const $inputWrapEl = $inputEl.parents('.input');
-    if ((value && (typeof value === 'string' && value.trim() !== '')) || (Array.isArray(value) && value.length > 0)) {
+    if (
+      (value && typeof value === 'string' && value.trim() !== '') ||
+      (Array.isArray(value) && value.length > 0)
+    ) {
       $itemInputEl.addClass('item-input-with-value');
       $inputWrapEl.addClass('input-with-value');
       $inputEl.addClass('input-with-value');
@@ -137,7 +165,9 @@ const Input = {
   },
   scrollIntoView(inputEl, duration = 0, centered, force) {
     const $inputEl = $(inputEl);
-    const $scrollableEl = $inputEl.parents('.page-content, .panel, .card-expandable .card-content').eq(0);
+    const $scrollableEl = $inputEl
+      .parents('.page-content, .panel, .card-expandable .card-content')
+      .eq(0);
     if (!$scrollableEl.length) {
       return false;
     }
@@ -150,9 +180,10 @@ const Input = {
     const inputOffsetTop = $inputEl.offset().top - contentOffsetTop;
     const inputHeight = $inputEl[0].offsetHeight;
 
-    const min = (inputOffsetTop + contentScrollTop) - contentPaddingTop;
-    const max = ((inputOffsetTop + contentScrollTop) - contentHeight) + contentPaddingBottom + inputHeight;
-    const centeredPosition = min + ((max - min) / 2);
+    const min = inputOffsetTop + contentScrollTop - contentPaddingTop;
+    const max =
+      inputOffsetTop + contentScrollTop - contentHeight + contentPaddingBottom + inputHeight;
+    const centeredPosition = min + (max - min) / 2;
 
     if (contentScrollTop > min) {
       $scrollableEl.scrollTop(centered ? centeredPosition : min, duration);
@@ -173,14 +204,24 @@ const Input = {
     function onFocus() {
       const inputEl = this;
       if (app.params.input.scrollIntoViewOnFocus) {
-        if (Device.android) {
+        if (app.device.android) {
           $(window).once('resize', () => {
             if (document && document.activeElement === inputEl) {
-              app.input.scrollIntoView(inputEl, app.params.input.scrollIntoViewDuration, app.params.input.scrollIntoViewCentered, app.params.input.scrollIntoViewAlways);
+              app.input.scrollIntoView(
+                inputEl,
+                app.params.input.scrollIntoViewDuration,
+                app.params.input.scrollIntoViewCentered,
+                app.params.input.scrollIntoViewAlways,
+              );
             }
           });
         } else {
-          app.input.scrollIntoView(inputEl, app.params.input.scrollIntoViewDuration, app.params.input.scrollIntoViewCentered, app.params.input.scrollIntoViewAlways);
+          app.input.scrollIntoView(
+            inputEl,
+            app.params.input.scrollIntoViewDuration,
+            app.params.input.scrollIntoViewCentered,
+            app.params.input.scrollIntoViewAlways,
+          );
         }
       }
       app.input.focus(inputEl);
@@ -189,7 +230,11 @@ const Input = {
       const $inputEl = $(this);
       const tag = $inputEl[0].nodeName.toLowerCase();
       app.input.blur($inputEl);
-      if ($inputEl.dataset().validate || $inputEl.attr('validate') !== null || $inputEl.attr('data-validate-on-blur') !== null) {
+      if (
+        $inputEl.dataset().validate ||
+        $inputEl.attr('validate') !== null ||
+        $inputEl.attr('data-validate-on-blur') !== null
+      ) {
         app.input.validate($inputEl);
       }
       // Resize textarea
@@ -209,7 +254,10 @@ const Input = {
       if (isContentEditable) return;
 
       // Check validation
-      if ($inputEl.attr('data-validate-on-blur') === null && ($inputEl.dataset().validate || $inputEl.attr('validate') !== null)) {
+      if (
+        $inputEl.attr('data-validate-on-blur') === null &&
+        ($inputEl.dataset().validate || $inputEl.attr('validate') !== null)
+      ) {
         app.input.validate($inputEl);
       }
 
@@ -220,7 +268,10 @@ const Input = {
     }
     function onInvalid(e) {
       const $inputEl = $(this);
-      if ($inputEl.attr('data-validate-on-blur') === null && ($inputEl.dataset().validate || $inputEl.attr('validate') !== null)) {
+      if (
+        $inputEl.attr('data-validate-on-blur') === null &&
+        ($inputEl.dataset().validate || $inputEl.attr('validate') !== null)
+      ) {
         e.preventDefault();
         app.input.validate($inputEl);
       }
@@ -229,16 +280,26 @@ const Input = {
       const $clicked = $(this);
       const $inputEl = $clicked.siblings('input, textarea').eq(0);
       const previousValue = $inputEl.val();
-      $inputEl
-        .val('')
-        .trigger('input change')
-        .focus()
-        .trigger('input:clear', previousValue);
+      $inputEl.val('').trigger('input change').focus().trigger('input:clear', previousValue);
       app.emit('inputClear', previousValue);
     }
+    function preventDefault(e) {
+      e.preventDefault();
+    }
     $(document).on('click', '.input-clear-button', clearInput);
-    $(document).on('change input', 'input, textarea, select, .item-input [contenteditable]', onChange, true);
-    $(document).on('focus', 'input, textarea, select, .item-input [contenteditable]', onFocus, true);
+    $(document).on('mousedown', '.input-clear-button', preventDefault);
+    $(document).on(
+      'change input',
+      'input, textarea, select, .item-input [contenteditable]',
+      onChange,
+      true,
+    );
+    $(document).on(
+      'focus',
+      'input, textarea, select, .item-input [contenteditable]',
+      onFocus,
+      true,
+    );
     $(document).on('blur', 'input, textarea, select, .item-input [contenteditable]', onBlur, true);
     $(document).on('invalid', 'input, textarea, select', onInvalid, true);
   },
@@ -248,7 +309,7 @@ export default {
   name: 'input',
   params: {
     input: {
-      scrollIntoViewOnFocus: Device.android,
+      scrollIntoViewOnFocus: undefined,
       scrollIntoViewCentered: false,
       scrollIntoViewDuration: 0,
       scrollIntoViewAlways: false,
@@ -256,17 +317,11 @@ export default {
   },
   create() {
     const app = this;
-    Utils.extend(app, {
-      input: {
-        scrollIntoView: Input.scrollIntoView.bind(app),
-        focus: Input.focus.bind(app),
-        blur: Input.blur.bind(app),
-        validate: Input.validate.bind(app),
-        validateInputs: Input.validateInputs.bind(app),
-        checkEmptyState: Input.checkEmptyState.bind(app),
-        resizeTextarea: Input.resizeTextarea.bind(app),
-        init: Input.init.bind(app),
-      },
+    if (typeof app.params.input.scrollIntoViewOnFocus === 'undefined') {
+      app.params.input.scrollIntoViewOnFocus = app.device.android;
+    }
+    Utils.bindMethods(app, {
+      input: Input,
     });
   },
   on: {

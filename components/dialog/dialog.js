@@ -73,9 +73,7 @@ export default {
             [text, callbackOk, callbackCancel, defaultValue, title] = args;
           }
           defaultValue =
-            typeof defaultValue === 'undefined' || defaultValue === null
-              ? ''
-              : defaultValue;
+            typeof defaultValue === 'undefined' || defaultValue === null ? '' : defaultValue;
           return new Dialog(app, {
             title: typeof title === 'undefined' ? defaultDialogTitle() : title,
             text,
@@ -134,6 +132,7 @@ export default {
           return new Dialog(app, {
             title: typeof title === 'undefined' ? defaultDialogTitle() : title,
             text,
+            // prettier-ignore
             content: `
               <div class="dialog-input-field dialog-input-double input">
                 <input type="text" name="dialog-username" placeholder="${app.params.dialog.usernamePlaceholder}" class="dialog-input">
@@ -154,14 +153,9 @@ export default {
               },
             ],
             onClick(dialog, index) {
-              const username = dialog.$el
-                .find('[name="dialog-username"]')
-                .val();
-              const password = dialog.$el
-                .find('[name="dialog-password"]')
-                .val();
-              if (index === 0 && callbackCancel)
-                callbackCancel(username, password);
+              const username = dialog.$el.find('[name="dialog-username"]').val();
+              const password = dialog.$el.find('[name="dialog-password"]').val();
+              if (index === 0 && callbackCancel) callbackCancel(username, password);
               if (index === 1 && callbackOk) callbackOk(username, password);
             },
             destroyOnClose,
@@ -176,6 +170,7 @@ export default {
           return new Dialog(app, {
             title: typeof title === 'undefined' ? defaultDialogTitle() : title,
             text,
+            // prettier-ignore
             content: `
               <div class="dialog-input-field input">
                 <input type="password" name="dialog-password" placeholder="${app.params.dialog.passwordPlaceholder}" class="dialog-input">
@@ -193,9 +188,7 @@ export default {
               },
             ],
             onClick(dialog, index) {
-              const password = dialog.$el
-                .find('[name="dialog-password"]')
-                .val();
+              const password = dialog.$el.find('[name="dialog-password"]').val();
               if (index === 0 && callbackCancel) callbackCancel(password);
               if (index === 1 && callbackOk) callbackOk(password);
             },
@@ -210,9 +203,8 @@ export default {
               typeof title === 'undefined' || title === null
                 ? app.params.dialog.preloaderTitle
                 : title,
-            content: `<div class="preloader${
-              color ? ` color-${color}` : ''
-            }">${preloaderInner}</div>`,
+            // prettier-ignore
+            content: `<div class="preloader${color ? ` color-${color}` : ''}">${preloaderInner}</div>`,
             cssClass: 'dialog-preloader',
             destroyOnClose,
           }).open();
@@ -222,10 +214,7 @@ export default {
           if (args.length === 2) {
             if (typeof args[0] === 'number') {
               [progress, color, title] = args;
-            } else if (
-              typeof args[0] === 'string' &&
-              typeof args[1] === 'string'
-            ) {
+            } else if (typeof args[0] === 'string' && typeof args[1] === 'string') {
               [title, color, progress] = args;
             }
           } else if (args.length === 1) {
@@ -235,15 +224,11 @@ export default {
           }
           const infinite = typeof progress === 'undefined';
           const dialog = new Dialog(app, {
-            title:
-              typeof title === 'undefined'
-                ? app.params.dialog.progressTitle
-                : title,
+            title: typeof title === 'undefined' ? app.params.dialog.progressTitle : title,
             cssClass: 'dialog-progress',
+            // prettier-ignore
             content: `
-              <div class="progressbar${infinite ? '-infinite' : ''}${
-              color ? ` color-${color}` : ''
-            }">
+              <div class="progressbar${infinite ? '-infinite' : ''}${color ? ` color-${color}` : ''}">
                 ${!infinite ? '<span></span>' : ''}
               </div>
             `,
@@ -252,7 +237,7 @@ export default {
           if (!infinite) dialog.setProgress(progress);
           return dialog.open();
         },
-      }
+      },
     );
   },
 };
