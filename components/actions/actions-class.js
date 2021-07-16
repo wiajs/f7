@@ -103,6 +103,36 @@ class Actions extends Modal {
           targetY,
           targetWidth,
           targetHeight,
+          on: {
+            open() {
+              if (!actions.$el) {
+                actions.$el = popover.$el;
+              }
+              actions.$el.trigger(`modal:open ${actions.type.toLowerCase()}:open`);
+              actions.emit(`local::open modalOpen ${actions.type}Open`, actions);
+            },
+            opened() {
+              if (!actions.$el) {
+                actions.$el = popover.$el;
+              }
+              actions.$el.trigger(`modal:opened ${actions.type.toLowerCase()}:opened`);
+              actions.emit(`local::opened modalOpened ${actions.type}Opened`, actions);
+            },
+            close() {
+              if (!actions.$el) {
+                actions.$el = popover.$el;
+              }
+              actions.$el.trigger(`modal:close ${actions.type.toLowerCase()}:close`);
+              actions.emit(`local::close modalClose ${actions.type}Close`, actions);
+            },
+            closed() {
+              if (!actions.$el) {
+                actions.$el = popover.$el;
+              }
+              actions.$el.trigger(`modal:closed ${actions.type.toLowerCase()}:closed`);
+              actions.emit(`local::closed modalClosed ${actions.type}Closed`, actions);
+            },
+          },
         });
         popover.open(animate);
         popover.once('popoverOpened', () => {
@@ -159,14 +189,20 @@ class Actions extends Modal {
     function handleClick(e) {
       const target = e.target;
       const $target = $(target);
-      const keyboardOpened = !app.device.desktop && app.device.cordova && ((window.Keyboard && window.Keyboard.isVisible) || (window.cordova.plugins && window.cordova.plugins.Keyboard && window.cordova.plugins.Keyboard.isVisible));
+      const keyboardOpened =
+        !app.device.desktop &&
+        app.device.cordova &&
+        ((window.Keyboard && window.Keyboard.isVisible) ||
+          (window.cordova.plugins &&
+            window.cordova.plugins.Keyboard &&
+            window.cordova.plugins.Keyboard.isVisible));
       if (keyboardOpened) return;
       if ($target.closest(actions.el).length === 0) {
         if (
-          actions.params.closeByBackdropClick
-          && actions.params.backdrop
-          && actions.backdropEl
-          && actions.backdropEl === target
+          actions.params.closeByBackdropClick &&
+          actions.params.backdrop &&
+          actions.backdropEl &&
+          actions.backdropEl === target
         ) {
           actions.close();
         } else if (actions.params.closeByOutsideClick) {

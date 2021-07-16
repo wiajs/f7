@@ -11,7 +11,8 @@ const Accordion = {
       if ($accordionContent.parents($accordionItemEl).length) return;
     }
 
-    if ($clickedEl.parents('li').length > 1 && $clickedEl.parents('li')[0] !== $accordionItemEl[0]) return;
+    if ($clickedEl.parents('li').length > 1 && $clickedEl.parents('li')[0] !== $accordionItemEl[0])
+      return;
     app.accordion.toggle($accordionItemEl);
   },
   open(el) {
@@ -110,16 +111,13 @@ export default {
   name: 'accordion',
   create() {
     const app = this;
-    Utils.extend(app, {
-      accordion: {
-        open: Accordion.open.bind(app),
-        close: Accordion.close.bind(app),
-        toggle: Accordion.toggle.bind(app),
-      },
+    Utils.bindMethods(app, {
+      accordion: Accordion,
     });
   },
   clicks: {
-    '.accordion-item .item-link, .accordion-item-toggle, .links-list.accordion-list > ul > li > a': function open($clickedEl) {
+    '.accordion-item .item-link, .accordion-item-toggle, .links-list.accordion-list > ul > li > a':
+      function open($clickedEl) {
       const app = this;
       Accordion.toggleClicked.call(app, $clickedEl);
     },

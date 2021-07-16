@@ -5,10 +5,6 @@
   --f7-accordion-chevron-icon-down: 'chevron_down';
   --f7-accordion-chevron-icon-up: 'chevron_up';
 }
-.aurora {
-  --f7-accordion-chevron-icon-down: 'chevron_down_aurora';
-  --f7-accordion-chevron-icon-up: 'chevron_up_aurora';
-}
 .accordion-item-toggle {
   cursor: pointer;
 }
@@ -39,12 +35,17 @@
   .item-link .item-inner:after {
     transition-duration: 300ms;
   }
-  .list, .block {
+  .list,
+  .block {
     margin-top: 0;
     margin-bottom: 0;
   }
   .block {
-    > h1, > h2, > h3, > h4, > p {
+    > h1,
+    > h2,
+    > h3,
+    > h4,
+    > p {
       &:first-child {
         margin-top: 10px;
       }
@@ -67,7 +68,7 @@
   });
   .rtl({
     padding-right: 0;
-  })
+  });
 }
 .accordion-item-content {
   position: relative;
