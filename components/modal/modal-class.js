@@ -12,9 +12,18 @@ class Modal extends Event {
     super(params, [app]);
 
     const modal = this;
+
     const defaults = {};
+
     modal.params = Utils.extend(defaults, params);
     modal.opened = false;
+
+    let $containerEl = modal.params.containerEl ? $(modal.params.containerEl).eq(0) : app.$el;
+    if (!$containerEl.length) $containerEl = app.$el;
+
+    modal.$containerEl = $containerEl;
+    modal.containerEl = $containerEl[0];
+
     return this;
   }
 
@@ -65,6 +74,9 @@ class Modal extends Event {
     }
 
     if (!$el || $el.hasClass('modal-in')) {
+      if (animateModal === false && $el[0] && type !== 'dialog') {
+        $el[0].style.display = 'block';
+      }
       return modal;
     }
 
@@ -73,7 +85,7 @@ class Modal extends Event {
       if ($('.dialog.modal-in').length > 0) {
         pushToQueue = true;
       } else if (openedModals.length > 0) {
-        openedModals.forEach(openedModal => {
+        openedModals.forEach((openedModal) => {
           if (openedModal.type === 'dialog') pushToQueue = true;
         });
       }
@@ -85,8 +97,8 @@ class Modal extends Event {
 
     const $modalParentEl = $el.parent();
     const wasInDom = $el.parents(document).length > 0;
-    if (app.params.modal.moveToRoot && !$modalParentEl.is(app.root)) {
-      app.root.append($el);
+    if (!$modalParentEl.is(modal.$containerEl)) {
+      modal.$containerEl.append($el);
       modal.once(`${type}Closed`, () => {
         if (wasInDom) {
           $modalParentEl.append($el);
@@ -156,7 +168,10 @@ class Modal extends Event {
     if ($backdropEl) {
       let needToHideBackdrop = true;
       if (modal.type === 'popup') {
-        modal.$el.prevAll('.popup.modal-in').each((index, popupEl) => {
+        modal.$el
+          .prevAll('.popup.modal-in')
+          .add(modal.$el.nextAll('.popup.modal-in'))
+          .each((index, popupEl) => {
           const popupInstance = popupEl.f7Modal;
           if (!popupInstance) return;
           if (
@@ -176,6 +191,7 @@ class Modal extends Event {
 
     // Modal
     $el[animate ? 'removeClass' : 'addClass']('not-animated');
+
     function transitionEnd() {
       if ($el.hasClass('modal-out')) {
         modal.onClosed();
@@ -194,10 +210,7 @@ class Modal extends Event {
       // Emit close
       modal.onClose();
     } else {
-      $el
-        .addClass('not-animated')
-        .removeClass('modal-in')
-        .addClass('modal-out');
+      $el.addClass('not-animated').removeClass('modal-in').addClass('modal-out');
       // Emit close
       modal.onClose();
       modal.onClosed();

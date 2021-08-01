@@ -1,5 +1,5 @@
 /* === Stepper === */
-@import url('./text-editor-vars.less');
+@import './text-editor-vars.less';
 
 .text-editor {
   margin: var(--f7-text-editor-margin);
@@ -25,7 +25,7 @@
   position: sticky;
   left: 0;
   top: 0;
-  padding: var(--f7-text-editor-toolbar-padding);;
+  padding: var(--f7-text-editor-toolbar-padding);
   flex-shrink: 0;
   box-shadow: var(--f7-text-editor-toolbar-box-shadow);
   box-sizing: border-box;
@@ -56,10 +56,13 @@ button.text-editor-button {
   color: var(--f7-text-editor-button-text-color);
   background-color: var(--f7-text-editor-button-bg-color);
   flex-shrink: 0;
-  i {
+  i,
+  .f7-icons,
+  .material-icons {
     font-size: var(--f7-text-editor-button-icon-size);
     font-style: normal;
-    sup, sub {
+    sup,
+    sub {
       font-size: 60%;
     }
   }
@@ -148,11 +151,11 @@ button.text-editor-button {
   }
 }
 .if-ios-theme({
-  @import url('./text-editor-ios.less');
+  @import './text-editor-ios.less';
 });
 .if-md-theme({
-  @import url('./text-editor-md.less');
+  @import './text-editor-md.less';
 });
 .if-aurora-theme({
-  @import url('./text-editor-aurora.less');
+  @import './text-editor-aurora.less';
 });

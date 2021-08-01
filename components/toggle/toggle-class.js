@@ -57,10 +57,8 @@ class Toggle extends Event {
     let touchStartChecked;
     function handleTouchStart(e) {
       if (isTouched || toggle.disabled) return;
-      touchesStart.x =
-        e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
-      touchesStart.y =
-        e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
+      touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
+      touchesStart.y = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
       touchesDiff = 0;
 
       isTouched = true;
@@ -83,8 +81,7 @@ class Toggle extends Event {
 
       if (typeof isScrolling === 'undefined') {
         isScrolling = !!(
-          isScrolling ||
-          Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
+          isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
         );
       }
       if (isScrolling) {

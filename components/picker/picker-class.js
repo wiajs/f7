@@ -5,6 +5,7 @@ class Picker extends Event {
   constructor(app, params = {}) {
     super(params, [app]);
     const picker = this;
+    const device = app.device();
     picker.params = Utils.extend({}, app.params.picker, params);
 
     let $containerEl;
@@ -17,7 +18,6 @@ class Picker extends Event {
     if (picker.params.inputEl) {
       $inputEl = $(picker.params.inputEl);
     }
-
 
     let $scrollToEl = picker.params.scrollToInput ? $inputEl : undefined;
     if (picker.params.scrollToEl) {
@@ -32,7 +32,11 @@ class Picker extends Event {
       $containerEl,
       containerEl: $containerEl && $containerEl[0],
       inline: $containerEl && $containerEl.length > 0,
-      needsOriginFix: app.device.ios || ((window.navigator.userAgent.toLowerCase().indexOf('safari') >= 0 && window.navigator.userAgent.toLowerCase().indexOf('chrome') < 0) && !app.device.android),
+      needsOriginFix:
+        device.ios ||
+        (window.navigator.userAgent.toLowerCase().indexOf('safari') >= 0 &&
+          window.navigator.userAgent.toLowerCase().indexOf('chrome') < 0 &&
+          !device.android),
       cols: [],
       $inputEl,
       inputEl: $inputEl && $inputEl[0],
@@ -78,12 +82,18 @@ class Picker extends Event {
         picker.$inputEl.on('click', onInputClick);
         if (picker.params.inputReadOnly) {
           picker.$inputEl.on('focus mousedown', onInputFocus);
+          if (picker.$inputEl[0]) {
+            picker.$inputEl[0].f7ValidateReadonly = true;
+          }
         }
       },
       detachInputEvents() {
         picker.$inputEl.off('click', onInputClick);
         if (picker.params.inputReadOnly) {
           picker.$inputEl.off('focus mousedown', onInputFocus);
+          if (picker.$inputEl[0]) {
+            delete picker.$inputEl[0].f7ValidateReadonly;
+          }
         }
       },
       attachHtmlEvents() {
@@ -131,18 +141,19 @@ class Picker extends Event {
   isPopover() {
     const picker = this;
     const { app, modal, params } = picker;
+    const device = app.device();
     if (params.openIn === 'sheet') return false;
     if (modal && modal.type !== 'popover') return false;
 
     if (!picker.inline && picker.inputEl) {
       if (params.openIn === 'popover') return true;
-      if (app.device.ios) {
-        return !!app.device.ipad;
+      if (device.ios) {
+        return !!device.ipad;
       }
       if (app.width >= 768) {
         return true;
       }
-      if (app.device.desktop && app.theme === 'aurora') {
+      if (device.desktop && app.theme === 'aurora') {
         return true;
       }
     }
@@ -188,7 +199,11 @@ class Picker extends Event {
       const noDividerColumns = picker.params.cols.filter(c => !c.divider);
       for (let i = 0; i < noDividerColumns.length; i += 1) {
         column = noDividerColumns[i];
-        if (column.displayValues !== undefined && column.values !== undefined && column.values.indexOf(newValue[i]) !== -1) {
+        if (
+          column.displayValues !== undefined &&
+          column.values !== undefined &&
+          column.values.indexOf(newValue[i]) !== -1
+        ) {
           newDisplayValue.push(column.displayValues[column.values.indexOf(newValue[i])]);
         } else {
           newDisplayValue.push(newValue[i]);
@@ -232,33 +247,38 @@ class Picker extends Event {
   renderToolbar() {
     const picker = this;
     if (picker.params.renderToolbar) return picker.params.renderToolbar.call(picker, picker);
-    return `
+    return (
       <div class="toolbar toolbar-top no-shadow">
         <div class="toolbar-inner">
           <div class="left"></div>
           <div class="right">
-            <a class="link sheet-close popover-close">${picker.params.toolbarCloseText}</a>
+            <a class="link sheet-close popover-close">{picker.params.toolbarCloseText}</a>
           </div>
         </div>
       </div>
-    `.trim();
+    );
   }
   // eslint-disable-next-line
   renderColumn(col, onlyItems) {
-    const colClasses = `picker-column ${col.textAlign ? `picker-column-${col.textAlign}` : ''} ${col.cssClass || ''}`;
+    const colClasses = `picker-column ${col.textAlign ? `picker-column-${col.textAlign}` : ''} ${
+      col.cssClass || ''
+    }`;
     let columnHtml;
     let columnItemsHtml;
 
     if (col.divider) {
+      // prettier-ignore
       columnHtml = `
         <div class="${colClasses} picker-column-divider">${col.content}</div>
       `;
     } else {
+      // prettier-ignore
       columnItemsHtml = col.values.map((value, index) => `
         <div class="picker-item" data-picker-value="${value}">
           <span>${col.displayValues ? col.displayValues[index] : value}</span>
         </div>
       `).join('');
+      // prettier-ignore
       columnHtml = `
         <div class="${colClasses}">
           <div class="picker-items">${columnItemsHtml}</div>
@@ -272,15 +292,15 @@ class Picker extends Event {
   renderInline() {
     const picker = this;
     const { rotateEffect, cssClass, toolbar } = picker.params;
-    const inlineHtml = `
-      <div class="picker picker-inline ${rotateEffect ? 'picker-3d' : ''} ${cssClass || ''}">
-        ${toolbar ? picker.renderToolbar() : ''}
+    const inlineHtml = (
+      <div class={`picker picker-inline ${rotateEffect ? 'picker-3d' : ''} ${cssClass || ''}`}>
+        {toolbar && picker.renderToolbar()}
         <div class="picker-columns">
-          ${picker.cols.map(col => picker.renderColumn(col)).join('')}
+          {picker.cols.map((col) => picker.renderColumn(col))}
           <div class="picker-center-highlight"></div>
         </div>
       </div>
-    `.trim();
+    );
 
     return inlineHtml;
   }
@@ -288,15 +308,19 @@ class Picker extends Event {
   renderSheet() {
     const picker = this;
     const { rotateEffect, cssClass, toolbar } = picker.params;
-    const sheetHtml = `
-      <div class="sheet-modal picker picker-sheet ${rotateEffect ? 'picker-3d' : ''} ${cssClass || ''}">
-        ${toolbar ? picker.renderToolbar() : ''}
+    const sheetHtml = (
+      <div
+        class={`sheet-modal picker picker-sheet ${rotateEffect ? 'picker-3d' : ''} ${
+          cssClass || ''
+        }`}
+      >
+        {toolbar && picker.renderToolbar()}
         <div class="sheet-modal-inner picker-columns">
-          ${picker.cols.map(col => picker.renderColumn(col)).join('')}
+          {picker.cols.map((col) => picker.renderColumn(col))}
           <div class="picker-center-highlight"></div>
         </div>
       </div>
-    `.trim();
+    );
 
     return sheetHtml;
   }
@@ -304,19 +328,19 @@ class Picker extends Event {
   renderPopover() {
     const picker = this;
     const { rotateEffect, cssClass, toolbar } = picker.params;
-    const popoverHtml = `
+    const popoverHtml = (
       <div class="popover picker-popover">
         <div class="popover-inner">
-          <div class="picker ${rotateEffect ? 'picker-3d' : ''} ${cssClass || ''}">
-            ${toolbar ? picker.renderToolbar() : ''}
+          <div class={`picker ${rotateEffect ? 'picker-3d' : ''} ${cssClass || ''}`}>
+            {toolbar && picker.renderToolbar()}
             <div class="picker-columns">
-              ${picker.cols.map(col => picker.renderColumn(col)).join('')}
+              {picker.cols.map((col) => picker.renderColumn(col))}
               <div class="picker-center-highlight"></div>
             </div>
           </div>
         </div>
       </div>
-    `.trim();
+    );
 
     return popoverHtml;
   }
@@ -344,10 +368,7 @@ class Picker extends Event {
     // Init cols
     $el.find('.picker-column').each((index, colEl) => {
       let updateItems = true;
-      if (
-        (!initialized && params.value)
-        || (initialized && value)
-      ) {
+      if ((!initialized && params.value) || (initialized && value)) {
         updateItems = false;
       }
       picker.initColumn(colEl, updateItems);
@@ -405,8 +426,17 @@ class Picker extends Event {
     picker.cols.forEach((col) => {
       if (col.destroy) col.destroy();
     });
-    if (picker.$inputEl && app.theme === 'md') {
+
+    if (picker.$inputEl) {
+      if (app.theme === 'md') {
       picker.$inputEl.trigger('blur');
+      } else {
+        const validate = picker.$inputEl.attr('validate');
+        const required = picker.$inputEl.attr('required');
+        if (validate && required) {
+          app.input.validate(picker.$inputEl);
+        }
+      }
     }
 
     if (picker.$el) {
@@ -475,9 +505,15 @@ class Picker extends Event {
           picker.$el[0].f7Picker = picker;
           picker.onOpen();
         },
-        opened() { picker.onOpened(); },
-        close() { picker.onClose(); },
-        closed() { picker.onClosed(); },
+        opened() {
+          picker.onOpened();
+        },
+        close() {
+          picker.onClose();
+        },
+        closed() {
+          picker.onClosed();
+        },
       },
     };
     if (modalType === 'sheet') {

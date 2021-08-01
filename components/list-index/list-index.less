@@ -1,5 +1,5 @@
 /* === Indexed List === */
-@import url('./list-index-vars.less');
+@import './list-index-vars.less';
 
 .list-index {
   position: absolute;
@@ -88,8 +88,7 @@
 .navbar ~ .toolbar-top,
 .navbars ~ .toolbar-top,
 .ios .navbar ~ .toolbar-top-ios,
-.ios .navbars ~ .toolbar-top-ios
-.md .navbar ~ .toolbar-top-md {
+.ios .navbars ~ .toolbar-top-ios .md .navbar ~ .toolbar-top-md {
   ~ .list-index {
     top: calc(var(--f7-navbar-height) + var(--f7-toolbar-height));
   }
@@ -124,11 +123,11 @@
 }
 
 .if-ios-theme({
-  @import url('./list-index-ios.less');
+  @import './list-index-ios.less';
 });
 .if-md-theme({
-  @import url('./list-index-md.less');
+  @import './list-index-md.less';
 });
 .if-aurora-theme({
-  @import url('./list-index-aurora.less');
+  @import './list-index-aurora.less';
 });

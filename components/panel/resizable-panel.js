@@ -27,7 +27,7 @@ function resizablePanel(panel) {
   function transformCSSWidth(v) {
     if (!v) return null;
     if (v.indexOf('%') >= 0 || v.indexOf('vw') >= 0) {
-      return parseInt(v, 10) / 100 * app.width;
+      return (parseInt(v, 10) / 100) * app.width;
     }
     const newV = parseInt(v, 10);
     if (Number.isNaN(newV)) return null;
@@ -59,6 +59,9 @@ function resizablePanel(panel) {
       $htmlEl.css('cursor', 'col-resize');
       if (effect === 'reveal' || visibleByBreakpoint) {
         $viewEl = $(panel.getViewEl());
+        if (panel.$containerEl && panel.$containerEl.hasClass('page')) {
+          $viewEl.add(panel.$containerEl.children('.page-content, .tabs, .fab'));
+        }
       }
       if (effect === 'reveal' && !visibleByBreakpoint) {
         $backdropEl.transition(0);
@@ -70,7 +73,7 @@ function resizablePanel(panel) {
 
     e.preventDefault();
 
-    touchesDiff = (pageX - touchesStart.x);
+    touchesDiff = pageX - touchesStart.x;
 
     let newPanelWidth = side === 'left' ? panelWidth + touchesDiff : panelWidth - touchesDiff;
     if (panelMinWidth && !Number.isNaN(panelMinWidth)) {
@@ -85,10 +88,14 @@ function resizablePanel(panel) {
     $el[0].style.width = `${newPanelWidth}px`;
     if (effect === 'reveal' && !visibleByBreakpoint) {
       if ($viewEl) {
-        $viewEl.transform(`translate3d(${side === 'left' ? newPanelWidth : -newPanelWidth}px, 0, 0)`);
+        $viewEl.transform(
+          `translate3d(${side === 'left' ? newPanelWidth : -newPanelWidth}px, 0, 0)`,
+        );
       }
       if ($backdropEl) {
-        $backdropEl.transform(`translate3d(${side === 'left' ? newPanelWidth : -newPanelWidth}px, 0, 0)`);
+        $backdropEl.transform(
+          `translate3d(${side === 'left' ? newPanelWidth : -newPanelWidth}px, 0, 0)`
+        );
       }
     } else if (visibleByBreakpoint && $viewEl) {
       $viewEl.css(`margin-${side}`, `${newPanelWidth}px`);
@@ -115,7 +122,6 @@ function resizablePanel(panel) {
     }
     $el.removeClass('panel-resizing');
     Utils.nextFrame(() => {
-      if (visibleByBreakpoint) return;
       $el.transition('');
       if (effect === 'reveal') {
         $backdropEl.transition('');

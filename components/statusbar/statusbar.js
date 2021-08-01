@@ -1,14 +1,29 @@
 import {Utils, Device} from '@wiajs/core';
 
+const isCapacitor = () => {
+  return (
+    window.Capacitor &&
+    window.Capacitor.isNative &&
+    window.Capacitor.Plugins &&
+    window.Capacitor.Plugins.StatusBar
+  );
+};
+
 const Statusbar = {
   hide() {
     if (Device.cordova && window.StatusBar) {
       window.StatusBar.hide();
     }
+    if (isCapacitor()) {
+      window.Capacitor.Plugins.StatusBar.hide();
+    }
   },
   show() {
     if (Device.cordova && window.StatusBar) {
       window.StatusBar.show();
+    }
+    if (isCapacitor()) {
+      window.Capacitor.Plugins.StatusBar.show();
     }
   },
   onClick() {
@@ -16,17 +31,28 @@ const Statusbar = {
     let pageContent;
     if ($('.popup.modal-in').length > 0) {
       // Check for opened popup
-      pageContent = $('.popup.modal-in').find('.page:not(.page-previous):not(.page-next):not(.cached)').find('.page-content');
+      pageContent = $('.popup.modal-in')
+        .find('.page:not(.page-previous):not(.page-next):not(.cached)')
+        .find('.page-content');
     } else if ($('.panel.panel-in').length > 0) {
       // Check for opened panel
-      pageContent = $('.panel.panel-in').find('.page:not(.page-previous):not(.page-next):not(.cached)').find('.page-content');
+      pageContent = $('.panel.panel-in')
+        .find('.page:not(.page-previous):not(.page-next):not(.cached)')
+        .find('.page-content');
     } else if ($('.views > .view.tab-active').length > 0) {
       // View in tab bar app layout
-      pageContent = $('.views > .view.tab-active').find('.page:not(.page-previous):not(.page-next):not(.cached)').find('.page-content');
+      pageContent = $('.views > .view.tab-active')
+        .find('.page:not(.page-previous):not(.page-next):not(.cached)')
+        .find('.page-content');
     } else if ($('.views').length > 0) {
-      pageContent = $('.views').find('.page:not(.page-previous):not(.page-next):not(.cached)').find('.page-content');
+      pageContent = $('.views')
+        .find('.page:not(.page-previous):not(.page-next):not(.cached)')
+        .find('.page-content');
     } else {
-      pageContent = app.root.children('.view').find('.page:not(.page-previous):not(.page-next):not(.cached)').find('.page-content');
+      pageContent = app.$el
+        .children('.view')
+        .find('.page:not(.page-previous):not(.page-next):not(.cached)')
+        .find('.page-content');
     }
 
     if (pageContent && pageContent.length > 0) {
@@ -45,54 +71,76 @@ const Statusbar = {
         window.StatusBar.styleDefault();
       }
     }
+    if (isCapacitor()) {
+      if (color === 'white') {
+        window.Capacitor.Plugins.StatusBar.setStyle({ style: 'DARK' });
+      } else {
+        window.Capacitor.Plugins.StatusBar.setStyle({ style: 'LIGHT' });
+      }
+    }
   },
   setBackgroundColor(color) {
     if (Device.cordova && window.StatusBar) {
       window.StatusBar.backgroundColorByHexString(color);
     }
+    if (isCapacitor()) {
+      window.Capacitor.Plugins.StatusBar.setBackgroundColor({ color });
+    }
   },
   isVisible() {
-    if (Device.cordova && window.StatusBar) {
-      return window.StatusBar.isVisible;
-    }
-    return false;
+    return new Promise((resolve) => {
+      if (Device.cordova && window.StatusBar) {
+        resolve(window.StatusBar.isVisible);
+      }
+      if (isCapacitor()) {
+        window.Capacitor.Plugins.StatusBar.getInfo().then((info) => {
+          resolve(info.visible);
+        });
+      }
+      resolve(false);
+    });
   },
   overlaysWebView(overlays = true) {
     if (Device.cordova && window.StatusBar) {
       window.StatusBar.overlaysWebView(overlays);
+    }
+    if (isCapacitor()) {
+      window.Capacitor.Plugins.StatusBar.setOverlaysWebView({ overlay: overlays });
     }
   },
   init() {
     const app = this;
     const params = app.params.statusbar;
     if (!params.enabled) return;
+    const isCordova = Device.cordova && window.StatusBar;
+    const isCap = isCapacitor();
 
-    if (Device.cordova && window.StatusBar) {
+    if (isCordova || isCap) {
       if (params.scrollTopOnClick) {
         $(window).on('statusTap', Statusbar.onClick.bind(app));
       }
       if (Device.ios) {
         if (params.iosOverlaysWebView) {
-          window.StatusBar.overlaysWebView(true);
+          Statusbar.overlaysWebView(true);
         } else {
-          window.StatusBar.overlaysWebView(false);
+          Statusbar.overlaysWebView(false);
         }
         if (params.iosTextColor === 'white') {
-          window.StatusBar.styleLightContent();
+          Statusbar.setTextColor('white');
         } else {
-          window.StatusBar.styleDefault();
+          Statusbar.setTextColor('black');
         }
       }
       if (Device.android) {
         if (params.androidOverlaysWebView) {
-          window.StatusBar.overlaysWebView(true);
+          Statusbar.overlaysWebView(true);
         } else {
-          window.StatusBar.overlaysWebView(false);
+          Statusbar.overlaysWebView(false);
         }
         if (params.androidTextColor === 'white') {
-          window.StatusBar.styleLightContent();
+          Statusbar.setTextColor('white');
         } else {
-          window.StatusBar.styleDefault();
+          Statusbar.setTextColor('black');
         }
       }
     }
@@ -124,16 +172,8 @@ export default {
   },
   create() {
     const app = this;
-    Utils.extend(app, {
-      statusbar: {
-        hide: Statusbar.hide,
-        show: Statusbar.show,
-        overlaysWebView: Statusbar.overlaysWebView,
-        setTextColor: Statusbar.setTextColor,
-        setBackgroundColor: Statusbar.setBackgroundColor,
-        isVisible: Statusbar.isVisible,
-        init: Statusbar.init.bind(app),
-      },
+    Utils.bindMethods(app, {
+      statusbar: Statusbar,
     });
   },
   on: {

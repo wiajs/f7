@@ -33,6 +33,7 @@ export default {
       searchbarPlaceholder: 'Search...',
       searchbarDisableText: 'Cancel',
       searchbarDisableButton: undefined,
+      searchbarSpellcheck: false,
 
       popupPush: false,
       popupSwipeToClose: undefined,
@@ -53,7 +54,7 @@ export default {
       navbarColorTheme: undefined,
 
       // Routing
-      routableModals: true,
+      routableModals: false,
       url: 'select/',
 
       // Custom render functions
@@ -63,7 +64,6 @@ export default {
       renderItem: undefined,
       renderSearchbar: undefined,
       renderNavbar: undefined,
-
     },
   },
   static: {

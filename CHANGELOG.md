@@ -1,5 +1,51 @@
 # Change Log
 
+## 2021-08-01
+
+- \+ pie-chart
+- \+ area-chart
+- \+ searchbar\remove-diacritics
+
+## 2021-07-31
+
+- 组件更新到 F7 的 6.1.1 版本。
+- 增加 area-chart pie-chart 组件
+- 增加 jsx 解析器，支持 react 语法
+  通过 /\*_ @jsx $jsx _/ 让 @babel/plugin-transform-react-jsx 使用指定的函数解析 js 代码中的 html 代码！
+  无需使用 插值字符串，带语法支持，js 中写 html 代码，确实很舒服。
+- wia 项目需配置为 jsx 项目，否则无法编译 jsx 语法。
+  - eslintrc.js 需配置为支持 jsx 语法高亮
+  - eslintrc.js 使用 plugin:prettier/recommended。
+    需安装 prettier，否则 eslint 无法加载 prettier 模块而停止工作。
+  - babel.config.js 需配置为 @babel/preset-react，支持 jsx 语法转换。
+    presets: ['@babel/preset-react', ['@babel/preset-env', { modules, loose: true }]],
+  - prettier.config.js
+    增加 endOfLine: 'auto', 否则 CRLF 提示错误！
+- 编译 f7 原项目报错。
+  - build\core\components 不存在，手工创建。
+  - build\core\modules 不存在，手工创建。
+  - getOutput 路径问题
+    return outputPath.replace(/\\/gim, '/');
+
+### f7 组件 修改为 wiajs f7 组件
+
+```js
+import $ from '../../shared/dom7';
+import { extend, deleteProps } from '../../shared/utils';
+import Framework7Class from '../../shared/class';
+/\*_ @jsx $jsx _/;
+import $jsx from '../../shared/$jsx';
+
+class AreaChart extends Framework7Class {}
+
+// 改为：
+
+/\*_ @jsx jsx _/;
+import { Utils, Event, jsx } from '@wiajs/core';
+
+class AreaChart extends Event {}
+```
+
 ## 2021-07-12
 
 部分组件更新到 F7 的 6.00.10 版本。

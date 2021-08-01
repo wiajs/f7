@@ -29,7 +29,8 @@
     }
   }
   .ptr-content:not(.ptr-refreshing) {
-    .ptr-preloader .preloader {
+    .ptr-preloader .preloader,
+    .ptr-preloader .preloader-inner {
       animation: none;
     }
   }
@@ -53,7 +54,8 @@
     }
   }
   .ptr-no-navbar,
-  .ptr-with-navbar-large-transparent {
+  .ptr-with-navbar-large-transparent,
+  .ptr-with-navbar-transparent {
     margin-top: calc(-1 * var(--f7-ptr-size));
     height: calc(100% + var(--f7-ptr-size));
     .ptr-preloader {
@@ -87,7 +89,8 @@
       }
     }
   }
-  .ptr-with-navbar-large-transparent {
+  .ptr-with-navbar-large-transparent,
+  .ptr-with-navbar-transparent {
     .ptr-preloader {
       .preloader,
       .ptr-arrow {

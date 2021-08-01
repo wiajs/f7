@@ -5,6 +5,7 @@ class Range extends Event {
     super(params, [app]);
 
     const range = this;
+    const support = Support;
 
     const defaults = {
       el: null,
@@ -38,12 +39,12 @@ class Range extends Event {
 
     const dataset = $el.dataset();
 
-    ('step min max value scaleSteps scaleSubSteps').split(' ').forEach((paramName) => {
+    'step min max value scaleSteps scaleSubSteps'.split(' ').forEach((paramName) => {
       if (typeof params[paramName] === 'undefined' && typeof dataset[paramName] !== 'undefined') {
         range.params[paramName] = parseFloat(dataset[paramName]);
       }
     });
-    ('dual label vertical verticalReversed scale').split(' ').forEach((paramName) => {
+    'dual label vertical verticalReversed scale'.split(' ').forEach((paramName) => {
       if (typeof params[paramName] === 'undefined' && typeof dataset[paramName] !== 'undefined') {
         range.params[paramName] = dataset[paramName];
       }
@@ -66,7 +67,18 @@ class Range extends Event {
     }
 
     const {
-      dual, step, label, min, max, value, vertical, verticalReversed, scale, scaleSteps, scaleSubSteps, limitKnobPosition,
+      dual,
+      step,
+      label,
+      min,
+      max,
+      value,
+      vertical,
+      verticalReversed,
+      scale,
+      scaleSteps,
+      scaleSubSteps,
+      limitKnobPosition,
     } = range.params;
 
     Utils.extend(range, {
@@ -91,7 +103,7 @@ class Range extends Event {
     });
 
     if ($inputEl) {
-      ('step min max').split(' ').forEach((paramName) => {
+      'step min max'.split(' ').forEach((paramName) => {
         if (!params[paramName] && $inputEl.attr(paramName)) {
           range.params[paramName] = parseFloat($inputEl.attr(paramName));
           range[paramName] = parseFloat($inputEl.attr(paramName));
@@ -127,6 +139,7 @@ class Range extends Event {
     $barEl.append($barActiveEl);
 
     // Create Knobs
+    // prettier-ignore
     const knobHTML = `
       <div class="range-knob-wrap">
         <div class="range-knob"></div>
@@ -155,7 +168,7 @@ class Range extends Event {
 
     // Scale
     let $scaleEl;
-    if (range.scale && range.scaleSteps > 1) {
+    if (range.scale && range.scaleSteps >= 1) {
       $scaleEl = $(`
         <div class="range-scale">
           ${range.renderScale()}
@@ -213,12 +226,12 @@ class Range extends Event {
         progress = (touchesStart.y - rangeOffsetTop) / range.rangeHeight;
         if (!range.verticalReversed) progress = 1 - progress;
       } else if (range.app.rtl) {
-        progress = ((rangeOffsetLeft + range.rangeWidth) - touchesStart.x) / range.rangeWidth;
+        progress = (rangeOffsetLeft + range.rangeWidth - touchesStart.x) / range.rangeWidth;
       } else {
         progress = (touchesStart.x - rangeOffsetLeft) / range.rangeWidth;
       }
 
-      let newValue = (progress * (range.max - range.min)) + range.min;
+      let newValue = progress * (range.max - range.min) + range.min;
       if (range.dual) {
         if (Math.abs(range.value[0] - newValue) < Math.abs(range.value[1] - newValue)) {
           dualValueIndex = 0;
@@ -231,7 +244,7 @@ class Range extends Event {
         }
       } else {
         $touchedKnobEl = range.knobs[0];
-        newValue = (progress * (range.max - range.min)) + range.min;
+        newValue = progress * (range.max - range.min) + range.min;
       }
       Utils.nextTick(() => {
         if (isTouched) $touchedKnobEl.addClass('range-knob-active-state');
@@ -257,7 +270,9 @@ class Range extends Event {
       if (typeof pageX === 'undefined' && typeof pageY === 'undefined') return;
 
       if (typeof isScrolling === 'undefined' && !range.vertical) {
-        isScrolling = !!(isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x));
+        isScrolling = !!(
+          isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
+        );
       }
       if (isScrolling) {
         isTouched = false;
@@ -270,12 +285,12 @@ class Range extends Event {
         progress = (pageY - rangeOffsetTop) / range.rangeHeight;
         if (!range.verticalReversed) progress = 1 - progress;
       } else if (range.app.rtl) {
-        progress = ((rangeOffsetLeft + range.rangeWidth) - pageX) / range.rangeWidth;
+        progress = (rangeOffsetLeft + range.rangeWidth - pageX) / range.rangeWidth;
       } else {
         progress = (pageX - rangeOffsetLeft) / range.rangeWidth;
       }
 
-      let newValue = (progress * (range.max - range.min)) + range.min;
+      let newValue = progress * (range.max - range.min) + range.min;
       if (range.dual) {
         let leftValue;
         let rightValue;
@@ -318,17 +333,10 @@ class Range extends Event {
       valueChangedByTouch = false;
       if (typeof range.previousValue !== 'undefined') {
         if (
-          (
-            range.dual
-            && (
-              range.previousValue[0] !== range.value[0]
-              || range.previousValue[1] !== range.value[1]
-            )
-          )
-          || (
-            !range.dual
-            && range.previousValue !== range.value
-          )
+          (range.dual &&
+            (range.previousValue[0] !== range.value[0] ||
+              range.previousValue[1] !== range.value[1])) ||
+          (!range.dual && range.previousValue !== range.value)
         ) {
           range.$el.trigger('range:changed', range.value);
           range.emit('local::changed rangeChanged', range, range.value);
@@ -344,21 +352,23 @@ class Range extends Event {
     let parentPanel;
     let parentPage;
     range.attachEvents = function attachEvents() {
-      const passive = Support.passiveListener ? { passive: true } : false;
+      const passive = support.passiveListener ? { passive: true } : false;
       range.$el.on(app.touchEvents.start, handleTouchStart, passive);
       app.on('touchmove', handleTouchMove);
       app.on('touchend:passive', handleTouchEnd);
       app.on('tabShow', handleResize);
       app.on('resize', handleResize);
-      parentModals = range.$el.parents('.sheet-modal, .actions-modal, .popup, .popover, .login-screen, .dialog, .toast');
+      parentModals = range.$el.parents(
+        '.sheet-modal, .actions-modal, .popup, .popover, .login-screen, .dialog, .toast'
+      );
       parentModals.on('modal:open', handleResize);
       parentPanel = range.$el.parents('.panel');
-      parentPanel.on('panel:open', handleResize);
+      parentPanel.on('panel:open panel:resize', handleResize);
       parentPage = range.$el.parents('.page').eq(0);
       parentPage.on('page:reinit', handleResize);
     };
     range.detachEvents = function detachEvents() {
-      const passive = Support.passiveListener ? { passive: true } : false;
+      const passive = support.passiveListener ? { passive: true } : false;
       range.$el.off(app.touchEvents.start, handleTouchStart, passive);
       app.off('touchmove', handleTouchMove);
       app.off('touchend:passive', handleTouchEnd);
@@ -368,7 +378,7 @@ class Range extends Event {
         parentModals.off('modal:open', handleResize);
       }
       if (parentPanel) {
-        parentPanel.off('panel:open', handleResize);
+        parentPanel.off('panel:open panel:resize', handleResize);
       }
       if (parentPage) {
         parentPage.off('page:reinit', handleResize);
@@ -422,10 +432,14 @@ class Range extends Event {
     const rangeSize = vertical ? rangeHeight : rangeWidth;
     // eslint-disable-next-line
     const positionProperty = vertical
-      ? (verticalReversed ? 'top' : 'bottom')
-      : (app.rtl ? 'right' : 'left');
+      ? verticalReversed
+        ? 'top'
+        : 'bottom'
+      : app.rtl
+      ? 'right'
+      : 'left';
     if (range.dual) {
-      const progress = [((value[0] - min) / (max - min)), ((value[1] - min) / (max - min))];
+      const progress = [(value[0] - min) / (max - min), (value[1] - min) / (max - min)];
       $barActiveEl.css({
         [positionProperty]: `${progress[0] * 100}%`,
         [vertical ? 'height' : 'width']: `${(progress[1] - progress[0]) * 100}%`,
@@ -433,22 +447,23 @@ class Range extends Event {
       knobs.forEach(($knobEl, knobIndex) => {
         let startPos = rangeSize * progress[knobIndex];
         if (limitKnobPosition) {
-          const realStartPos = (rangeSize * progress[knobIndex]) - (knobSize / 2);
+          const realStartPos = rangeSize * progress[knobIndex] - knobSize / 2;
           if (realStartPos < 0) startPos = knobSize / 2;
-          if ((realStartPos + knobSize) > rangeSize) startPos = rangeSize - (knobSize / 2);
+          if (realStartPos + knobSize > rangeSize) startPos = rangeSize - knobSize / 2;
         }
         $knobEl.css(positionProperty, `${startPos}px`);
-        if (label) labels[knobIndex].text(range.formatLabel(value[knobIndex], labels[knobIndex][0]));
+        if (label)
+          labels[knobIndex].text(range.formatLabel(value[knobIndex], labels[knobIndex][0]));
       });
     } else {
-      const progress = ((value - min) / (max - min));
+      const progress = (value - min) / (max - min);
       $barActiveEl.css(vertical ? 'height' : 'width', `${progress * 100}%`);
 
       let startPos = rangeSize * progress;
       if (limitKnobPosition) {
-        const realStartPos = (rangeSize * progress) - (knobSize / 2);
+        const realStartPos = rangeSize * progress - knobSize / 2;
         if (realStartPos < 0) startPos = knobSize / 2;
-        if ((realStartPos + knobSize) > rangeSize) startPos = rangeSize - (knobSize / 2);
+        if (realStartPos + knobSize > rangeSize) startPos = rangeSize - knobSize / 2;
       }
       knobs[0].css(positionProperty, `${startPos}px`);
       if (label) labels[0].text(range.formatLabel(value, labels[0][0]));
@@ -477,7 +492,9 @@ class Range extends Event {
       if (newValue[0] > newValue[1]) {
         newValues = [newValues[0], newValues[0]];
       }
-      newValues = newValues.map(value => Math.max(Math.min(Math.round(value / step) * step, max), min));
+      newValues = newValues.map((value) =>
+        Math.max(Math.min(Math.round(value / step) * step, max), min)
+      );
       if (newValues[0] === range.value[0] && newValues[1] === range.value[1]) {
         return range;
       }
@@ -538,27 +555,30 @@ class Range extends Event {
 
     // eslint-disable-next-line
     const positionProperty = vertical
-      ? (verticalReversed ? 'top' : 'bottom')
-      : (app.rtl ? 'right' : 'left');
+      ? verticalReversed
+        ? 'top'
+        : 'bottom'
+      : app.rtl
+      ? 'right'
+      : 'left';
 
     let html = '';
-
-    Array
-      .from({ length: range.scaleSteps + 1 })
-      .forEach((scaleEl, index) => {
+    Array.from({ length: range.scaleSteps + 1 }).forEach((scaleEl, index) => {
         const scaleStepValue = (range.max - range.min) / range.scaleSteps;
         const scaleValue = range.min + scaleStepValue * index;
-        const progress = ((scaleValue - range.min) / (range.max - range.min));
-        html += `<div class="range-scale-step" style="${positionProperty}: ${progress * 100}%">${range.formatScaleLabel(scaleValue)}</div>`;
+      const progress = (scaleValue - range.min) / (range.max - range.min);
+      html += `<div class="range-scale-step" style="${positionProperty}: ${
+        progress * 100
+      }%">${range.formatScaleLabel(scaleValue)}</div>`;
 
         if (range.scaleSubSteps && range.scaleSubSteps > 1 && index < range.scaleSteps) {
-          Array
-            .from({ length: range.scaleSubSteps - 1 })
-            .forEach((subStepEl, subIndex) => {
+        Array.from({ length: range.scaleSubSteps - 1 }).forEach((subStepEl, subIndex) => {
               const subStep = scaleStepValue / range.scaleSubSteps;
               const scaleSubValue = scaleValue + subStep * (subIndex + 1);
-              const subProgress = ((scaleSubValue - range.min) / (range.max - range.min));
-              html += `<div class="range-scale-step range-scale-substep" style="${positionProperty}: ${subProgress * 100}%"></div>`;
+          const subProgress = (scaleSubValue - range.min) / (range.max - range.min);
+          html += `<div class="range-scale-step range-scale-substep" style="${positionProperty}: ${
+            subProgress * 100
+          }%"></div>`;
             });
         }
       });
@@ -568,7 +588,7 @@ class Range extends Event {
 
   updateScale() {
     const range = this;
-    if (!range.scale || range.scaleSteps < 2) {
+    if (!range.scale || range.scaleSteps < 1) {
       if (range.$scaleEl) range.$scaleEl.remove();
       delete range.$scaleEl;
       return;

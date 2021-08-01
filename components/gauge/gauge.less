@@ -6,20 +6,22 @@
   margin-right: auto;
   display: inline-block;
 }
-.gauge-svg, .gauge svg {
+.gauge-svg,
+.gauge svg {
   max-width: 100%;
   height: auto;
-  circle, path {
+  circle,
+  path {
     transition-duration: 400ms;
   }
 }
 
 .if-ios-theme({
-  @import url('./gauge-ios.less');
+  @import './gauge-ios.less';
 });
 .if-md-theme({
-  @import url('./gauge-md.less');
+  @import './gauge-md.less';
 });
 .if-aurora-theme({
-  @import url('./gauge-aurora.less');
+  @import './gauge-aurora.less';
 });

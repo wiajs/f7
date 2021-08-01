@@ -123,10 +123,10 @@ const Lazy = {
     const threshold = app.params.lazy.threshold || 0;
 
     return (
-      rect.top >= (0 - threshold)
-      && rect.left >= (0 - threshold)
-      && rect.top <= (app.height + threshold)
-      && rect.left <= (app.width + threshold)
+      rect.top >= 0 - threshold &&
+      rect.left >= 0 - threshold &&
+      rect.top <= app.height + threshold &&
+      rect.left <= app.width + threshold
     );
   },
   loadImage(imageEl, callback) {
@@ -194,7 +194,6 @@ const Lazy = {
       }
     });
   },
-
 };
 export default {
   name: 'lazy',
@@ -208,14 +207,8 @@ export default {
   },
   create() {
     const app = this;
-    Utils.extend(app, {
-      lazy: {
-        create: Lazy.create.bind(app),
-        destroy: Lazy.destroy.bind(app),
-        loadImage: Lazy.loadImage.bind(app),
-        load: Lazy.load.bind(app),
-        isInViewport: Lazy.isInViewport.bind(app),
-      },
+    Utils.bindMethods(app, {
+      lazy: Lazy,
     });
   },
   on: {

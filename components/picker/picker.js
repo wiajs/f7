@@ -48,7 +48,7 @@ export default {
       toolbar: true,
       toolbarCloseText: 'Done',
       cssClass: null,
-      routableModals: true,
+      routableModals: false,
       view: null,
       url: 'select/',
       // Render functions

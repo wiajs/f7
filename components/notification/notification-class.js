@@ -1,4 +1,5 @@
-import {Utils} from '@wiajs/core';
+/** @jsx jsx */
+import {Utils, jsx} from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 class Notification extends Modal {
@@ -114,7 +115,7 @@ class Notification extends Modal {
         notificationHeight = notification.$el[0].offsetHeight / 2;
       }
       isMoved = true;
-      touchesDiff = (pageY - touchesStart.y);
+      touchesDiff = pageY - touchesStart.y;
       let newTranslate = touchesDiff;
       if (touchesDiff > 0) {
         newTranslate = touchesDiff ** 0.8;
@@ -138,10 +139,7 @@ class Notification extends Modal {
       notification.$el.addClass('notification-transitioning');
       notification.$el.transform('');
 
-      if (
-        (touchesDiff < -10 && timeDiff < 300)
-        || (-touchesDiff >= notificationHeight / 1)
-      ) {
+      if ((touchesDiff < -10 && timeDiff < 300) || -touchesDiff >= notificationHeight / 1) {
         notification.close();
       }
     }
@@ -185,7 +183,7 @@ class Notification extends Modal {
       if (notification.params.swipeToClose) {
         detachTouchEvents();
       }
-      window.clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
     });
 
     return notification;
@@ -193,22 +191,24 @@ class Notification extends Modal {
 
   render() {
     const notification = this;
-    if (notification.params.render) return notification.params.render.call(notification, notification);
-    const { icon, title, titleRightText, subtitle, text, closeButton, cssClass } = notification.params;
-    return `
-      <div class="notification ${cssClass || ''}">
+    if (notification.params.render)
+      return notification.params.render.call(notification, notification);
+    const { icon, title, titleRightText, subtitle, text, closeButton, cssClass } =
+      notification.params;
+    return (
+      <div class={`notification ${cssClass || ''}`}>
         <div class="notification-header">
-          ${icon ? `<div class="notification-icon">${icon}</div>` : ''}
-          ${title ? `<div class="notification-title">${title}</div>` : ''}
-          ${titleRightText ? `<div class="notification-title-right-text">${titleRightText}</div>` : ''}
-          ${closeButton ? '<span class="notification-close-button"></span>' : ''}
+          {icon && <div class="notification-icon">{icon}</div>}
+          {title && <div class="notification-title">{title}</div>}
+          {titleRightText && <div class="notification-title-right-text">{titleRightText}</div>}
+          {closeButton && <span class="notification-close-button"></span>}
         </div>
         <div class="notification-content">
-          ${subtitle ? `<div class="notification-subtitle">${subtitle}</div>` : ''}
-          ${text ? `<div class="notification-text">${text}</div>` : ''}
+          {subtitle && <div class="notification-subtitle">{subtitle}</div>}
+          {text && <div class="notification-text">{text}</div>}
         </div>
       </div>
-    `.trim();
+    );
   }
 }
 export default Notification;

@@ -1,26 +1,57 @@
 import {Utils} from '@wiajs/core';
 
 export default class TouchRipple {
-  constructor($el, x, y) {
+  constructor(app, $el, x, y) {
     const ripple = this;
-    if (!$el) return undefined;
-    const box = $el[0].getBoundingClientRect();
-    const center = {
-      x: x - box.left,
-      y: y - box.top,
-    };
-    const {width, height} = box;
-    const diameter = Math.max((height ** 2 + width ** 2) ** 0.5, 48);
 
-    ripple.$rippleWaveEl = $(`<div class="ripple-wave" style="width: ${diameter}px; height: ${diameter}px; margin-top:-${diameter / 2}px; margin-left:-${diameter / 2}px; left:${center.x}px; top:${center.y}px;"></div>`);
+    if (!$el) return undefined;
+
+    const { left, top, width, height } = $el[0].getBoundingClientRect();
+    const center = {
+      x: x - left,
+      y: y - top,
+    };
+    let diameter = Math.max((height ** 2 + width ** 2) ** 0.5, 48);
+
+    let isInset = false;
+    const insetElements = app.params.touch.touchRippleInsetElements || '';
+    if (insetElements && $el.is(insetElements)) {
+      isInset = true;
+    }
+    if (isInset) {
+      diameter = Math.max(Math.min(width, height), 48);
+    }
+
+    if (!isInset && $el.css('overflow') === 'hidden') {
+      const distanceFromCenter =
+        ((center.x - width / 2) ** 2 + (center.y - height / 2) ** 2) ** 0.5;
+      const scale = (diameter / 2 + distanceFromCenter) / (diameter / 2);
+      ripple.rippleTransform = `translate3d(0px, 0px, 0) scale(${scale})`;
+    } else {
+      // prettier-ignore
+      ripple.rippleTransform = `translate3d(${-center.x + width / 2}px, ${-center.y + height / 2}px, 0) scale(1)`;
+    }
+    if (isInset) {
+      $el.addClass('ripple-inset');
+    }
+
+    ripple.$rippleWaveEl = $(
+      `<div class="ripple-wave" style="width: ${diameter}px; height: ${diameter}px; margin-top:-${
+        diameter / 2
+      }px; margin-left:-${diameter / 2}px; left:${center.x}px; top:${
+        center.y
+      }px; --f7-ripple-transform: ${ripple.rippleTransform}"></div>`,
+    );
 
     $el.prepend(ripple.$rippleWaveEl);
 
-    ripple.rippleTransform = `translate3d(${-center.x + (width / 2)}px, ${-center.y + (height / 2)}px, 0) scale(1)`;
-
-    Utils.nextFrame(() => {
-      if (!ripple || !ripple.$rippleWaveEl) return;
-      ripple.$rippleWaveEl.transform(ripple.rippleTransform);
+    ripple.$rippleWaveEl.animationEnd(() => {
+      if (!ripple.$rippleWaveEl) return;
+      if (ripple.$rippleWaveEl.hasClass('ripple-wave-out')) return;
+      ripple.$rippleWaveEl.addClass('ripple-wave-in');
+      if (ripple.shouldBeRemoved) {
+        ripple.out();
+      }
     });
 
     return ripple;
@@ -38,34 +69,31 @@ export default class TouchRipple {
     ripple = null;
   }
 
+  out() {
+    const ripple = this;
+    const { $rippleWaveEl } = this;
+    clearTimeout(ripple.removeTimeout);
+    $rippleWaveEl.addClass('ripple-wave-out');
+
+    ripple.removeTimeout = setTimeout(() => {
+      ripple.destroy();
+    }, 300);
+
+    $rippleWaveEl.animationEnd(() => {
+      clearTimeout(ripple.removeTimeout);
+      ripple.destroy();
+    });
+  }
+
   remove() {
     const ripple = this;
-    if (ripple.removing) return;
-    const $rippleWaveEl = this.$rippleWaveEl;
-    const rippleTransform = this.rippleTransform;
-    let removeTimeout = Utils.nextTick(() => {
+    if (ripple.shouldBeRemoved) return;
+    ripple.removeTimeout = setTimeout(() => {
       ripple.destroy();
     }, 400);
-    ripple.removing = true;
-    $rippleWaveEl
-      .addClass('ripple-wave-fill')
-      .transform(rippleTransform.replace('scale(1)', 'scale(1.01)'))
-      .transitionEnd(() => {
-        clearTimeout(removeTimeout);
-        Utils.nextFrame(() => {
-          $rippleWaveEl
-            .addClass('ripple-wave-out')
-            .transform(rippleTransform.replace('scale(1)', 'scale(1.01)'));
-
-          removeTimeout = Utils.nextTick(() => {
-            ripple.destroy();
-          }, 700);
-
-          $rippleWaveEl.transitionEnd(() => {
-            clearTimeout(removeTimeout);
-            ripple.destroy();
-          });
-        });
-      });
+    ripple.shouldBeRemoved = true;
+    if (ripple.$rippleWaveEl.hasClass('ripple-wave-in')) {
+      ripple.out();
+    }
   }
 }

@@ -8,8 +8,14 @@ const Treeview = {
     $itemEl.addClass('treeview-item-opened');
     $itemEl.trigger('treeview:open');
     app.emit('treeviewOpen', $itemEl[0]);
-    function done() {
+    function done(cancel) {
+      if (cancel) {
+        $itemEl.removeClass('treeview-item-opened');
+        $itemEl.trigger('treeview:close');
+        app.emit('treeviewClose', $itemEl[0]);
+      } else {
       $itemEl[0].f7TreeviewChildrenLoaded = true;
+      }
       $itemEl.find('.treeview-toggle').removeClass('treeview-toggle-hidden');
       $itemEl.find('.treeview-preloader').remove();
     }
@@ -42,12 +48,8 @@ export default {
   name: 'treeview',
   create() {
     const app = this;
-    Utils.extend(app, {
-      treeview: {
-        open: Treeview.open.bind(app),
-        close: Treeview.close.bind(app),
-        toggle: Treeview.toggle.bind(app),
-      },
+    Utils.bindMethods(app, {
+      treeview: Treeview,
     });
   },
   clicks: {

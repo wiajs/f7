@@ -1,5 +1,7 @@
+/** @jsx jsx */
+
 /* eslint indent: ["off"] */
-import {Utils} from '@wiajs/core';
+import {Utils, Device, jsx} from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 class Actions extends Modal {
@@ -15,6 +17,7 @@ class Actions extends Modal {
 
     const actions = this;
 
+    const device = Device;
     actions.params = extendedParams;
 
     // Buttons
@@ -83,13 +86,16 @@ class Actions extends Modal {
     actions.open = function open(animate) {
       let convertToPopover = false;
       const { targetEl, targetX, targetY, targetWidth, targetHeight } = actions.params;
-      if (actions.params.convertToPopover && (targetEl || (targetX !== undefined && targetY !== undefined))) {
+      if (
+        actions.params.convertToPopover &&
+        (targetEl || (targetX !== undefined && targetY !== undefined))
+      ) {
         // Popover
         if (
-          actions.params.forceToPopover
-          || (app.device.ios && app.device.ipad)
-          || app.width >= 768
-          || (app.device.desktop && app.theme === 'aurora')
+          actions.params.forceToPopover ||
+          (device.ios && device.ipad) ||
+          app.width >= 768 ||
+          (device.desktop && app.theme === 'aurora')
         ) {
           convertToPopover = true;
         }
@@ -190,8 +196,8 @@ class Actions extends Modal {
       const target = e.target;
       const $target = $(target);
       const keyboardOpened =
-        !app.device.desktop &&
-        app.device.cordova &&
+        !device.desktop &&
+        device.cordova &&
         ((window.Keyboard && window.Keyboard.isVisible) ||
           (window.cordova.plugins &&
             window.cordova.plugins.Keyboard &&
@@ -249,10 +255,12 @@ class Actions extends Modal {
     const actions = this;
     if (actions.params.render) return actions.params.render.call(actions, actions);
     const { groups } = actions;
-    return `
-      <div class="actions-modal${actions.params.grid ? ' actions-grid' : ''}">
-        ${groups.map(group => `<div class="actions-group">
-            ${group.map((button) => {
+    const cssClass = actions.params.cssClass;
+    return (
+      <div class={`actions-modal${actions.params.grid ? ' actions-grid' : ''} ${cssClass || ''}`}>
+        {groups.map((group) => (
+          <div class="actions-group">
+            {group.map((button) => {
               const buttonClasses = [`actions-${button.label ? 'label' : 'button'}`];
               const { color, bg, bold, disabled, label, text, icon } = button;
               if (color) buttonClasses.push(`color-${color}`);
@@ -260,30 +268,33 @@ class Actions extends Modal {
               if (bold) buttonClasses.push('actions-button-bold');
               if (disabled) buttonClasses.push('disabled');
               if (label) {
-                return `<div class="${buttonClasses.join(' ')}">${text}</div>`;
+                return <div class={buttonClasses.join(' ')}>{text}</div>;
               }
-              return `
-                <div class="${buttonClasses.join(' ')}">
-                  ${icon ? `<div class="actions-button-media">${icon}</div>` : ''}
-                  <div class="actions-button-text">${text}</div>
-                </div>`.trim();
-            }).join('')}
-          </div>`).join('')}
+              return (
+                <div class={buttonClasses.join(' ')}>
+                  {icon && <div class="actions-button-media">{icon}</div>}
+                  <div class="actions-button-text">{text}</div>
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
-    `.trim();
+    );
   }
 
   renderPopover() {
     const actions = this;
     if (actions.params.renderPopover) return actions.params.renderPopover.call(actions, actions);
     const { groups } = actions;
-    return `
-      <div class="popover popover-from-actions">
+    const cssClass = actions.params.cssClass;
+    return (
+      <div class={`popover popover-from-actions ${cssClass || ''}`}>
         <div class="popover-inner">
-          ${groups.map(group => `
+          {groups.map((group) => (
             <div class="list">
               <ul>
-                ${group.map((button) => {
+                {group.map((button) => {
                   const itemClasses = [];
                   const { color, bg, bold, disabled, label, text, icon } = button;
                   if (color) itemClasses.push(`color-${color}`);
@@ -296,34 +307,30 @@ class Actions extends Modal {
                   }
                   if (icon) {
                     itemClasses.push('item-link item-content');
-                    return `
+                    return (
                       <li>
-                        <a class="${itemClasses.join(' ')}">
-                          <div class="item-media">
-                            ${icon}
-                          </div>
+                        <a class={itemClasses.join(' ')}>
+                          <div class="item-media">{icon}</div>
                           <div class="item-inner">
-                            <div class="item-title">
-                              ${text}
-                            </div>
+                            <div class="item-title">{text}</div>
                           </div>
                         </a>
                       </li>
-                    `;
+                    );
                   }
                   itemClasses.push('list-button');
-                  return `
+                  return (
                     <li>
-                      <a class="${itemClasses.join(' ')}">${text}</a>
+                      <a class={itemClasses.join(' ')}>{text}</a>
                     </li>
-                  `;
-                }).join('')}
+                  );
+                })}
               </ul>
             </div>
-          `).join('')}
+          ))}
         </div>
       </div>
-    `.trim();
+    );
   }
 }
 

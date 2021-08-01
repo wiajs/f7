@@ -1,4 +1,4 @@
-import {Utils, Support} from '@wiajs/core';
+import {Utils, Support, Device} from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 class Sheet extends Modal {
@@ -13,6 +13,8 @@ class Sheet extends Modal {
     super(app, extendedParams);
 
     const sheet = this;
+    const support = Support;
+    const device = Device();
 
     sheet.params = extendedParams;
     if (typeof sheet.params.backdrop === 'undefined') {
@@ -76,11 +78,11 @@ class Sheet extends Modal {
 
       let newPaddingBottom;
 
-      const scrollElTop = ($scrollEl.offset().top - paddingTop) + $scrollEl[0].offsetHeight;
+      const scrollElTop = $scrollEl.offset().top - paddingTop + $scrollEl[0].offsetHeight;
       if (scrollElTop > pageHeight) {
-        const scrollTop = (pageScroll + scrollElTop) - pageHeight;
+        const scrollTop = pageScroll + scrollElTop - pageHeight;
         if (scrollTop + pageHeight > pageScrollHeight) {
-          newPaddingBottom = ((scrollTop + pageHeight) - pageScrollHeight) + paddingBottom;
+          newPaddingBottom = scrollTop + pageHeight - pageScrollHeight + paddingBottom;
           if (pageHeight === pageScrollHeight) {
             newPaddingBottom = $el.height();
           }
@@ -102,14 +104,20 @@ class Sheet extends Modal {
     function handleClick(e) {
       const target = e.target;
       const $target = $(target);
-      const keyboardOpened = !app.device.desktop && app.device.cordova && ((window.Keyboard && window.Keyboard.isVisible) || (window.cordova.plugins && window.cordova.plugins.Keyboard && window.cordova.plugins.Keyboard.isVisible));
+      const keyboardOpened =
+        !device.desktop &&
+        device.cordova &&
+        ((window.Keyboard && window.Keyboard.isVisible) ||
+          (window.cordova.plugins &&
+            window.cordova.plugins.Keyboard &&
+            window.cordova.plugins.Keyboard.isVisible));
       if (keyboardOpened) return;
       if ($target.closest(sheet.el).length === 0) {
         if (
-          sheet.params.closeByBackdropClick
-          && sheet.params.backdrop
-          && sheet.backdropEl
-          && sheet.backdropEl === target
+          sheet.params.closeByBackdropClick &&
+          sheet.params.backdrop &&
+          sheet.backdropEl &&
+          sheet.backdropEl === target
         ) {
           sheet.close();
         } else if (sheet.params.closeByOutsideClick) {
@@ -130,7 +138,6 @@ class Sheet extends Modal {
     function pushViewScale(offset) {
       return (app.height - offset * 2) / app.height;
     }
-
 
     let isTouched = false;
     let startTouch;
@@ -155,7 +162,10 @@ class Sheet extends Modal {
 
     function handleTouchStart(e) {
       if (isTouched || !(sheet.params.swipeToClose || sheet.params.swipeToStep)) return;
-      if (sheet.params.swipeHandler && $(e.target).closest(sheet.params.swipeHandler).length === 0) {
+      if (
+        sheet.params.swipeHandler &&
+        $(e.target).closest(sheet.params.swipeHandler).length === 0
+      ) {
         return;
       }
       isTouched = true;
@@ -179,7 +189,10 @@ class Sheet extends Modal {
       };
 
       if (typeof isScrolling === 'undefined') {
-        isScrolling = !!(isScrolling || Math.abs(currentTouch.x - startTouch.x) > Math.abs(currentTouch.y - startTouch.y));
+        isScrolling = !!(
+          isScrolling ||
+          Math.abs(currentTouch.x - startTouch.x) > Math.abs(currentTouch.y - startTouch.y)
+        );
       }
       if (isScrolling) {
         isTouched = false;
@@ -191,16 +204,19 @@ class Sheet extends Modal {
 
       const direction = touchesDiff < 0 ? 'to-bottom' : 'to-top';
 
-
       if (!isMoved) {
         if (sheetPageContentEl && !$el.hasClass('modal-in-swipe-step')) {
           sheetPageContentScrollTop = sheetPageContentEl.scrollTop;
           sheetPageContentScrollHeight = sheetPageContentEl.scrollHeight;
           sheetPageContentOffsetHeight = sheetPageContentEl.offsetHeight;
           if (
-            !(sheetPageContentScrollHeight === sheetPageContentOffsetHeight)
-            && !(direction === 'to-bottom' && sheetPageContentScrollTop === 0)
-            && !(direction === 'to-top' && sheetPageContentScrollTop === (sheetPageContentScrollHeight - sheetPageContentOffsetHeight))
+            !(sheetPageContentScrollHeight === sheetPageContentOffsetHeight) &&
+            !(direction === 'to-bottom' && sheetPageContentScrollTop === 0) &&
+            !(
+              direction === 'to-top' &&
+              sheetPageContentScrollTop ===
+                sheetPageContentScrollHeight - sheetPageContentOffsetHeight
+            )
           ) {
             $el.transform('');
             isTouched = false;
@@ -209,7 +225,7 @@ class Sheet extends Modal {
           }
         }
         if (sheet.push && pushOffset) {
-          $pushViewEl = app.root.children('.view, .views');
+          $pushViewEl = app.$el.children('.view, .views');
         }
         sheetElOffsetHeight = $el[0].offsetHeight;
         startTranslate = Utils.getTranslate($el[0], 'y');
@@ -229,7 +245,7 @@ class Sheet extends Modal {
         let progress = (currentTranslate - startTranslate) / sheetElOffsetHeight;
         if (sheet.params.swipeToStep) {
           if (isTopSheetModal) {
-            progress = (currentTranslate / swipeStepTranslate);
+            progress = currentTranslate / swipeStepTranslate;
           } else {
             progress = 1 - (swipeStepTranslate - currentTranslate) / swipeStepTranslate;
           }
@@ -238,18 +254,18 @@ class Sheet extends Modal {
         progress = Math.min(Math.max(progress, 0), 1);
         const pushProgress = 1 - progress;
         const scale = 1 - (1 - pushViewScale(pushOffset)) * pushProgress;
-        $pushViewEl.transition(0).transform(`translate3d(0,0,0) scale(${scale})`);
+        $pushViewEl.transition(0).forEach((el) => {
+          el.style.setProperty('transform', `translate3d(0,0,0) scale(${scale})`, 'important');
+        });
         if (sheet.params.swipeToStep) {
           $pushViewEl.css('border-radius', `${pushBorderRadius * pushProgress}px`);
         }
       }
-      $el
-        .transition(0)
-        .transform(`translate3d(0,${currentTranslate}px,0)`);
+      $el.transition(0).transform(`translate3d(0,${currentTranslate}px,0)`);
       if (sheet.params.swipeToStep) {
         let progress;
         if (isTopSheetModal) {
-          progress = 1 - (currentTranslate / swipeStepTranslate);
+          progress = 1 - currentTranslate / swipeStepTranslate;
         } else {
           progress = (swipeStepTranslate - currentTranslate) / swipeStepTranslate;
         }
@@ -275,13 +291,13 @@ class Sheet extends Modal {
       const diff = Math.abs(touchesDiff);
       if (diff === 0 || currentTranslate === startTranslate) return;
 
-      const timeDiff = (new Date()).getTime() - touchStartTime;
+      const timeDiff = new Date().getTime() - touchStartTime;
 
       if (!sheet.params.swipeToStep) {
         if (direction !== (isTopSheetModal ? 'to-top' : 'to-bottom')) {
           return;
         }
-        if ((timeDiff < 300 && diff > 20) || (timeDiff >= 300 && diff > (sheetElOffsetHeight / 2))) {
+        if ((timeDiff < 300 && diff > 20) || (timeDiff >= 300 && diff > sheetElOffsetHeight / 2)) {
           sheet.close();
         }
         return;
@@ -339,7 +355,7 @@ class Sheet extends Modal {
       if (timeDiff >= 300) {
         const stepOpened = !$el.hasClass('modal-in-swipe-step');
         if (!stepOpened) {
-          if (absCurrentTranslate < (absSwipeStepTranslate / 2)) {
+          if (absCurrentTranslate < absSwipeStepTranslate / 2) {
             // open step
             $el.removeClass('modal-in-swipe-step');
             $el.trigger('sheet:stepprogress', 1);
@@ -347,15 +363,24 @@ class Sheet extends Modal {
             $el.trigger('sheet:stepopen');
             sheet.emit('local::stepOpen sheetStepOpen', sheet);
             if (sheet.push && pushOffset) {
-              sheet.$htmlEl[0].style.setProperty('--f7-sheet-push-scale', pushViewScale(pushOffset));
+              sheet.$htmlEl[0].style.setProperty(
+                '--f7-sheet-push-scale',
+                pushViewScale(pushOffset),
+              );
               $pushViewEl.css('border-radius', '');
             }
-          } else if ((absCurrentTranslate - absSwipeStepTranslate) > (sheetElOffsetHeight - absSwipeStepTranslate) / 2) {
+          } else if (
+            absCurrentTranslate - absSwipeStepTranslate >
+            (sheetElOffsetHeight - absSwipeStepTranslate) / 2
+          ) {
             // close sheet
             if (sheet.params.swipeToClose) sheet.close();
           }
         } else if (stepOpened) {
-          if (absCurrentTranslate > absSwipeStepTranslate + (sheetElOffsetHeight - absSwipeStepTranslate) / 2) {
+          if (
+            absCurrentTranslate >
+            absSwipeStepTranslate + (sheetElOffsetHeight - absSwipeStepTranslate) / 2
+          ) {
             // close sheet
             if (sheet.params.swipeToClose) sheet.close();
           } else if (absCurrentTranslate > absSwipeStepTranslate / 2) {
@@ -378,9 +403,15 @@ class Sheet extends Modal {
       const $swipeStepEl = $el.find('.sheet-modal-swipe-step').eq(0);
       if (!$swipeStepEl.length) return;
       if ($el.hasClass('sheet-modal-top')) {
-        swipeStepTranslate = -($swipeStepEl.offset().top - $el.offset().top + $swipeStepEl[0].offsetHeight);
+        swipeStepTranslate = -(
+          $swipeStepEl.offset().top -
+          $el.offset().top +
+          $swipeStepEl[0].offsetHeight
+        );
       } else {
-        swipeStepTranslate = $el[0].offsetHeight - ($swipeStepEl.offset().top - $el.offset().top + $swipeStepEl[0].offsetHeight);
+        swipeStepTranslate =
+          $el[0].offsetHeight -
+          ($swipeStepEl.offset().top - $el.offset().top + $swipeStepEl[0].offsetHeight);
       }
       $el[0].style.setProperty('--f7-sheet-swipe-step', `${swipeStepTranslate}px`);
       if (!byResize) {
@@ -392,7 +423,7 @@ class Sheet extends Modal {
       sheet.setSwipeStep(true);
     }
 
-    const passive = Support.passiveListener ? { passive: true } : false;
+    const passive = support.passiveListener ? { passive: true } : false;
     if (sheet.params.swipeToClose || sheet.params.swipeToStep) {
       $el.on(app.touchEvents.start, handleTouchStart, passive);
       app.on('touchmove', handleTouchMove);
@@ -408,6 +439,7 @@ class Sheet extends Modal {
       if (sheet.params.closeOnEscape) {
         $(document).on('keydown', onKeyDown);
       }
+      $el.prevAll('.popup.modal-in').addClass('popup-behind');
       if (sheet.params.swipeToStep) {
         sheet.setSwipeStep(false);
         app.on('resize', onResize);
@@ -425,8 +457,10 @@ class Sheet extends Modal {
           if (!sheet.params.swipeToStep) {
             sheet.$htmlEl[0].style.setProperty('--f7-sheet-push-scale', pushViewScale(pushOffset));
           } else {
-            $pushViewEl = app.root.children('.view, .views');
-            pushBorderRadius = parseFloat($el.css(`border-${isTopSheetModal ? 'bottom' : 'top'}-left-radius`));
+            $pushViewEl = app.$el.children('.view, .views');
+            pushBorderRadius = parseFloat(
+              $el.css(`border-${isTopSheetModal ? 'bottom' : 'top'}-left-radius`),
+            );
             $pushViewEl.css('border-radius', '0px');
           }
         }
@@ -451,6 +485,7 @@ class Sheet extends Modal {
       if (sheet.params.closeByOutsideClick || sheet.params.closeByBackdropClick) {
         app.off('click', handleClick);
       }
+      $el.prevAll('.popup.modal-in').eq(0).removeClass('popup-behind');
       if (sheet.push && pushOffset) {
         sheet.$htmlEl.removeClass('with-modal-sheet-push');
         sheet.$htmlEl.addClass('with-modal-sheet-push-closing');

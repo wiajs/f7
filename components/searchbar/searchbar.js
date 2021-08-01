@@ -37,7 +37,13 @@ export default {
         const $searchbarEl = $(searchbarEl);
         app.searchbar.create(Utils.extend($searchbarEl.dataset(), { el: searchbarEl }));
       });
-      if (app.theme === 'ios' && page.view && page.view.router.dynamicNavbar && page.$navbarEl && page.$navbarEl.length > 0) {
+      if (
+        app.theme === 'ios' &&
+        page.view &&
+        page.view.router.dynamicNavbar &&
+        page.$navbarEl &&
+        page.$navbarEl.length > 0
+      ) {
         page.$navbarEl.find('.searchbar-init').each((index, searchbarEl) => {
           const $searchbarEl = $(searchbarEl);
           app.searchbar.create(Utils.extend($searchbarEl.dataset(), { el: searchbarEl }));
@@ -51,8 +57,14 @@ export default {
           searchbarEl.f7Searchbar.destroy();
         }
       });
-      if (app.theme === 'ios' && page.view && page.view.router.dynamicNavbar && page.$navbarEl && page.$navbarEl.length > 0) {
-        page.$navbarEl.find('.searchbar-init').each((index, searchbarEl) => {
+      if (
+        app.theme === 'ios' &&
+        page.view &&
+        page.view.router.dynamicNavbar &&
+        page.$navbarEl &&
+        page.$navbarEl.length > 0
+      ) {
+        page.$navbarEl.find('.searchbar-init').each((searchbarEl) => {
           if (searchbarEl.f7Searchbar && searchbarEl.f7Searchbar.destroy) {
             searchbarEl.f7Searchbar.destroy();
           }

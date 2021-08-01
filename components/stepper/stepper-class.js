@@ -47,7 +47,7 @@ class Stepper extends Event {
     }
 
     if ($inputEl && $inputEl.length) {
-      ('step min max').split(' ').forEach((paramName) => {
+      'step min max'.split(' ').forEach((paramName) => {
         if (!params[paramName] && $inputEl.attr(paramName)) {
           stepper.params[paramName] = parseFloat($inputEl.attr(paramName));
         }
@@ -61,7 +61,11 @@ class Stepper extends Event {
       }
 
       const inputValue = parseFloat($inputEl.val());
-      if (typeof params.value === 'undefined' && !Number.isNaN(inputValue) && (inputValue || inputValue === 0)) {
+      if (
+        typeof params.value === 'undefined' &&
+        !Number.isNaN(inputValue) &&
+        (inputValue || inputValue === 0)
+      ) {
         stepper.params.value = inputValue;
       }
     }
@@ -113,7 +117,8 @@ class Stepper extends Event {
 
     function dynamicRepeat(current, progressions, startsIn, progressionStep, repeatEvery, action) {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(
+        () => {
         if (current === 1) {
           preventButtonClick = true;
           autorepeatInAction = true;
@@ -124,14 +129,25 @@ class Stepper extends Event {
           action();
         }, repeatEvery);
         if (current < progressions) {
-          dynamicRepeat(current + 1, progressions, startsIn, progressionStep, repeatEvery / 2, action);
+            dynamicRepeat(
+              current + 1,
+              progressions,
+              startsIn,
+              progressionStep,
+              repeatEvery / 2,
+              action,
+            );
         }
-      }, current === 1 ? startsIn : progressionStep);
+        },
+        current === 1 ? startsIn : progressionStep
+      );
     }
 
     function onTouchStart(e) {
       if (isTouched) return;
-      if (manualInput) { return; }
+      if (manualInput) {
+        return;
+      }
       if ($(e.target).closest($buttonPlusEl).length) {
         autorepeatAction = 'increment';
       } else if ($(e.target).closest($buttonMinusEl).length) {
@@ -151,14 +167,18 @@ class Stepper extends Event {
     }
     function onTouchMove(e) {
       if (!isTouched) return;
-      if (manualInput) { return; }
+      if (manualInput) {
+        return;
+      }
       const pageX = e.type === 'touchmove' ? e.targetTouches[0].pageX : e.pageX;
       const pageY = e.type === 'touchmove' ? e.targetTouches[0].pageY : e.pageY;
 
       if (typeof isScrolling === 'undefined' && !autorepeatInAction) {
-        isScrolling = !!(isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x));
+        isScrolling = !!(
+          isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
+        );
       }
-      const distance = (((pageX - touchesStart.x) ** 2) + ((pageY - touchesStart.y) ** 2)) ** 0.5;
+      const distance = ((pageX - touchesStart.x) ** 2 + (pageY - touchesStart.y) ** 2) ** 0.5;
 
       if (isScrolling || distance > 20) {
         isTouched = false;
@@ -353,8 +373,14 @@ class Stepper extends Event {
     const stepper = this;
     stepper.typeModeChanged = true;
     let inputTxt = String(value);
-    if (inputTxt.lastIndexOf('.') + 1 === inputTxt.length || inputTxt.lastIndexOf(',') + 1 === inputTxt.length) {
-      if (inputTxt.lastIndexOf('.') !== inputTxt.indexOf('.') || inputTxt.lastIndexOf(',') !== inputTxt.indexOf(',')) {
+    if (
+      inputTxt.lastIndexOf('.') + 1 === inputTxt.length ||
+      inputTxt.lastIndexOf(',') + 1 === inputTxt.length
+    ) {
+      if (
+        inputTxt.lastIndexOf('.') !== inputTxt.indexOf('.') ||
+        inputTxt.lastIndexOf(',') !== inputTxt.indexOf(',')
+      ) {
         inputTxt = inputTxt.slice(0, -1);
         stepper.value = inputTxt;
         stepper.$inputEl.val(stepper.value);
@@ -373,7 +399,7 @@ class Stepper extends Event {
         return stepper;
       }
       const powVal = 10 ** stepper.params.decimalPoint;
-      newValue = (Math.round((newValue) * powVal)).toFixed(stepper.params.decimalPoint + 1) / powVal;
+      newValue = Math.round(newValue * powVal).toFixed(stepper.params.decimalPoint + 1) / powVal;
       stepper.value = parseFloat(String(newValue).replace(',', '.'));
       stepper.$inputEl.val(stepper.value);
       return stepper;

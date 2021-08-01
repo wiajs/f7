@@ -31,7 +31,7 @@ const Progressbar = {
     }
     $progressbarLine
       .transition(typeof duration !== 'undefined' ? duration : '')
-      .transform(`translate3d(${(-100 + progressNormalized)}%,0,0)`);
+      .transform(`translate3d(${-100 + progressNormalized}%,0,0)`);
 
     return $progressbarEl[0];
   },
@@ -43,7 +43,10 @@ const Progressbar = {
     let type = 'determined';
 
     if (args.length === 2) {
-      if ((typeof args[0] === 'string' || typeof args[0] === 'object') && typeof args[1] === 'string') {
+      if (
+        (typeof args[0] === 'string' || typeof args[0] === 'object') &&
+        typeof args[1] === 'string'
+      ) {
         // '.page', 'multi'
         [el, color, progress] = args;
         type = 'infinite';
@@ -76,7 +79,9 @@ const Progressbar = {
       $progressbarEl = $el.children('.progressbar:not(.progressbar-out), .progressbar-infinite:not(.progressbar-out)');
       if ($progressbarEl.length === 0) {
         $progressbarEl = $(`
-          <span class="progressbar${type === 'infinite' ? '-infinite' : ''}${color ? ` color-${color}` : ''} progressbar-in">
+          <span class="progressbar${type === 'infinite' ? '-infinite' : ''}${
+          color ? ` color-${color}` : ''
+        } progressbar-in">
             ${type === 'infinite' ? '' : '<span></span>'}
           </span>`);
         $el.append($progressbarEl);
@@ -99,7 +104,11 @@ const Progressbar = {
     } else {
       $progressbarEl = $el.children('.progressbar, .progressbar-infinite');
     }
-    if ($progressbarEl.length === 0 || !$progressbarEl.hasClass('progressbar-in') || $progressbarEl.hasClass('progressbar-out')) {
+    if (
+      $progressbarEl.length === 0 ||
+      !$progressbarEl.hasClass('progressbar-in') ||
+      $progressbarEl.hasClass('progressbar-out')
+    ) {
       return $progressbarEl;
     }
     $progressbarEl
@@ -118,12 +127,8 @@ export default {
   name: 'progressbar',
   create() {
     const app = this;
-    Utils.extend(app, {
-      progressbar: {
-        set: Progressbar.set.bind(app),
-        show: Progressbar.show.bind(app),
-        hide: Progressbar.hide.bind(app),
-      },
+    Utils.bindMethods(app, {
+      progressbar: Progressbar,
     });
   },
   on: {

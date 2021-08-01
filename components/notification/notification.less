@@ -1,5 +1,5 @@
 /* === Notifications === */
-@import url('./notification-vars.less');
+@import './notification-vars.less';
 
 .notification {
   --f7-link-highlight-color: var(--f7-link-highlight-black);
@@ -58,12 +58,16 @@
 .notification-icon {
   font-size: 0;
   line-height: var(--f7-notification-icon-size);
-  i, & {
+  i,
+  & {
     width: var(--f7-notification-icon-size) !important;
     height: var(--f7-notification-icon-size) !important;
   }
   i {
     font-size: var(--f7-notification-icon-size);
+  }
+  img {
+    height: var(--f7-notification-icon-size);
   }
 }
 .notification-header {
@@ -85,11 +89,11 @@
 }
 
 .if-ios-theme({
-  @import url('./notification-ios.less');
+  @import './notification-ios.less';
 });
 .if-md-theme({
-  @import url('./notification-md.less');
+  @import './notification-md.less';
 });
 .if-aurora-theme({
-  @import url('./notification-aurora.less');
+  @import './notification-aurora.less';
 });

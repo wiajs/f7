@@ -8,11 +8,13 @@ const Tab = {
     let tabLinkEl;
     let animate;
     let tabRoute;
-    if (args.length === 1 && args[0].constructor === Object) {
+    let animatedInit;
+    if (args.length === 1 && args[0] && args[0].constructor === Object) {
       tabEl = args[0].tabEl;
       tabLinkEl = args[0].tabLinkEl;
       animate = args[0].animate;
       tabRoute = args[0].tabRoute;
+      animatedInit = args[0].animatedInit;
     } else {
       [tabEl, tabLinkEl, animate, tabRoute] = args;
       if (typeof args[1] === 'boolean') {
@@ -36,7 +38,7 @@ const Tab = {
       $newTabEl[0].f7TabRoute = tabRoute;
     }
 
-    if ($newTabEl.length === 0 || $newTabEl.hasClass('tab-active')) {
+    if (!animatedInit && ($newTabEl.length === 0 || $newTabEl.hasClass('tab-active'))) {
       return {
         $newTabEl,
         newTabEl: $newTabEl[0],
@@ -97,8 +99,7 @@ const Tab = {
           .slideTo($newTabEl.index(), animate ? undefined : 0);
       } else if (swiper && swiper.animating) {
         animated = true;
-        swiper
-          .once('slideChangeTransitionEnd', () => {
+        swiper.once('slideChangeTransitionEnd', () => {
             tabsChanged();
           });
       }
@@ -107,14 +108,26 @@ const Tab = {
     // Remove active class from old tabs
     const $oldTabEl = $tabsEl.children('.tab-active');
     $oldTabEl.removeClass('tab-active');
-    if (!swiper || (swiper && !swiper.animating) || (swiper && tabRoute)) {
+    if (!animatedInit && (!swiper || (swiper && !swiper.animating) || (swiper && tabRoute))) {
+      if ($oldTabEl.hasClass('view') && $oldTabEl.children('.page').length) {
+        $oldTabEl.children('.page').each((pageEl) => {
+          $(pageEl).trigger('page:tabhide');
+          app.emit('pageTabHide', pageEl);
+        });
+      }
       $oldTabEl.trigger('tab:hide');
       app.emit('tabHide', $oldTabEl[0]);
     }
 
     // Trigger 'show' event on new tab
     $newTabEl.addClass('tab-active');
-    if (!swiper || (swiper && !swiper.animating) || (swiper && tabRoute)) {
+    if (!animatedInit && (!swiper || (swiper && !swiper.animating) || (swiper && tabRoute))) {
+      if ($newTabEl.hasClass('view') && $newTabEl.children('.page').length) {
+        $newTabEl.children('.page').each((pageEl) => {
+          $(pageEl).trigger('page:tabshow');
+          app.emit('pageTabShow', pageEl);
+        });
+      }
       $newTabEl.trigger('tab:show');
       app.emit('tabShow', $newTabEl[0]);
     }
@@ -177,7 +190,12 @@ const Tab = {
         $oldTabLinkEl = $tabLinkEl.siblings('.tab-link-active');
       }
 
-      if ($oldTabLinkEl && $oldTabLinkEl.length > 1 && $oldTabEl && $oldTabEl.parents('.page').length) {
+      if (
+        $oldTabLinkEl &&
+        $oldTabLinkEl.length > 1 &&
+        $oldTabEl &&
+        $oldTabEl.parents('.page').length
+      ) {
         // eslint-disable-next-line
         $oldTabLinkEl = $oldTabLinkEl.filter((index, tabLinkElement) => {
           return $(tabLinkElement).parents('.page')[0] === $oldTabEl.parents('.page')[0];
@@ -190,7 +208,7 @@ const Tab = {
       if ($tabLinkEl && $tabLinkEl.length > 0) {
         $tabLinkEl.addClass('tab-link-active');
         // Material Highlight
-        if (app.theme === 'md' && app.toolbar) {
+        if (app.theme !== 'ios' && app.toolbar) {
           const $tabbarEl = $tabLinkEl.parents('.tabbar, .tabbar-labels');
           if ($tabbarEl.length > 0) {
             app.toolbar.setHighlight($tabbarEl);

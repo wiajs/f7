@@ -6,9 +6,7 @@ class DataTable extends Event {
 
     const table = this;
 
-    const defaults = {
-
-    };
+    const defaults = {};
 
     table.params = Utils.extend(defaults, params);
 
@@ -46,8 +44,7 @@ class DataTable extends Event {
 
       if ($inputEl.parents('thead').length > 0) {
         if (columnIndex === 0) {
-          $el
-            .find('tbody tr')[checked ? 'addClass' : 'removeClass']('data-table-row-selected');
+          $el.find('tbody tr')[checked ? 'addClass' : 'removeClass']('data-table-row-selected');
         }
         $el
           .find(`tbody tr td:nth-child(${columnIndex + 1}) input`)
@@ -58,9 +55,12 @@ class DataTable extends Event {
         if (columnIndex === 0) {
           $inputEl.parents('tr')[checked ? 'addClass' : 'removeClass']('data-table-row-selected');
         }
-        const checkedRows = $el.find(`tbody .checkbox-cell:nth-child(${columnIndex + 1}) input[type="checkbox"]:checked`).length;
+        const checkedRows = $el.find(
+          `tbody .checkbox-cell:nth-child(${columnIndex + 1}) input[type="checkbox"]:checked`,
+        ).length;
         const totalRows = $el.find('tbody tr').length;
-        const $headCheckboxEl = $el.find(`thead .checkbox-cell:nth-child(${columnIndex + 1}) input[type="checkbox"]`);
+        const $headCheckboxEl = $el.find(
+          `thead .checkbox-cell:nth-child(${columnIndex + 1}) input[type="checkbox"]`);
         if (!checked) {
           $headCheckboxEl.prop('checked', false);
         } else if (checkedRows === totalRows) {

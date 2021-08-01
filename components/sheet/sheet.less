@@ -1,5 +1,5 @@
 /* === Sheet Modal === */
-@import url('./sheet-vars.less');
+@import './sheet-vars.less';
 .sheet-backdrop {
   z-index: 11000;
 }
@@ -16,7 +16,8 @@
   background: var(--f7-sheet-bg-color);
   z-index: 12500;
   will-change: transform, opacity;
-  &.modal-in, &.modal-out {
+  &.modal-in,
+  &.modal-out {
     transition-duration: var(--f7-sheet-transition-duration);
   }
   &.not-animated {
@@ -42,7 +43,8 @@
     --f7-safe-area-bottom: 0px;
     position: relative;
     width: 100%;
-    &:after, &:before {
+    &:after,
+    &:before {
       display: none;
     }
     + .sheet-modal-inner {
@@ -91,9 +93,11 @@
 html.with-modal-sheet-push,
 html.with-modal-sheet-push-closing {
   .sheet-modal-push {
+    --f7-sheet-border-color: transparent;
     border-radius: var(--f7-sheet-push-border-radius) var(--f7-sheet-push-border-radius) 0 0;
     overflow: hidden;
-    .view, .page {
+    .view,
+    .page {
       --f7-safe-area-top: 0px;
     }
     &.sheet-modal-top {
@@ -107,23 +111,82 @@ html.with-modal-sheet-push-closing {
       transition-duration: var(--f7-sheet-transition-duration);
     }
   }
+  .if-dark-theme({
+    &.theme-dark .framework7-root > .views,
+    &.theme-dark .framework7-root > .view,
+    .theme-dark .framework7-root > .views,
+    .theme-dark .framework7-root > .view,
+    .theme-dark.framework7-root > .views,
+    .theme-dark.framework7-root > .view,
+    .framework7-root > .views.theme-dark,
+    .framework7-root > .view.theme-dark {
+      &:after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        z-index: 13000;
+        border-radius: var(--f7-sheet-push-border-radius) var(--f7-sheet-push-border-radius) 0 0;
+        opacity: 1;
+        animation: sheet-dark-push-overlay-fade-in var(--f7-sheet-transition-duration) forwards;
+      }
+    }
+  });
 }
 html.with-modal-sheet-push {
   .framework7-root {
     > .views,
     > .view {
       border-radius: var(--f7-sheet-push-border-radius);
-      transform: translate3d(0, 0, 0px) scale(var(--f7-sheet-push-scale, 1));
+      transform: translate3d(0, 0, 0px) scale(var(--f7-sheet-push-scale, 1)) !important;
     }
   }
 }
 
+.if-dark-theme({
+  html.with-modal-sheet-push-closing {
+    &.theme-dark .framework7-root > .views,
+    &.theme-dark .framework7-root > .view,
+    .theme-dark .framework7-root > .views,
+    .theme-dark .framework7-root > .view,
+    .theme-dark.framework7-root > .views,
+    .theme-dark.framework7-root > .view,
+    .framework7-root > .views.theme-dark,
+    .framework7-root > .view.theme-dark {
+      &:after {
+        animation: sheet-dark-push-overlay-fade-out var(--f7-sheet-transition-duration) forwards;
+      }
+    }
+  }
+
+  @keyframes sheet-dark-push-overlay-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes sheet-dark-push-overlay-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+});
+
 .if-ios-theme({
-  @import url('./sheet-ios.less');
+  @import './sheet-ios.less';
 });
 .if-md-theme({
-  @import url('./sheet-md.less');
+  @import './sheet-md.less';
 });
 .if-aurora-theme({
-  @import url('./sheet-aurora.less');
+  @import './sheet-aurora.less';
 });

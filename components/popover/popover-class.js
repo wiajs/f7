@@ -101,10 +101,10 @@ class Popover extends Modal {
       if (keyboardOpened) return;
       if ($target.closest(popover.el).length === 0) {
         if (
-          popover.params.closeByBackdropClick
-          && popover.params.backdrop
-          && popover.backdropEl
-          && popover.backdropEl === target
+          popover.params.closeByBackdropClick &&
+          popover.params.backdrop &&
+          popover.backdropEl &&
+          popover.backdropEl === target
         ) {
           popover.close();
         } else if (popover.params.closeByOutsideClick) {
@@ -158,7 +158,11 @@ class Popover extends Modal {
       $angleEl.removeClass('on-left on-right on-top on-bottom').css({ left: '', top: '' });
       angleSize = $angleEl.width() / 2;
     } else {
-      $el.removeClass('popover-on-left popover-on-right popover-on-top popover-on-bottom popover-on-middle').css({ left: '', top: '' });
+      $el
+        .removeClass(
+          'popover-on-left popover-on-right popover-on-top popover-on-bottom popover-on-middle',
+        )
+        .css({ left: '', top: '' });
     }
 
     let targetWidth;
@@ -166,7 +170,11 @@ class Popover extends Modal {
     let targetOffsetLeft;
     let targetOffsetTop;
     let safeAreaTop = parseInt($('html').css('--f7-safe-area-top'), 10);
+    let safeAreaLeft = parseInt($('html').css('--f7-safe-area-left'), 10);
+    let safeAreaRight = parseInt($('html').css('--f7-safe-area-right'), 10);
     if (Number.isNaN(safeAreaTop)) safeAreaTop = 0;
+    if (Number.isNaN(safeAreaLeft)) safeAreaLeft = 0;
+    if (Number.isNaN(safeAreaRight)) safeAreaRight = 0;
     if ($targetEl && $targetEl.length > 0) {
       targetWidth = $targetEl.outerWidth();
       targetHeight = $targetEl.outerHeight();
@@ -201,7 +209,7 @@ class Popover extends Modal {
       } else {
         // On middle
         position = 'middle';
-        top = ((targetHeight / 2) + targetOffsetTop) - (height / 2);
+        top = targetHeight / 2 + targetOffsetTop - height / 2;
       }
       top = Math.max(8, Math.min(top, app.height - height - 8));
 
@@ -209,30 +217,27 @@ class Popover extends Modal {
       let hPosition;
       if (targetOffsetLeft < app.width / 2) {
         hPosition = 'right';
-        left = position === 'middle'
-          ? targetOffsetLeft + targetWidth
-          : targetOffsetLeft;
+        left = position === 'middle' ? targetOffsetLeft + targetWidth : targetOffsetLeft;
       } else {
         hPosition = 'left';
-        left = position === 'middle'
-          ? targetOffsetLeft - width
-          : (targetOffsetLeft + targetWidth) - width;
+        left =
+          position === 'middle' ? targetOffsetLeft - width : targetOffsetLeft + targetWidth - width;
       }
-      left = Math.max(8, Math.min(left, app.width - width - 8));
+      left = Math.max(8, Math.min(left, app.width - width - 8 - safeAreaRight), safeAreaLeft);
       $el.addClass(`popover-on-${position} popover-on-${hPosition}`);
     } else {
       // ios and aurora
-      if ((height + angleSize) < targetOffsetTop - safeAreaTop) {
+      if (height + angleSize < targetOffsetTop - safeAreaTop) {
         // On top
         top = targetOffsetTop - height - angleSize;
-      } else if ((height + angleSize) < app.height - targetOffsetTop - targetHeight) {
+      } else if (height + angleSize < app.height - targetOffsetTop - targetHeight) {
         // On bottom
         position = 'bottom';
         top = targetOffsetTop + targetHeight + angleSize;
       } else {
         // On middle
         position = 'middle';
-        top = ((targetHeight / 2) + targetOffsetTop) - (height / 2);
+        top = targetHeight / 2 + targetOffsetTop - height / 2;
         diff = top;
         top = Math.max(5, Math.min(top, app.height - height - 5));
         diff -= top;
@@ -240,9 +245,15 @@ class Popover extends Modal {
 
       // Horizontal Position
       if (position === 'top' || position === 'bottom') {
-        left = ((targetWidth / 2) + targetOffsetLeft) - (width / 2);
+        left = targetWidth / 2 + targetOffsetLeft - width / 2;
         diff = left;
         left = Math.max(5, Math.min(left, app.width - width - 5));
+        if (safeAreaLeft) {
+          left = Math.max(left, safeAreaLeft);
+        }
+        if (safeAreaRight && left + width > app.width - 5 - safeAreaRight) {
+          left = app.width - 5 - safeAreaRight - width;
+        }
         if (position === 'top') {
           $angleEl.addClass('on-bottom');
         }
@@ -250,19 +261,21 @@ class Popover extends Modal {
           $angleEl.addClass('on-top');
         }
         diff -= left;
-        angleLeft = ((width / 2) - angleSize) + diff;
-        angleLeft = Math.max(Math.min(angleLeft, width - (angleSize * 2) - 13), 13);
+        angleLeft = width / 2 - angleSize + diff;
+        angleLeft = Math.max(Math.min(angleLeft, width - angleSize * 2 - 13), 13);
         $angleEl.css({ left: `${angleLeft}px` });
       } else if (position === 'middle') {
         left = targetOffsetLeft - width - angleSize;
         $angleEl.addClass('on-right');
-        if (left < 5 || (left + width > app.width)) {
+        if (left < 5 || left + width + safeAreaRight > app.width || left < safeAreaLeft) {
           if (left < 5) left = targetOffsetLeft + targetWidth + angleSize;
-          if (left + width > app.width) left = app.width - width - 5;
+          if (left + width + safeAreaRight > app.width)
+            left = app.width - width - 5 - safeAreaRight;
+          if (left < safeAreaLeft) left = safeAreaLeft;
           $angleEl.removeClass('on-right').addClass('on-left');
         }
-        angleTop = ((height / 2) - angleSize) + diff;
-        angleTop = Math.max(Math.min(angleTop, height - (angleSize * 2) - 13), 13);
+        angleTop = height / 2 - angleSize + diff;
+        angleTop = Math.max(Math.min(angleTop, height - angleSize * 2 - 13), 13);
         $angleEl.css({ top: `${angleTop}px` });
       }
     }
