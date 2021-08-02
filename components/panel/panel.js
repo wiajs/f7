@@ -14,23 +14,22 @@ export default {
       visibleBreakpoint: undefined,
       collapsedBreakpoint: undefined,
       swipe: false, // or true
+      swipeNoFollow: false, // or true
       swipeOnlyClose: false,
       swipeActiveArea: 0,
       swipeThreshold: 0,
       closeByBackdropClick: true,
+      containerEl: undefined,
     },
   },
   static: {
     Panel,
   },
-  instance: {
-    panel: {
-      allowOpen: true,
-    },
-  },
   create() {
     const app = this;
-    Utils.extend(app.panel, {
+    Utils.extend(app, {
+      panel: {
+        allowOpen: true,
       create(params) {
         return new Panel(app, params);
       },
@@ -75,6 +74,7 @@ export default {
           return panel.toggle(animate);
         }
         return undefined;
+      },
       },
     });
   },

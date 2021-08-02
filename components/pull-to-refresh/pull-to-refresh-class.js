@@ -63,12 +63,26 @@ class PullToRefresh extends Event {
     let maxScrollTop;
     const $pageEl = $el.parents('.page');
 
-    if ($pageEl.find('.navbar').length > 0 || $pageEl.parents('.view').children('.navbars').length > 0) hasNavbar = true;
+    if (
+      $pageEl.find('.navbar').length > 0 ||
+      $pageEl.parents('.view').children('.navbars').length > 0
+    )
+      hasNavbar = true;
     if ($pageEl.hasClass('no-navbar')) hasNavbar = false;
-    if (!ptr.bottom && $pageEl.hasClass('page-with-navbar-large')) {
+    if (!ptr.bottom) {
       const pageNavbarEl = app.navbar.getElByPage($pageEl[0]);
-      if (pageNavbarEl && $(pageNavbarEl).hasClass('navbar-large-transparent')) {
+      if (pageNavbarEl) {
+        const $pageNavbarEl = $(pageNavbarEl);
+        const isLargeTransparent =
+          $pageNavbarEl.hasClass('navbar-large-transparent') ||
+          ($pageNavbarEl.hasClass('navbar-large') && $pageNavbarEl.hasClass('navbar-transparent'));
+        const isTransparent =
+          $pageNavbarEl.hasClass('navbar-transparent') && !$pageNavbarEl.hasClass('navbar-large');
+        if (isLargeTransparent) {
         $el.addClass('ptr-with-navbar-large-transparent');
+        } else if (isTransparent) {
+          $el.addClass('ptr-with-navbar-transparent');
+        }
       }
     }
     if (!hasNavbar && !ptr.bottom) $el.addClass('ptr-no-navbar');
@@ -94,7 +108,10 @@ class PullToRefresh extends Event {
       if ($el.hasClass('ptr-refreshing')) {
         return;
       }
-      if ($(e.target).closest('.sortable-handler, .ptr-ignore, .card-expandable.card-opened').length) return;
+      if (
+        $(e.target).closest('.sortable-handler, .ptr-ignore, .card-expandable.card-opened').length
+      )
+        return;
 
       isMoved = false;
       pullStarted = false;
@@ -128,9 +145,10 @@ class PullToRefresh extends Event {
       }
       if (!pageX || !pageY) return;
 
-
       if (typeof isScrolling === 'undefined') {
-        isScrolling = !!(isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x));
+        isScrolling = !!(
+          isScrolling || Math.abs(pageY - touchesStart.y) > Math.abs(pageX - touchesStart.x)
+        );
       }
       if (!isScrolling) {
         isTouched = false;
@@ -156,12 +174,12 @@ class PullToRefresh extends Event {
           $ptrWatchScrollable.each((ptrScrollableIndex, ptrScrollableEl) => {
             if (ptrScrollableEl === el) return;
             if (
-              (ptrScrollableEl.scrollHeight > ptrScrollableEl.offsetHeight)
-              && $(ptrScrollableEl).css('overflow') === 'auto'
-              && (
-                (!ptr.bottom && ptrScrollableEl.scrollTop > 0)
-                || (ptr.bottom && ptrScrollableEl.scrollTop < ptrScrollableEl.scrollHeight - ptrScrollableEl.offsetHeight)
-              )
+              ptrScrollableEl.scrollHeight > ptrScrollableEl.offsetHeight &&
+              $(ptrScrollableEl).css('overflow') === 'auto' &&
+              ((!ptr.bottom && ptrScrollableEl.scrollTop > 0) ||
+                (ptr.bottom &&
+                  ptrScrollableEl.scrollTop <
+                    ptrScrollableEl.scrollHeight - ptrScrollableEl.offsetHeight))
             ) {
               targetIsScrollable = true;
             }
@@ -173,7 +191,8 @@ class PullToRefresh extends Event {
         }
         if (dynamicTriggerDistance) {
           triggerDistance = $el.attr('data-ptr-distance');
-          if (triggerDistance.indexOf('%') >= 0) triggerDistance = (scrollHeight * parseInt(triggerDistance, 10)) / 100;
+          if (triggerDistance.indexOf('%') >= 0)
+            triggerDistance = (scrollHeight * parseInt(triggerDistance, 10)) / 100;
         }
         startTranslate = $el.hasClass('ptr-refreshing') ? triggerDistance : 0;
         if (scrollHeight === offsetHeight || Device.os !== 'ios' || isMaterial) {
@@ -186,7 +205,11 @@ class PullToRefresh extends Event {
       isMoved = true;
       touchesDiff = pageY - touchesStart.y;
 
-      if (typeof wasScrolled === 'undefined' && (ptr.bottom ? scrollTop !== maxScrollTop : scrollTop !== 0)) wasScrolled = true;
+      if (
+        typeof wasScrolled === 'undefined' &&
+        (ptr.bottom ? scrollTop !== maxScrollTop : scrollTop !== 0)
+      )
+        wasScrolled = true;
 
       const ptrStarted = ptr.bottom
         ? (touchesDiff < 0 && scrollTop >= maxScrollTop) || scrollTop > maxScrollTop
@@ -209,10 +232,14 @@ class PullToRefresh extends Event {
           if (e.cancelable) {
             e.preventDefault();
           }
-          translate = (ptr.bottom ? -1 * (Math.abs(touchesDiff) ** 0.85) : touchesDiff ** 0.85) + startTranslate;
+          translate =
+            (ptr.bottom ? -1 * Math.abs(touchesDiff) ** 0.85 : touchesDiff ** 0.85) +
+            startTranslate;
           if (isMaterial) {
-            $preloaderEl.transform(`translate3d(0,${translate}px,0)`)
-              .find('.ptr-arrow').transform(`rotate(${(180 * (Math.abs(touchesDiff) / 66)) + 100}deg)`);
+            $preloaderEl
+              .transform(`translate3d(0,${translate}px,0)`)
+              .find('.ptr-arrow')
+              .transform(`rotate(${180 * (Math.abs(touchesDiff) / 66) + 100}deg)`);
           } else {
             // eslint-disable-next-line
             if (ptr.bottom) {
@@ -223,7 +250,11 @@ class PullToRefresh extends Event {
           }
         }
 
-        if (((useTranslate || forceUseTranslate) && (Math.abs(touchesDiff) ** 0.85) > triggerDistance) || (!useTranslate && Math.abs(touchesDiff) >= triggerDistance * 2)) {
+        if (
+          ((useTranslate || forceUseTranslate) &&
+            Math.abs(touchesDiff) ** 0.85 > triggerDistance) ||
+          (!useTranslate && Math.abs(touchesDiff) >= triggerDistance * 2)
+        ) {
           refresh = true;
           $el.addClass('ptr-pull-up').removeClass('ptr-pull-down');
         } else {
@@ -273,8 +304,7 @@ class PullToRefresh extends Event {
         translate = 0;
       }
       if (isMaterial) {
-        $preloaderEl.transform('')
-          .find('.ptr-arrow').transform('');
+        $preloaderEl.transform('').find('.ptr-arrow').transform('');
       } else {
         // eslint-disable-next-line
         if (ptr.bottom) {
@@ -317,8 +347,7 @@ class PullToRefresh extends Event {
         translate = 0;
       }
       if (isMaterial) {
-        $preloaderEl.transform('')
-          .find('.ptr-arrow').transform('');
+        $preloaderEl.transform('').find('.ptr-arrow').transform('');
       } else {
         // eslint-disable-next-line
         if (ptr.bottom) {
@@ -347,7 +376,10 @@ class PullToRefresh extends Event {
       if ($el.hasClass('ptr-refreshing')) {
         return;
       }
-      if ($(e.target).closest('.sortable-handler, .ptr-ignore, .card-expandable.card-opened').length) return;
+      if (
+        $(e.target).closest('.sortable-handler, .ptr-ignore, .card-expandable.card-opened').length
+      )
+        return;
 
       clearTimeout(mousewheelTimeout);
 
@@ -370,12 +402,12 @@ class PullToRefresh extends Event {
           $ptrWatchScrollable.each((ptrScrollableIndex, ptrScrollableEl) => {
             if (ptrScrollableEl === el) return;
             if (
-              (ptrScrollableEl.scrollHeight > ptrScrollableEl.offsetHeight)
-              && $(ptrScrollableEl).css('overflow') === 'auto'
-              && (
-                (!ptr.bottom && ptrScrollableEl.scrollTop > 0)
-                || (ptr.bottom && ptrScrollableEl.scrollTop < ptrScrollableEl.scrollHeight - ptrScrollableEl.offsetHeight)
-              )
+              ptrScrollableEl.scrollHeight > ptrScrollableEl.offsetHeight &&
+              $(ptrScrollableEl).css('overflow') === 'auto' &&
+              ((!ptr.bottom && ptrScrollableEl.scrollTop > 0) ||
+                (ptr.bottom &&
+                  ptrScrollableEl.scrollTop <
+                    ptrScrollableEl.scrollHeight - ptrScrollableEl.offsetHeight))
             ) {
               targetIsScrollable = true;
             }
@@ -387,14 +419,19 @@ class PullToRefresh extends Event {
         }
         if (dynamicTriggerDistance) {
           triggerDistance = $el.attr('data-ptr-distance');
-          if (triggerDistance.indexOf('%') >= 0) triggerDistance = (scrollHeight * parseInt(triggerDistance, 10)) / 100;
+          if (triggerDistance.indexOf('%') >= 0)
+            triggerDistance = (scrollHeight * parseInt(triggerDistance, 10)) / 100;
         }
       }
       isMoved = true;
       mousewheelTranslate -= deltaY;
       touchesDiff = mousewheelTranslate; // pageY - touchesStart.y;
 
-      if (typeof wasScrolled === 'undefined' && (ptr.bottom ? scrollTop !== maxScrollTop : scrollTop !== 0)) wasScrolled = true;
+      if (
+        typeof wasScrolled === 'undefined' &&
+        (ptr.bottom ? scrollTop !== maxScrollTop : scrollTop !== 0)
+      )
+        wasScrolled = true;
 
       const ptrStarted = ptr.bottom
         ? (touchesDiff < 0 && scrollTop >= maxScrollTop) || scrollTop > maxScrollTop
@@ -407,13 +444,15 @@ class PullToRefresh extends Event {
 
         translate = touchesDiff;
         if (Math.abs(translate) > triggerDistance) {
-          translate = triggerDistance + ((Math.abs(translate) - triggerDistance) ** 0.7);
+          translate = triggerDistance + (Math.abs(translate) - triggerDistance) ** 0.7;
           if (ptr.bottom) translate = -translate;
         }
 
         if (isMaterial) {
-          $preloaderEl.transform(`translate3d(0,${translate}px,0)`)
-            .find('.ptr-arrow').transform(`rotate(${(180 * (Math.abs(touchesDiff) / 66)) + 100}deg)`);
+          $preloaderEl
+            .transform(`translate3d(0,${translate}px,0)`)
+            .find('.ptr-arrow')
+            .transform(`rotate(${180 * (Math.abs(touchesDiff) / 66) + 100}deg)`);
         } else {
           // eslint-disable-next-line
           if (ptr.bottom) {

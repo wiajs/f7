@@ -65,20 +65,20 @@ class Popup extends Modal {
       if (keyboardOpened) return;
       if ($target.closest(popup.el).length === 0) {
         if (
-          popup.params
-          && popup.params.closeByBackdropClick
-          && popup.params.backdrop
-          && popup.backdropEl
-          && popup.backdropEl === target
+          popup.params &&
+          popup.params.closeByBackdropClick &&
+          popup.params.backdrop &&
+          popup.backdropEl &&
+          popup.backdropEl === target
         ) {
           let needToClose = true;
           popup.$el.nextAll('.popup.modal-in').each((index, popupEl) => {
             const popupInstance = popupEl.f7Modal;
             if (!popupInstance) return;
             if (
-              popupInstance.params.closeByBackdropClick
-              && popupInstance.params.backdrop
-              && popupInstance.backdropEl === popup.backdropEl
+              popupInstance.params.closeByBackdropClick &&
+              popupInstance.params.backdrop &&
+              popupInstance.backdropEl === popup.backdropEl
             ) {
               needToClose = false;
             }
@@ -117,11 +117,14 @@ class Popup extends Modal {
     let pageContentOffsetHeight;
     let pageContentScrollHeight;
     let popupHeight;
-    let $pushViewEl;
+    let $pushEl;
 
     function handleTouchStart(e) {
       if (isTouched || !allowSwipeToClose || !popup.params.swipeToClose) return;
-      if (popup.params.swipeHandler && $(e.target).closest(popup.params.swipeHandler).length === 0) {
+      if (
+        popup.params.swipeHandler &&
+        $(e.target).closest(popup.params.swipeHandler).length === 0
+      ) {
         return;
       }
       isTouched = true;
@@ -144,7 +147,10 @@ class Popup extends Modal {
       };
 
       if (typeof isScrolling === 'undefined') {
-        isScrolling = !!(isScrolling || Math.abs(currentTouch.x - startTouch.x) > Math.abs(currentTouch.y - startTouch.y));
+        isScrolling = !!(
+          isScrolling ||
+          Math.abs(currentTouch.x - startTouch.x) > Math.abs(currentTouch.y - startTouch.y)
+        );
       }
       if (isScrolling) {
         isTouched = false;
@@ -159,7 +165,10 @@ class Popup extends Modal {
       const direction = touchesDiff < 0 ? 'to-bottom' : 'to-top';
       $el.transition(0);
 
-      if (typeof popup.params.swipeToClose === 'string' && direction !== popup.params.swipeToClose) {
+      if (
+        typeof popup.params.swipeToClose === 'string' &&
+        direction !== popup.params.swipeToClose
+      ) {
         $el.transform('');
         $el.transition('');
         return;
@@ -168,16 +177,22 @@ class Popup extends Modal {
       if (!isMoved) {
         if (isPush && pushOffset) {
           popupHeight = $el[0].offsetHeight;
-          $pushViewEl = app.root.children('.view, .views');
+          $pushEl = $el.prevAll('.popup.modal-in').eq(0);
+          if ($pushEl.length === 0) {
+            $pushEl = app.$el.children('.view, .views');
+          }
         }
         if (pageContentEl) {
           pageContentScrollTop = pageContentEl.scrollTop;
           pageContentScrollHeight = pageContentEl.scrollHeight;
           pageContentOffsetHeight = pageContentEl.offsetHeight;
           if (
-            !(pageContentScrollHeight === pageContentOffsetHeight)
-            && !(direction === 'to-bottom' && pageContentScrollTop === 0)
-            && !(direction === 'to-top' && pageContentScrollTop === (pageContentScrollHeight - pageContentOffsetHeight))
+            !(pageContentScrollHeight === pageContentOffsetHeight) &&
+            !(direction === 'to-bottom' && pageContentScrollTop === 0) &&
+            !(
+              direction === 'to-top' &&
+              pageContentScrollTop === pageContentScrollHeight - pageContentOffsetHeight
+            )
           ) {
             $el.transform('');
             $el.transition('');
@@ -187,12 +202,40 @@ class Popup extends Modal {
           }
         }
         isMoved = true;
+        popup.emit('local::swipeStart popupSwipeStart', popup);
+        popup.$el.trigger('popup:swipestart');
+      } else {
+        popup.emit('local::swipeMove popupSwipeMove', popup);
+        popup.$el.trigger('popup:swipemove');
       }
+
       e.preventDefault();
       if (isPush && pushOffset) {
         const pushProgress = 1 - Math.abs(touchesDiff / popupHeight);
         const scale = 1 - (1 - pushViewScale(pushOffset)) * pushProgress;
-        $pushViewEl.transition(0).transform(`translate3d(0,0,0) scale(${scale})`);
+        if ($pushEl.hasClass('popup')) {
+          if ($pushEl.hasClass('popup-push')) {
+            $pushEl.transition(0).forEach((el) => {
+              el.style.setProperty(
+                'transform',
+                `translate3d(0, calc(-1 * ${pushProgress} * (var(--f7-popup-push-offset) + 10px)) , 0px) scale(${scale})`,
+                'important',
+              );
+            });
+          } else {
+            $pushEl.transition(0).forEach((el) => {
+              el.style.setProperty(
+                'transform',
+                `translate3d(0, 0px , 0px) scale(${scale})`,
+                'important',
+              );
+            });
+          }
+        } else {
+          $pushEl.transition(0).forEach((el) => {
+            el.style.setProperty('transform', `translate3d(0,0,0) scale(${scale})`, 'important');
+          });
+        }
       }
       $el.transition(0).transform(`translate3d(0,${-touchesDiff}px,0)`);
     }
@@ -201,20 +244,25 @@ class Popup extends Modal {
       if (!isMoved) {
         return;
       }
+      popup.emit('local::swipeEnd popupSwipeEnd', popup);
+      popup.$el.trigger('popup:swipeend');
       isMoved = false;
       allowSwipeToClose = false;
       $el.transition('');
       if (isPush && pushOffset) {
-        $pushViewEl.transition('').transform('');
+        $pushEl.transition('').transform('');
       }
       const direction = touchesDiff <= 0 ? 'to-bottom' : 'to-top';
-      if ((typeof popup.params.swipeToClose === 'string' && direction !== popup.params.swipeToClose)) {
+      if (
+        typeof popup.params.swipeToClose === 'string' &&
+        direction !== popup.params.swipeToClose
+      ) {
         $el.transform('');
         allowSwipeToClose = true;
         return;
       }
       const diff = Math.abs(touchesDiff);
-      const timeDiff = (new Date()).getTime() - touchStartTime;
+      const timeDiff = new Date().getTime() - touchStartTime;
       if ((timeDiff < 300 && diff > 20) || (timeDiff >= 300 && diff > 100)) {
         Utils.nextTick(() => {
           if (direction === 'to-bottom') {
@@ -223,6 +271,8 @@ class Popup extends Modal {
             $el.addClass('swipe-close-to-top');
           }
           $el.transform('');
+          popup.emit('local::swipeclose popupSwipeClose', popup);
+          popup.$el.trigger('popup:swipeclose');
           popup.close();
           allowSwipeToClose = true;
         });
@@ -244,15 +294,32 @@ class Popup extends Modal {
       });
     }
 
-    popup.on('open', () => {
-      if (popup.params.closeOnEscape) {
-        $(document).on('keydown', onKeyDown);
-      }
+    let hasPreviousPushPopup;
+
+    const updatePushOffset = () => {
+      const wasPush = isPush;
       if (popup.push) {
-        isPush = popup.push && (
-          (app.width < 630 || app.height < 630)
-          || $el.hasClass('popup-tablet-fullscreen')
-        );
+        isPush =
+          popup.push &&
+          (app.width < 630 || app.height < 630 || $el.hasClass('popup-tablet-fullscreen'));
+      }
+      if (isPush && !wasPush) {
+        // eslint-disable-next-line
+        setPushOffset();
+      } else if (isPush && wasPush) {
+        popup.$htmlEl[0].style.setProperty('--f7-popup-push-scale', pushViewScale(pushOffset));
+      } else if (!isPush && wasPush) {
+        popup.$htmlEl.removeClass('with-modal-popup-push');
+        popup.$htmlEl[0].style.removeProperty('--f7-popup-push-scale');
+      }
+    };
+
+    const setPushOffset = () => {
+      app.off('resize', updatePushOffset);
+      if (popup.push) {
+        isPush =
+          popup.push &&
+          (app.width < 630 || app.height < 630 || $el.hasClass('popup-tablet-fullscreen'));
       }
       if (isPush) {
         pushOffset = parseInt($el.css('--f7-popup-push-offset'), 10);
@@ -263,6 +330,16 @@ class Popup extends Modal {
           popup.$htmlEl[0].style.setProperty('--f7-popup-push-scale', pushViewScale(pushOffset));
         }
       }
+      app.on('resize', updatePushOffset);
+    };
+
+    popup.on('open', () => {
+      hasPreviousPushPopup = false;
+      if (popup.params.closeOnEscape) {
+        $(document).on('keydown', onKeyDown);
+      }
+      $el.prevAll('.popup.modal-in').addClass('popup-behind');
+      setPushOffset();
     });
     popup.on('opened', () => {
       $el.removeClass('swipe-close-to-bottom swipe-close-to-top');
@@ -271,19 +348,23 @@ class Popup extends Modal {
       }
     });
     popup.on('close', () => {
+      hasPreviousPushPopup = popup.$el.prevAll('.popup-push.modal-in').length > 0;
       if (popup.params.closeOnEscape) {
         $(document).off('keydown', onKeyDown);
       }
       if (popup.params.closeByBackdropClick) {
         app.off('click', handleClick);
       }
-      if (isPush && pushOffset) {
+      $el.prevAll('.popup.modal-in').eq(0).removeClass('popup-behind');
+      if (isPush && pushOffset && !hasPreviousPushPopup) {
         popup.$htmlEl.removeClass('with-modal-popup-push');
         popup.$htmlEl.addClass('with-modal-popup-push-closing');
       }
+      app.off('resize', updatePushOffset);
     });
     popup.on('closed', () => {
-      if (isPush && pushOffset) {
+      $el.removeClass('popup-behind');
+      if (isPush && pushOffset && !hasPreviousPushPopup) {
         popup.$htmlEl.removeClass('with-modal-popup-push-closing');
         popup.$htmlEl[0].style.removeProperty('--f7-popup-push-scale');
       }

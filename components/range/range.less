@@ -1,5 +1,5 @@
 /* === Range Slider === */
-@import url('./range-vars.less');
+@import './range-vars.less';
 
 .range-slider {
   display: block;
@@ -7,16 +7,18 @@
   align-self: center;
   cursor: pointer;
   user-select: none;
-  input[type="range"] {
+  input[type='range'] {
     display: none;
   }
   &.range-slider-horizontal {
     width: 100%;
     height: var(--f7-range-size);
+    touch-action: pan-y;
   }
   &.range-slider-vertical {
     height: 100%;
     width: var(--f7-range-size);
+    touch-action: pan-x;
   }
 }
 .range-bar {
@@ -218,16 +220,19 @@
   }
 }
 .range-scale-substep {
-  --f7-range-scale-step-bg-color: var(--f7-range-scale-substep-bg-color, var(--f7-range-bar-bg-color));
+  --f7-range-scale-step-bg-color: var(
+    --f7-range-scale-substep-bg-color,
+    var(--f7-range-bar-bg-color)
+  );
   --f7-range-scale-step-width: var(--f7-range-scale-substep-width);
   --f7-range-scale-step-height: var(--f7-range-scale-substep-height);
 }
 .if-ios-theme({
-  @import url('./range-ios.less');
+  @import './range-ios.less';
 });
 .if-md-theme({
-  @import url('./range-md.less');
+  @import './range-md.less';
 });
 .if-aurora-theme({
-  @import url('./range-aurora.less');
+  @import './range-aurora.less';
 });

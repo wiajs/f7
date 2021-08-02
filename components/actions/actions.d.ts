@@ -49,7 +49,7 @@ export namespace Actions {
 
   interface Parameters {
     /** Action Sheet element. Can be useful if you already have Action Sheet element in your HTML and want to create new instance using this element*/
-    el?: HTMLElement;
+    el?: HTMLElement | CSSSelector;
     /** Full Action Sheet HTML content string. Can be useful if you want to create Action Sheet element with custom HTML*/
     content?: string;
     /** Enables Action Sheet backdrop (dark semi transparent layer behind)*/
@@ -70,7 +70,7 @@ export namespace Actions {
     buttons?: Button[] | Button[][];
     /** Enables grid buttons layout*/
     grid?: boolean;
-    /** When enabled, action sheet will be converted to Popoveron large screens.*/
+    /** When enabled, action sheet will be converted to Popover on large screens.*/
     convertToPopover?: boolean;
     /** When enabled, action sheet will be always converted to Popover.*/
     forceToPopover?: boolean;
@@ -125,15 +125,15 @@ export namespace Actions {
   interface AppMethods {
     actions: {
       /** create Action Sheet instance */
-      create(parameters : Parameters) : Actions;
+      create(parameters: Parameters): Actions;
       /** destroy Action Sheet instance */
-      destroy(el : HTMLElement | CSSSelector | Actions) : void;
+      destroy(el: HTMLElement | CSSSelector | Actions): void;
       /** get Action Sheet instance by HTML element */
-      get(el? : HTMLElement | CSSSelector) : Actions;
+      get(el?: HTMLElement | CSSSelector): Actions;
       /** opens Action Sheet */
-      open(el? : HTMLElement | CSSSelector, animate? : boolean) : Actions;
+      open(el?: HTMLElement | CSSSelector, animate?: boolean): Actions;
       /** closes Action Sheet */
-      close(el? : HTMLElement | CSSSelector, animate? : boolean) : Actions;
+      close(el?: HTMLElement | CSSSelector, animate?: boolean): Actions;
     };
   }
   interface AppParams {

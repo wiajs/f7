@@ -84,10 +84,20 @@ class Messagebar extends Event {
       const index = $(this).index();
       if ($(e.target).closest('.messagebar-attachment-delete').length) {
         $(this).trigger('messagebar:attachmentdelete', index);
-        messagebar.emit('local::attachmentDelete messagebarAttachmentDelete', messagebar, this, index);
+        messagebar.emit(
+          'local::attachmentDelete messagebarAttachmentDelete',
+          messagebar,
+          this,
+          index,
+        );
       } else {
         $(this).trigger('messagebar:attachmentclick', index);
-        messagebar.emit('local::attachmentClick messagebarAttachmentClick', messagebar, this, index);
+        messagebar.emit(
+          'local::attachmentClick messagebarAttachmentClick',
+          messagebar,
+          this,
+          index,
+        );
       }
     }
     function onTextareaChange() {
@@ -205,9 +215,15 @@ class Messagebar extends Event {
         const pageScrollHeight = $pageContentEl[0].scrollHeight;
         const pageOffsetHeight = $pageContentEl[0].offsetHeight;
         const pageScrollTop = $pageContentEl[0].scrollTop;
-        const scrollOnBottom = (pageScrollTop === pageScrollHeight - pageOffsetHeight);
+        const scrollOnBottom = pageScrollTop === pageScrollHeight - pageOffsetHeight;
         if (!maxHeight) {
-          maxHeight = $pageEl[0].offsetHeight - currentPaddingTop - $sheetEl.outerHeight() - $attachmentsEl.outerHeight() - parseInt($areaEl.css('margin-top'), 10) - parseInt($areaEl.css('margin-bottom'), 10);
+          maxHeight =
+            $pageEl[0].offsetHeight -
+            currentPaddingTop -
+            $sheetEl.outerHeight() -
+            $attachmentsEl.outerHeight() -
+            parseInt($areaEl.css('margin-top'), 10) -
+            parseInt($areaEl.css('margin-bottom'), 10);
         }
         $textareaEl.css('max-height', `${maxHeight}px`);
         $pageContentEl.css('padding-bottom', `${requiredPaddingBottom}px`);
@@ -295,7 +311,9 @@ class Messagebar extends Event {
     if (messagebar.params.renderAttachments) {
       html = messagebar.params.renderAttachments.call(messagebar, messagebar.attachments);
     } else {
-      html = `${messagebar.attachments.map(attachment => messagebar.renderAttachment(attachment)).join('')}`;
+      html = `${messagebar.attachments
+        .map((attachment) => messagebar.renderAttachment(attachment))
+        .join('')}`;
     }
     if (messagebar.$attachmentsEl.length === 0) {
       messagebar.attachmentsCreate(html);

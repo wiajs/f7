@@ -1,11 +1,11 @@
 /* === Toast === */
-@import url('./toast-vars.less');
+@import './toast-vars.less';
 
 .toast {
   --f7-touch-ripple-color: var(--f7-touch-ripple-white);
   transition-property: transform, opacity;
   position: absolute;
-  max-width: 568px;
+  max-width: var(--f7-toast-max-width);
   z-index: 20000;
   color: var(--f7-toast-text-color);
   font-size: var(--f7-toast-font-size);
@@ -56,11 +56,11 @@
 }
 
 .if-ios-theme({
-  @import url('./toast-ios.less');
+  @import './toast-ios.less';
 });
 .if-md-theme({
-  @import url('./toast-md.less');
+  @import './toast-md.less';
 });
 .if-aurora-theme({
-  @import url('./toast-aurora.less');
+  @import './toast-aurora.less';
 });

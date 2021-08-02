@@ -1,5 +1,5 @@
 /* === Data Table === */
-@import url('./data-table-vars.less');
+@import './data-table-vars.less';
 
 .data-table {
   overflow-x: auto;
@@ -76,7 +76,7 @@
         --f7-table-cell-padding-left: var(--f7-table-edge-cell-padding-horizontal);
       });
     }
-    &.label-cell {
+    &.label-cell, &.link-cell {
       --f7-table-cell-padding-left: var(--f7-table-label-cell-padding-horizontal);
       --f7-table-cell-padding-right: var(--f7-table-label-cell-padding-horizontal);
     }
@@ -422,11 +422,11 @@
 }
 
 .if-ios-theme({
-  @import url('./data-table-ios.less');
+  @import './data-table-ios.less';
 });
 .if-md-theme({
-  @import url('./data-table-md.less');
+  @import './data-table-md.less';
 });
-.if-aurora-theme({
-  @import url('./data-table-aurora.less');
+.if-md-theme({
+  @import './data-table-aurora.less';
 });

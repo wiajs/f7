@@ -20,7 +20,7 @@
       animation: md-preloader-circle-rotate @speed * 4 ease-in-out infinite,
         md-preloader-multicolor @speed * 4 ease-in-out infinite;
     }
-      }
+  }
 
   @keyframes md-preloader-multicolor {
     0%,
@@ -29,35 +29,35 @@
     }
     75% {
       stroke: #1b9a59;
-      }
+    }
     50% {
       stroke: #f7c223;
     }
     25% {
       stroke: #de3e35;
+    }
   }
-    }
-    }
+}
 @keyframes md-preloader-rotate {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
-    }
-    }
+  }
+}
 @keyframes md-preloader-circle-rotate {
   0% {
     transform: rotate(-90deg);
     stroke-dashoffset: 100px;
   }
 
-    12.5% {
+  12.5% {
     transform: rotate(-90deg);
     stroke-dashoffset: 25px;
-    }
+  }
 
-    25% {
+  25% {
     stroke-dashoffset: 100px;
     transform: rotate(180deg);
   }
@@ -65,17 +65,17 @@
   25.1% {
     transform: rotate(-180deg);
     stroke-dashoffset: 100px;
-    }
+  }
 
-    37.5% {
+  37.5% {
     transform: rotate(-180deg);
     stroke-dashoffset: 25px;
-    }
+  }
 
-    50% {
+  50% {
     stroke-dashoffset: 100px;
     transform: rotate(90deg);
-    }
+  }
 
   50.1% {
     transform: rotate(90deg);
@@ -85,24 +85,24 @@
   62.5% {
     transform: rotate(90deg);
     stroke-dashoffset: 25px;
-    }
+  }
 
-    75% {
+  75% {
     stroke-dashoffset: 100px;
     transform: rotate(360deg);
-    }
+  }
 
   75.1% {
     transform: rotate(0deg);
     stroke-dashoffset: 100px;
-    }
+  }
 
   87.5% {
     transform: rotate(0deg);
     stroke-dashoffset: 25px;
   }
 
-    100% {
+  100% {
     stroke-dashoffset: 100px;
     transform: rotate(270deg);
   }

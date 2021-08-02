@@ -1,5 +1,5 @@
 /* === Treeview === */
-@import url('./treeview-vars.less');
+@import './treeview-vars.less';
 
 .treeview-item-root {
   .ltr({
@@ -10,7 +10,7 @@
     padding-right: var(--f7-treeview-item-padding-left);
     padding-left: var(--f7-treeview-item-padding-right);
   });
-  height: var(--f7-treeview-item-height);
+  min-height: var(--f7-treeview-item-height);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -32,7 +32,6 @@
     .rtl({
       margin-right: calc(var(--f7-treeview-toggle-size) + 5px);
     });
-
   }
   > * + * {
     .ltr({
@@ -53,7 +52,7 @@
   height: var(--f7-treeview-toggle-size);
   cursor: pointer;
   border-radius: 4px;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   transition-duration: 200ms;
   position: relative;
   .ltr({
@@ -97,7 +96,6 @@
   .rtl({
     margin-left: calc(-1 * var(--f7-treeview-toggle-size));
   });
-
 }
 .treeview-item-children {
   display: none;
@@ -155,11 +153,11 @@ a.treeview-item-root {
 }
 
 .if-ios-theme({
-  @import url('./treeview-ios.less');
+  @import './treeview-ios.less';
 });
 .if-md-theme({
-  @import url('./treeview-md.less');
+  @import './treeview-md.less';
 });
 .if-aurora-theme({
-  @import url('./treeview-aurora.less');
+  @import './treeview-aurora.less';
 });

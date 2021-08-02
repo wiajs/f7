@@ -101,6 +101,7 @@ class ListIndex extends Event {
       const $clickedLi = $(e.target).closest('li');
       if (!$clickedLi.length) return;
 
+      // 无需计算，直接读取，更快
       let itemIndex = $clickedLi.attr('i'); // $clickedLi.index();
       if (index.skipRate > 0) {
         const percentage = itemIndex / ($clickedLi.siblings('li').length - 1);
@@ -129,7 +130,8 @@ class ListIndex extends Event {
       const $children = $ul.children();
       if (!$children.length) return;
       topPoint = $children[0].getBoundingClientRect().top;
-      bottomPoint = $children[$children.length - 1].getBoundingClientRect().top + $children[0].offsetHeight;
+      bottomPoint =
+        $children[$children.length - 1].getBoundingClientRect().top + $children[0].offsetHeight;
 
       touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
       touchesStart.y = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
@@ -153,9 +155,8 @@ class ListIndex extends Event {
       const itemIndex = Math.round((index.indexes.length - 1) * percentage);
       const itemContent = index.indexes[itemIndex];
 
-
       const ulHeight = bottomPoint - topPoint;
-      const bubbleBottom = ((index.height - ulHeight) / 2) + ((1 - percentage) * ulHeight);
+      const bubbleBottom = (index.height - ulHeight) / 2 + (1 - percentage) * ulHeight;
 
       if (itemIndex !== previousIndex) {
         if (index.params.label) {
@@ -236,7 +237,9 @@ class ListIndex extends Event {
     const scrollTop = $pageContentEl[0].scrollTop;
     const scrollToElTop = $scrollToEl.offset().top;
     if ($pageContentEl.parents('.page-with-navbar-large').length) {
-      const navbarInnerEl = app.navbar.getElByPage($pageContentEl.parents('.page-with-navbar-large').eq(0));
+      const navbarInnerEl = app.navbar.getElByPage(
+        $pageContentEl.parents('.page-with-navbar-large').eq(0),
+      );
       const $titleLargeEl = $(navbarInnerEl).find('.title-large');
       if ($titleLargeEl.length) {
         paddingTop -= $titleLargeEl[0].offsetHeight || 0;
@@ -244,9 +247,9 @@ class ListIndex extends Event {
     }
 
     if (parentTop <= paddingTop) {
-      $pageContentEl.scrollTop((parentTop + scrollTop) - paddingTop);
+      $pageContentEl.scrollTop(parentTop + scrollTop - paddingTop);
     } else {
-      $pageContentEl.scrollTop((scrollToElTop + scrollTop) - paddingTop);
+      $pageContentEl.scrollTop(scrollToElTop + scrollTop - paddingTop);
     }
     return index;
   }
@@ -266,7 +269,8 @@ class ListIndex extends Event {
     const { $ul, indexes, skipRate } = index;
     let wasSkipped;
 
-    const html = indexes.map((itemContent, itemIndex) => {
+    const html = indexes
+      .map((itemContent, itemIndex) => {
       if (itemIndex % skipRate !== 0 && skipRate > 0) {
         wasSkipped = true;
         return '';
@@ -277,7 +281,8 @@ class ListIndex extends Event {
       }
       wasSkipped = false;
       return itemHtml;
-    }).join('');
+      })
+      .join('');
 
     $ul.html(html);
 
@@ -293,7 +298,7 @@ class ListIndex extends Event {
     const items = indexes.length;
     let skipRate = 0;
     if (items > maxItems) {
-      skipRate = Math.ceil(((items * 2) - 1) / maxItems);
+      skipRate = Math.ceil((items * 2 - 1) / maxItems);
     }
 
     index.height = height;

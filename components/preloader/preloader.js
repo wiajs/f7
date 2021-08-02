@@ -50,14 +50,8 @@ export default {
   name: 'preloader',
   create() {
     const app = this;
-    Utils.extend(app, {
-      preloader: {
-        init: Preloader.init.bind(app),
-        show: Preloader.show.bind(app),
-        hide: Preloader.hide.bind(app),
-        showIn: Preloader.showIn.bind(app),
-        hideIn: Preloader.hideIn.bind(app),
-      },
+    Utils.bindMethods(app, {
+      preloader: Preloader,
     });
   },
   on: {

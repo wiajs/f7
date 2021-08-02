@@ -73,7 +73,7 @@ export default {
       toolbarCloseText: 'Done',
       footer: false,
       cssClass: null,
-      routableModals: true,
+      routableModals: false,
       view: null,
       url: 'date/',
       backdrop: null,

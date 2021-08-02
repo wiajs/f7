@@ -1,4 +1,5 @@
-import {Utils} from '@wiajs/core';
+/** @jsx jsx */
+import {Utils, Device, jsx} from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 class Dialog extends Modal {
@@ -26,6 +27,8 @@ class Dialog extends Modal {
 
     const dialog = this;
 
+    const device = Device;
+
     const { title, text, content, buttons, verticalButtons, cssClass, backdrop } = extendedParams;
 
     dialog.params = extendedParams;
@@ -41,25 +44,31 @@ class Dialog extends Modal {
 
       let buttonsHTML = '';
       if (buttons.length > 0) {
-        buttonsHTML = `
+        buttonsHTML = (
           <div class="dialog-buttons">
-            ${buttons.map(button => `
-              <span class="dialog-button${button.bold ? ' dialog-button-bold' : ''}${button.color ? ` color-${button.color}` : ''}${button.cssClass ? ` ${button.cssClass}` : ''}">${button.text}</span>
-            `).join('')}
+            {buttons.map((button) => (
+              <span
+                class={`dialog-button${button.bold ? ' dialog-button-bold' : ''}${
+                  button.color ? ` color-${button.color}` : ''
+                }${button.cssClass ? ` ${button.cssClass}` : ''}`}
+              >
+                {button.text}
+              </span>
+            ))}
           </div>
-        `;
+        );
       }
 
-      const dialogHtml = `
-        <div class="${dialogClasses.join(' ')}">
+      const dialogHtml = (
+        <div class={dialogClasses.join(' ')}>
           <div class="dialog-inner">
-            ${title ? `<div class="dialog-title">${title}</div>` : ''}
-            ${text ? `<div class="dialog-text">${text}</div>` : ''}
-            ${content}
+            {title && <div class="dialog-title">{title}</div>}
+            {text && <div class="dialog-text">{text}</div>}
+            {content}
           </div>
-          ${buttonsHTML}
+          {buttonsHTML}
         </div>
-      `;
+      );
       $el = $(dialogHtml);
     } else {
       $el = $(dialog.params.el);
@@ -112,10 +121,10 @@ class Dialog extends Modal {
         });
         if (
           addKeyboardHander &&
-          !app.device.ios &&
-          !app.device.android &&
-          !app.device.cordova &&
-          !app.device.capacitor
+          !device.ios &&
+          !device.android &&
+          !device.cordova &&
+          !device.capacitor
         ) {
           $(document).on('keydown', onKeyDown);
         }
@@ -126,10 +135,10 @@ class Dialog extends Modal {
         });
         if (
           addKeyboardHander &&
-          !app.device.ios &&
-          !app.device.android &&
-          !app.device.cordova &&
-          !app.device.capacitor
+          !device.ios &&
+          !device.android &&
+          !device.cordova &&
+          !device.capacitor
         ) {
           $(document).off('keydown', onKeyDown);
         }

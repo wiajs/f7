@@ -1,5 +1,5 @@
 /* === Sortable === */
-@import url('./sortable-vars.less');
+@import './sortable-vars.less';
 
 .sortable {
   .sortable-handler {
@@ -86,11 +86,24 @@
   }
 }
 .sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) .item-inner,
-.sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) .item-link .item-inner,
-.sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) .item-link.no-chevron .item-inner,
-.sortable-enabled.no-chevron:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) .item-link .item-inner,
+.sortable-enabled:not(.sortable-opposite)
+  li:not(.no-sorting):not(.disallow-sorting)
+  .item-link
+  .item-inner,
+.sortable-enabled:not(.sortable-opposite)
+  li:not(.no-sorting):not(.disallow-sorting)
+  .item-link.no-chevron
+  .item-inner,
+.sortable-enabled.no-chevron:not(.sortable-opposite)
+  li:not(.no-sorting):not(.disallow-sorting)
+  .item-link
+  .item-inner,
 .sortable-enabled :not(.sortable-opposite).no-chevron .item-link .item-inner,
-.no-chevron .sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) .item-link .item-inner,
+.no-chevron
+  .sortable-enabled:not(.sortable-opposite)
+  li:not(.no-sorting):not(.disallow-sorting)
+  .item-link
+  .item-inner,
 .simple-list.sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting),
 .links-list.sortable-enabled:not(.sortable-opposite) li:not(.no-sorting):not(.disallow-sorting) a {
   .ltr({
@@ -112,11 +125,11 @@
 }
 
 .if-ios-theme({
-  @import url('./sortable-ios.less');
+  @import './sortable-ios.less';
 });
 .if-md-theme({
-  @import url('./sortable-md.less');
+  @import './sortable-md.less';
 });
 .if-aurora-theme({
-  @import url('./sortable-aurora.less');
+  @import './sortable-aurora.less';
 });

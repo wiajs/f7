@@ -24,7 +24,6 @@ class VirtualList extends Event {
       setListHeight: true,
       searchByItem: undefined,
       searchAll: undefined,
-      itemTemplate: undefined,
       ul: null,
       createUl: true,
       scrollableParentEl: undefined,
@@ -57,16 +56,15 @@ class VirtualList extends Event {
     if (vl.params.showFilteredItemsOnly) {
       vl.filteredItems = [];
     }
-    if (vl.params.itemTemplate) {
-      if (typeof vl.params.itemTemplate === 'string') vl.renderItem = app.t7.compile(vl.params.itemTemplate);
-      else if (typeof vl.params.itemTemplate === 'function') vl.renderItem = vl.params.itemTemplate;
-    } else if (vl.params.renderItem) {
+    if (vl.params.renderItem) {
       vl.renderItem = vl.params.renderItem;
     }
     vl.$pageContentEl = vl.$el.parents('.page-content');
     vl.pageContentEl = vl.$pageContentEl[0];
 
-    vl.$scrollableParentEl = vl.params.scrollableParentEl ? $(vl.params.scrollableParentEl).eq(0) : vl.$pageContentEl;
+    vl.$scrollableParentEl = vl.params.scrollableParentEl
+      ? $(vl.params.scrollableParentEl).eq(0)
+      : vl.$pageContentEl;
     if (!vl.$scrollableParentEl.length && vl.$pageContentEl.length) {
       vl.$scrollableParentEl = vl.$pageContentEl;
     }
@@ -127,23 +125,31 @@ class VirtualList extends Event {
     let $popupEl;
     vl.attachEvents = function attachEvents() {
       $pageEl = vl.$el.parents('.page').eq(0);
-      $tabEl = vl.$el.parents('.tab').eq(0);
+      $tabEl = vl.$el
+        .parents('.tab')
+        .filter((index, tabEl) => {
+          return (
+            $(tabEl).parent('.tabs').parent('.tabs-animated-wrap, .tabs-swipeable-wrap').length ===
+            0
+          );
+        })
+        .eq(0);
       $panelEl = vl.$el.parents('.panel').eq(0);
       $popupEl = vl.$el.parents('.popup').eq(0);
 
       vl.$scrollableParentEl.on('scroll', handleScrollBound);
-      if ($pageEl) $pageEl.on('page:reinit', handleResizeBound);
-      if ($tabEl) $tabEl.on('tab:show', handleResizeBound);
-      if ($panelEl) $panelEl.on('panel:open', handleResizeBound);
-      if ($popupEl) $popupEl.on('popup:open', handleResizeBound);
+      if ($pageEl.length) $pageEl.on('page:reinit', handleResizeBound);
+      if ($tabEl.length) $tabEl.on('tab:show', handleResizeBound);
+      if ($panelEl.length) $panelEl.on('panel:open', handleResizeBound);
+      if ($popupEl.length) $popupEl.on('popup:open', handleResizeBound);
       app.on('resize', handleResizeBound);
     };
     vl.detachEvents = function attachEvents() {
       vl.$scrollableParentEl.off('scroll', handleScrollBound);
-      if ($pageEl) $pageEl.off('page:reinit', handleResizeBound);
-      if ($tabEl) $tabEl.off('tab:show', handleResizeBound);
-      if ($panelEl) $panelEl.off('panel:open', handleResizeBound);
-      if ($popupEl) $popupEl.off('popup:open', handleResizeBound);
+      if ($pageEl.length) $pageEl.off('page:reinit', handleResizeBound);
+      if ($tabEl.length) $tabEl.off('tab:show', handleResizeBound);
+      if ($panelEl.length) $panelEl.off('panel:open', handleResizeBound);
+      if ($popupEl.length) $popupEl.off('popup:open', handleResizeBound);
       app.off('resize', handleResizeBound);
     };
     // Init
@@ -169,7 +175,7 @@ class VirtualList extends Event {
       vl.rowsPerScreen = Math.ceil(vl.pageHeight / vl.params.height);
       vl.rowsBefore = vl.params.rowsBefore || vl.rowsPerScreen * 2;
       vl.rowsAfter = vl.params.rowsAfter || vl.rowsPerScreen;
-      vl.rowsToRender = (vl.rowsPerScreen + vl.rowsBefore + vl.rowsAfter);
+      vl.rowsToRender = vl.rowsPerScreen + vl.rowsBefore + vl.rowsAfter;
       vl.maxBufferHeight = (vl.rowsBefore / 2) * vl.params.height;
     }
 
@@ -182,10 +188,18 @@ class VirtualList extends Event {
     const vl = this;
     if (force) vl.lastRepaintY = null;
 
-    let scrollTop = -(vl.$el[0].getBoundingClientRect().top - vl.$scrollableParentEl[0].getBoundingClientRect().top);
+    let scrollTop = -(
+      vl.$el[0].getBoundingClientRect().top - vl.$scrollableParentEl[0].getBoundingClientRect().top
+    );
 
     if (typeof forceScrollTop !== 'undefined') scrollTop = forceScrollTop;
-    if (vl.lastRepaintY === null || Math.abs(scrollTop - vl.lastRepaintY) > vl.maxBufferHeight || (!vl.updatableScroll && (vl.$scrollableParentEl[0].scrollTop + vl.pageHeight >= vl.$scrollableParentEl[0].scrollHeight))) {
+    if (
+      vl.lastRepaintY === null ||
+      Math.abs(scrollTop - vl.lastRepaintY) > vl.maxBufferHeight ||
+      (!vl.updatableScroll &&
+        vl.$scrollableParentEl[0].scrollTop + vl.pageHeight >=
+          vl.$scrollableParentEl[0].scrollHeight)
+    ) {
       vl.lastRepaintY = scrollTop;
     } else {
       return;
@@ -204,12 +218,21 @@ class VirtualList extends Event {
       for (let j = 0; j < vl.heights.length; j += 1) {
         itemHeight = vl.heights[j];
         if (typeof fromIndex === 'undefined') {
-          if (itemTop + itemHeight >= scrollTop - (vl.pageHeight * 2 * vl.params.dynamicHeightBufferSize)) fromIndex = j;
+          if (
+            itemTop + itemHeight >=
+            scrollTop - vl.pageHeight * 2 * vl.params.dynamicHeightBufferSize
+          )
+            fromIndex = j;
           else heightBeforeFirstItem += itemHeight;
         }
 
         if (typeof toIndex === 'undefined') {
-          if (itemTop + itemHeight >= scrollTop + (vl.pageHeight * 2 * vl.params.dynamicHeightBufferSize) || j === vl.heights.length - 1) toIndex = j + 1;
+          if (
+            itemTop + itemHeight >=
+              scrollTop + vl.pageHeight * 2 * vl.params.dynamicHeightBufferSize ||
+            j === vl.heights.length - 1
+          )
+            toIndex = j + 1;
           heightBeforeLastItem += itemHeight;
         }
         itemTop += itemHeight;
@@ -220,7 +243,7 @@ class VirtualList extends Event {
       if (fromIndex < 0) {
         fromIndex = 0;
       }
-      toIndex = Math.min(fromIndex + (vl.rowsToRender * vl.params.cols), items.length);
+      toIndex = Math.min(fromIndex + vl.rowsToRender * vl.params.cols, items.length);
     }
 
     let topPosition;
@@ -260,7 +283,7 @@ class VirtualList extends Event {
         if (vl.dynamicHeight) {
           topPosition = heightBeforeFirstItem;
         } else {
-          topPosition = ((i * vl.params.height) / vl.params.cols);
+          topPosition = (i * vl.params.height) / vl.params.cols;
         }
       }
       if (!vl.params.renderExternal) {
@@ -354,7 +377,7 @@ class VirtualList extends Event {
       itemTop = index * vl.params.height;
     }
     const listTop = vl.$el[0].offsetTop;
-    vl.render(true, (listTop + itemTop) - parseInt(vl.$scrollableParentEl.css('padding-top'), 10));
+    vl.render(true, listTop + itemTop - parseInt(vl.$scrollableParentEl.css('padding-top'), 10));
     return true;
   }
 
@@ -452,9 +475,11 @@ class VirtualList extends Event {
         const leftIndex = fromIndex < toIndex ? fromIndex : toIndex;
         const rightIndex = fromIndex < toIndex ? toIndex : fromIndex;
         const indexShift = fromIndex < toIndex ? -1 : 1;
-        if (cachedIndex < leftIndex || cachedIndex > rightIndex) newCache[cachedIndex] = vl.domCache[cachedIndex];
+        if (cachedIndex < leftIndex || cachedIndex > rightIndex)
+          newCache[cachedIndex] = vl.domCache[cachedIndex];
         if (cachedIndex === leftIndex) newCache[rightIndex] = vl.domCache[cachedIndex];
-        if (cachedIndex > leftIndex && cachedIndex <= rightIndex) newCache[cachedIndex + indexShift] = vl.domCache[cachedIndex];
+        if (cachedIndex > leftIndex && cachedIndex <= rightIndex)
+          newCache[cachedIndex + indexShift] = vl.domCache[cachedIndex];
       });
       vl.domCache = newCache;
     }

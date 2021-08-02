@@ -37,15 +37,15 @@ export namespace Input {
   interface AppParams {
     input?:
       | {
-      /** When enabled will scroll input into view on input focus. By default it is enabled for android devices only, as it helps to solve issue when on-screen keyboard may overlap the input. */
+          /** When enabled will scroll input into view on input focus. By default it is enabled for android devices only, as it helps to solve issue when on-screen keyboard may overlap the input. */
           scrollIntoViewOnFocus?: boolean;
-      /** Tweaks behavior of previous parameter to scroll input into the center of view on input focus. (default false) */
+          /** Tweaks behavior of previous parameter to scroll input into the center of view on input focus. (default false) */
           scrollIntoViewCentered?: boolean;
-      /** Default duration for scrolling input into view. (default 0) */
+          /** Default duration for scrolling input into view. (default 0) */
           scrollIntoViewDuration?: number;
-      /** When enabled will scroll input into view no matter is it outside of view or not. (default false) */
+          /** When enabled will scroll input into view no matter is it outside of view or not. (default false) */
           scrollIntoViewAlways?: boolean;
-  }
+        }
       | undefined;
   }
   interface AppEvents {}

@@ -14,19 +14,19 @@ export namespace Card {
   interface AppParams {
     card?:
       | {
-      /** Will hide Navbar on expandable card open. (default true) */
+          /** Will hide Navbar on expandable card open. (default true) */
           hideNavbarOnOpen?: boolean;
-      /** Will hide Toolbar on expandable card open. (default true) */
+          /** Will hide Toolbar on expandable card open. (default true) */
           hideToolbarOnOpen?: boolean;
-      /** Will hide "Statusbar" on expandable card open. (default true) */
+          /** Will hide "Statusbar" on expandable card open. (default true) */
           hideStatusbarOnOpen?: boolean;
-      /** Custom scrollable container CSS selector, (default '.card-content') */
+          /** Custom scrollable container CSS selector, (default '.card-content') */
           scrollableEl?: string;
-      /** Allows to close expandable card with swipe (default true) */
+          /** Allows to close expandable card with swipe (default true) */
           swipeToClose?: boolean;
-      /** Enables expandable card backdrop layer (default true) */
+          /** Enables expandable card backdrop layer (default true) */
           backdrop?: boolean;
-      /** When enabled, expandable card will be closed on backdrop click. (default true) */
+          /** When enabled, expandable card will be closed on backdrop click. (default true) */
           closeByBackdropClick?: boolean;
         }
       | undefined;

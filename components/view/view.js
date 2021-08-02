@@ -16,6 +16,9 @@ function getCurrentView(app) {
     if ($viewEl.hasClass('tab')) {
       // Tabs
       $viewEl = $viewsEl.children('.view.tab-active');
+      if ($viewEl.length === 0) {
+        $viewEl = $viewsEl.children('.tabs').children('.view.tab-active');
+      }
     } else {
       // Split View, leave appView intact
     }
@@ -36,6 +39,7 @@ export default {
   name: 'view',
   params: {
     view: {
+      init: true,
       name: undefined,
       main: false,
       router: true,
@@ -77,12 +81,14 @@ export default {
       auroraSwipeBackActiveArea: 30,
       auroraSwipeBackThreshold: 0,
       // Push State
-      pushState: false,
-      pushStateRoot: undefined,
-      pushStateAnimate: true,
-      pushStateAnimateOnLoad: false,
-      pushStateSeparator: '#!',
-      pushStateOnLoad: true,
+      browserHistory: false,
+      browserHistoryRoot: undefined,
+      browserHistoryAnimate: true,
+      browserHistoryAnimateOnLoad: false,
+      browserHistorySeparator: '#!',
+      browserHistoryOnLoad: true,
+      browserHistoryInitialMatch: false,
+      browserHistoryStoreHistory: true,
       // Animate Pages
       animate: true,
       // iOS Dynamic Navbar
@@ -134,17 +140,17 @@ export default {
         app.views.create(viewEl, viewParams);
       });
     },
-    modalOpen(modal) {
+    'modalOpen panelOpen': function onOpen(instance) {
       const app = this;
-      modal.$el.find('.view-init').each((index, viewEl) => {
+      instance.$el.find('.view-init').each((viewEl) => {
         if (viewEl.f7View) return;
         const viewParams = $(viewEl).dataset();
         app.views.create(viewEl, viewParams);
       });
     },
-    modalBeforeDestroy(modal) {
-      if (!modal || !modal.$el) return;
-      modal.$el.find('.view-init').each((index, viewEl) => {
+    'modalBeforeDestroy panelBeforeDestroy': function onClose(instance) {
+      if (!instance || !instance.$el) return;
+      instance.$el.find('.view-init').each((viewEl) => {
         const view = viewEl.f7View;
         if (!view) return;
         view.destroy();

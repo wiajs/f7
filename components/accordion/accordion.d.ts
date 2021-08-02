@@ -13,7 +13,7 @@ export namespace Accordion {
       /** toggle specified accordion item */
       toggle(el: HTMLElement | CSSSelector): void;
     };
-    }
+  }
   interface AppParams {}
   interface DomEvents {
     /** Event will be triggered right before accordion content starts its opening animation. event.detail.prevent contains function that will prevent accordion from opening when called */

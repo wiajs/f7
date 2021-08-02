@@ -1,6 +1,6 @@
 import {Utils, Event} from '@wiajs/core';
-import SwipePanel from './swipe-panel';
-import ResizablePanel from './resizable-panel';
+import swipePanel from './swipe-panel';
+import resizablePanel from './resizable-panel';
 
 class Panel extends Event {
   constructor(app, params = {}) {
@@ -14,6 +14,12 @@ class Panel extends Event {
     const panel = this;
 
     panel.params = extendedParams;
+    panel.$containerEl = panel.params.containerEl ? $(panel.params.containerEl).eq(0) : app.$el;
+    panel.containerEl = panel.$containerEl[0];
+    if (!panel.containerEl) {
+      panel.$containerEl = app.$el;
+      panel.containerEl = app.$el[0];
+    }
 
     let $el;
     if (panel.params.el) {
@@ -36,10 +42,10 @@ class Panel extends Event {
     if (panel.params.backdrop && panel.params.backdropEl) {
       $backdropEl = $(panel.params.backdropEl);
     } else if (panel.params.backdrop) {
-      $backdropEl = app.root.children('.panel-backdrop');
+      $backdropEl = panel.$containerEl.children('.panel-backdrop');
       if ($backdropEl.length === 0) {
         $backdropEl = $('<div class="panel-backdrop"></div>');
-        app.root.prepend($backdropEl);
+        panel.$containerEl.prepend($backdropEl);
       }
     }
 
@@ -55,7 +61,6 @@ class Panel extends Event {
       backdropEl: $backdropEl && $backdropEl[0],
     });
 
-
     // Init
     panel.init();
 
@@ -64,14 +69,38 @@ class Panel extends Event {
 
   getViewEl() {
     const panel = this;
-    const app = panel.app;
     let viewEl;
-    if (app.root.children('.views').length > 0) {
-      viewEl = app.root.children('.views')[0];
+    if (panel.$containerEl.children('.views').length > 0) {
+      viewEl = panel.$containerEl.children('.views')[0];
     } else {
-      viewEl = app.root.children('.view')[0];
+      viewEl = panel.$containerEl.children('.view')[0];
     }
     return viewEl;
+  }
+
+  setStateClasses(state) {
+    const panel = this;
+    const { side, el } = panel;
+
+    const viewEl = panel.getViewEl();
+    const panelInView = viewEl && viewEl.contains(el);
+    const $targetEl = !viewEl || panelInView ? panel.$containerEl : $('html');
+    if (state === 'open') {
+      $targetEl.addClass(`with-panel with-panel-${panel.side}-${panel.effect}`);
+    }
+    if (state === 'before-closing') {
+      $targetEl.addClass('with-panel-closing');
+    }
+    if (state === 'closing') {
+      $targetEl.addClass('with-panel-closing');
+      $targetEl.removeClass(`with-panel with-panel-${panel.side}-${panel.effect}`);
+    }
+    if (state === 'after-closing') {
+      $targetEl.removeClass('with-panel-closing');
+    }
+    if (state === 'closed') {
+      $targetEl.removeClass(`with-panel-${side}-reveal with-panel-${side}-cover with-panel`);
+    }
   }
 
   enableVisibleBreakpoint() {
@@ -104,14 +133,22 @@ class Panel extends Event {
       };
       app.on('resize', panel.visibleBreakpointResizeHandler);
     }
-    const { side, $el, params, visibleBreakpointDisabled } = panel;
+    const { side, $el, $containerEl, params, visibleBreakpointDisabled } = panel;
     const breakpoint = params.visibleBreakpoint;
     const $viewEl = $(panel.getViewEl());
     const wasVisible = $el.hasClass('panel-in-breakpoint');
+    if ($containerEl && $containerEl.hasClass('page')) {
+      $viewEl.add($containerEl.children('.page-content, .tabs, .fab'));
+    }
 
-    if (app.width >= breakpoint && typeof breakpoint !== 'undefined' && breakpoint !== null && !visibleBreakpointDisabled) {
+    if (
+      app.width >= breakpoint &&
+      typeof breakpoint !== 'undefined' &&
+      breakpoint !== null &&
+      !visibleBreakpointDisabled
+    ) {
       if (!wasVisible) {
-        $('html').removeClass(`with-panel-${side}-reveal with-panel-${side}-cover with-panel`);
+        panel.setStateClasses('closed');
         $el.addClass('panel-in-breakpoint').removeClass('panel-in panel-in-collapsed');
         panel.onOpen(false);
         panel.onOpened();
@@ -163,7 +200,7 @@ class Panel extends Event {
     return panel;
   }
 
-  setCollapsedBreakpoint(emitEvents) {
+  setCollapsedBreakpoint(emitEvents = true) {
     const panel = this;
     const app = panel.app;
     if (!panel.collapsedBreakpointResizeHandler) {
@@ -172,14 +209,19 @@ class Panel extends Event {
       };
       app.on('resize', panel.collapsedBreakpointResizeHandler);
     }
-    const { side, $el, params, collapsedBreakpointDisabled } = panel;
+    const { $el, params, collapsedBreakpointDisabled } = panel;
     if ($el.hasClass('panel-in-breakpoint')) return;
     const breakpoint = params.collapsedBreakpoint;
     const wasVisible = $el.hasClass('panel-in-collapsed');
 
-    if (app.width >= breakpoint && typeof breakpoint !== 'undefined' && breakpoint !== null && !collapsedBreakpointDisabled) {
+    if (
+      app.width >= breakpoint &&
+      typeof breakpoint !== 'undefined' &&
+      breakpoint !== null &&
+      !collapsedBreakpointDisabled
+    ) {
       if (!wasVisible) {
-        $('html').removeClass(`with-panel-${side}-reveal with-panel-${side}-cover with-panel`);
+        panel.setStateClasses('closed');
         $el.addClass('panel-in-collapsed').removeClass('panel-in');
         panel.collapsed = true;
         app.allowPanelOpen = true;
@@ -204,7 +246,7 @@ class Panel extends Event {
       panel.resizable = true;
       panel.$el.addClass('panel-resizable');
     } else {
-      ResizablePanel(panel);
+      resizablePanel(panel);
     }
     return panel;
   }
@@ -221,7 +263,7 @@ class Panel extends Event {
     if (panel.swipeInitialized) {
       panel.swipeable = true;
     } else {
-      SwipePanel(panel);
+      swipePanel(panel);
     }
     return panel;
   }
@@ -243,7 +285,7 @@ class Panel extends Event {
     panel.emit('local::beforeOpen panelBeforeOpen', panel);
 
     if (modifyHtmlClasses) {
-      $('html').addClass(`with-panel with-panel-${panel.side}-${panel.effect}`);
+      panel.setStateClasses('open');
     }
 
     panel.$el.trigger('panel:open');
@@ -270,8 +312,7 @@ class Panel extends Event {
     panel.$el.trigger('panel:beforeclose');
     panel.emit('local::beforeClose panelBeforeClose', panel);
 
-    $('html').addClass('with-panel-closing');
-    $('html').removeClass(`with-panel with-panel-${panel.side}-${panel.effect}`);
+    panel.setStateClasses('closing');
 
     panel.$el.trigger('panel:close');
     panel.emit('local::close panelClose', panel);
@@ -281,8 +322,15 @@ class Panel extends Event {
     const panel = this;
     const app = panel.app;
     app.panel.allowOpen = true;
-    $('html').removeClass('with-panel-closing');
+    panel.setStateClasses('after-closing');
     panel.$el.removeClass('panel-out');
+    if (panel.$backdropEl) {
+      const otherPanel = app.panel.get('.panel-in');
+      const shouldHideBackdrop = !otherPanel || (otherPanel && !otherPanel.$backdropEl);
+      if (shouldHideBackdrop) {
+        panel.$backdropEl.removeClass('panel-backdrop-in');
+      }
+    }
     panel.$el.trigger('panel:closed');
     panel.emit('local::closed panelClosed', panel);
   }
@@ -301,34 +349,27 @@ class Panel extends Event {
 
   insertToRoot() {
     const panel = this;
-    const { $el, app, $backdropEl } = panel;
+    const { $el, $backdropEl, $containerEl } = panel;
     const $panelParentEl = $el.parent();
     const wasInDom = $el.parents(document).length > 0;
 
-    if (!$panelParentEl.is(app.root) || $el.prevAll('.views, .view').length) {
-      const $insertBeforeEl = app.root.children('.panel, .views, .view').eq(0);
-      const $insertAfterEl = app.root.children('.panel-backdrop').eq(0);
+    if (!$panelParentEl.is($containerEl) || $el.prevAll('.views, .view').length) {
+      const $insertBeforeEl = $containerEl.children('.panel, .views, .view').eq(0);
+      const $insertAfterEl = $containerEl.children('.panel-backdrop').eq(0);
 
       if ($insertBeforeEl.length) {
         $el.insertBefore($insertBeforeEl);
       } else if ($insertAfterEl) {
         $el.insertBefore($insertAfterEl);
       } else {
-        app.root.prepend($el);
+        $containerEl.prepend($el);
       }
 
-      if ($backdropEl
-        && $backdropEl.length
-        && (
-          (
-            !$backdropEl.parent().is(app.root)
-            && $backdropEl.nextAll('.panel').length === 0
-          )
-          || (
-            $backdropEl.parent().is(app.root)
-            && $backdropEl.nextAll('.panel').length === 0
-          )
-        )
+      if (
+        $backdropEl &&
+        $backdropEl.length &&
+        ((!$backdropEl.parent().is($containerEl) && $backdropEl.nextAll('.panel').length === 0) ||
+          ($backdropEl.parent().is($containerEl) && $backdropEl.nextAll('.panel').length === 0))
       ) {
         $backdropEl.insertBefore($el);
       }
@@ -349,7 +390,7 @@ class Panel extends Event {
 
     if (!app.panel.allowOpen) return false;
 
-    const { effect, $el, $backdropEl, opened } = panel;
+    const { effect, $el, $backdropEl, opened, $containerEl } = panel;
 
     if (!$el || $el.hasClass('panel-in')) {
       return panel;
@@ -369,7 +410,10 @@ class Panel extends Event {
     $el[animate ? 'removeClass' : 'addClass']('not-animated');
     $el.addClass('panel-in');
 
+    if ($backdropEl) {
+      $backdropEl.addClass('panel-backdrop-in');
     $backdropEl[animate ? 'removeClass' : 'addClass']('not-animated');
+    }
 
     if (panel.effect === 'cover') {
       /* eslint no-underscore-dangle: ["error", { "allow": ["_clientLeft"] }] */
@@ -377,7 +421,11 @@ class Panel extends Event {
     }
 
     // Transitionend
-    const transitionEndTarget = effect === 'reveal' ? $el.nextAll('.view, .views').eq(0) : $el;
+    const $viewEl = $(panel.getViewEl());
+    if ($containerEl && $containerEl.hasClass('page')) {
+      $viewEl.add($containerEl.children('.page-content, .tabs'));
+    }
+    const transitionEndTarget = effect === 'reveal' ? $viewEl : $el;
 
     function panelTransitionEnd() {
       transitionEndTarget.transitionEnd((e) => {
@@ -395,9 +443,7 @@ class Panel extends Event {
         $backdropEl.removeClass('not-animated');
       }
       panelTransitionEnd();
-      $el
-        .removeClass('panel-out not-animated')
-        .addClass('panel-in');
+      $el.removeClass('panel-out not-animated').addClass('panel-in');
       panel.onOpen();
     } else {
       if ($backdropEl) {
@@ -414,13 +460,19 @@ class Panel extends Event {
   close(animate = true) {
     const panel = this;
 
-    const { effect, $el, $backdropEl, opened } = panel;
+    const { effect, $el, $backdropEl, opened, $containerEl } = panel;
     if (!opened || $el.hasClass('panel-in-breakpoint') || !$el.hasClass('panel-in')) return panel;
 
     $el[animate ? 'removeClass' : 'addClass']('not-animated');
+    if ($backdropEl) {
     $backdropEl[animate ? 'removeClass' : 'addClass']('not-animated');
+    }
 
-    const transitionEndTarget = effect === 'reveal' ? $el.nextAll('.view, .views').eq(0) : $el;
+    const $viewEl = $(panel.getViewEl());
+    if ($containerEl && $containerEl.hasClass('page')) {
+      $viewEl.add($containerEl.children('.page-content, .tabs'));
+    }
+    const transitionEndTarget = effect === 'reveal' ? $viewEl : $el;
 
     function transitionEnd() {
       if ($el.hasClass('panel-out')) {
@@ -428,23 +480,17 @@ class Panel extends Event {
       } else if ($el.hasClass('panel-in')) {
         panel.onOpened();
       }
-      $('html').removeClass('with-panel-closing');
+      panel.setStateClasses('after-closing');
     }
     if (animate) {
-      transitionEndTarget
-        .transitionEnd(() => {
+      transitionEndTarget.transitionEnd(() => {
           transitionEnd();
         });
-      $el
-        .removeClass('panel-in')
-        .addClass('panel-out');
+      $el.removeClass('panel-in').addClass('panel-out');
       // Emit close
       panel.onClose();
     } else {
-      $el
-        .addClass('not-animated')
-        .removeClass('panel-in')
-        .addClass('panel-out');
+      $el.addClass('not-animated').removeClass('panel-in').addClass('panel-out');
       // Emit close
       panel.onClose();
       panel.onClosed();
@@ -473,6 +519,7 @@ class Panel extends Event {
   destroy() {
     let panel = this;
     const app = panel.app;
+    const { $containerEl } = panel;
 
     if (!panel.$el) {
       // Panel already destroyed
@@ -490,6 +537,9 @@ class Panel extends Event {
     }
     if (panel.$el.hasClass('panel-in-breakpoint') || panel.$el.hasClass('panel-in-collapsed')) {
       const $viewEl = $(panel.getViewEl());
+      if ($containerEl && $containerEl.hasClass('page')) {
+        $viewEl.add($containerEl.children('.page-content, .tabs'));
+      }
       panel.$el.removeClass('panel-in-breakpoint panel-in-collapsed panel-in');
       $viewEl.css({
         [`margin-${panel.side}`]: '',
