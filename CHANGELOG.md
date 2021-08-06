@@ -1,5 +1,10 @@
 # Change Log
 
+## 2021-08-06
+
+- 修正 data-table.less bug
+	.if-md-theme 改为 .if-aurora-theme
+
 ## 2021-08-01
 
 - \+ pie-chart
