@@ -1,9 +1,14 @@
 # Change Log
 
+## 2021-09-13
+
+- f7\components\tabs\tabs.js
+  $.clas -> $.class
+
 ## 2021-08-06
 
 - 修正 data-table.less bug
-	.if-md-theme 改为 .if-aurora-theme
+  .if-md-theme 改为 .if-aurora-theme
 
 ## 2021-08-01
 
