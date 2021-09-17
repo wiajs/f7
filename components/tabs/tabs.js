@@ -28,7 +28,7 @@ const Tab = {
 
     tabLinkEl.addClass('tab-link-active', true);
     let tabs = '';
-    const links = tabLinkEl.parentNode('.tab-links').clases('tab-link-active');
+    const links = tabLinkEl.parentNode('.tab-links').classes('tab-link-active');
     if (links) tabs = links.toArray().reduce((prev, v) => prev ? `${prev}-${$(v).data('tab')}` : $(v).data('tab'), '');
 
     // const $newTabEl = $(tabEl);
