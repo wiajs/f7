@@ -1,5 +1,11 @@
 # Change Log
 
+## 2021-11-14
+
+- app-vars
+	part-vars
+	pc 字体，增加'Microsoft Yahei'
+
 ## 2021-09-13
 
 - f7\components\tabs\tabs.js
