@@ -1,4 +1,4 @@
-/** @jsx $jsx */
+/** @jsx jsx */
 
 import {Utils, Event, jsx} from '@wiajs/core';
 
