@@ -1,5 +1,26 @@
 # Change Log
 
+## 2023-07-10
+
+- 组件更新到 F7 的 8.2.0 版本。
+- core/clicks.js
+- + breadcrumbs
+- core/app
+  root -> $el
+	autoDarkMode -> darkMode
+  传入 root -> el
+	el: HTMLElement 元素
+	$el: $(el)	
+	+ mount	
+  setColorTheme(color)
+  setColors()
+	setDarkMode
+- - menu
+  - lazy
+  - vi
+  - appbar
+  - elevation	
+
 ## 2021-11-14
 
 - app-vars

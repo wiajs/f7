@@ -1,29 +1,27 @@
 import {Constructors} from '@wiajs/core';
 import Swiper from './swiper-class';
 
-if (process.env.FORMAT !== 'es') {
-  if (!window.Swiper) {
-    window.Swiper = Swiper;
-  }
+
+// UMD_ONLY_START
+/* eslint-disable */
+if (!window.Swiper) {
+  window.Swiper = Swiper;
 }
+/* eslint-enable */
+// UMD_ONLY_END
 
 function initSwiper(swiperEl) {
   const app = this;
   const $swiperEl = $(swiperEl);
   if ($swiperEl.length === 0) return;
-  if ($swiperEl[0].swiper) return;
+  const isElement = $swiperEl[0].swiper && $swiperEl[0].swiper.isElement;
+  if ($swiperEl[0].swiper && !$swiperEl[0].swiper.isElement) return;
   let initialSlide;
   let params = {};
   let isTabs;
   let isRoutableTabs;
-  if ($swiperEl.hasClass('tabs-swipeable-wrap')) {
-    $swiperEl
-      .addClass('swiper-container')
-      .children('.tabs')
-      .addClass('swiper-wrapper')
-      .children('.tab')
-      .addClass('swiper-slide');
-    initialSlide = $swiperEl.children('.tabs').children('.tab-active').index();
+  if ($swiperEl.hasClass('tabs')) {
+    initialSlide = $swiperEl.children('swiper-slide').indexOf($swiperEl.children('.tab-active')[0]);
     isTabs = true;
     isRoutableTabs = $swiperEl.find('.tabs-routable').length > 0;
   }
@@ -44,21 +42,43 @@ function initSwiper(swiperEl) {
       }
     });
   }
+
   if (typeof params.initialSlide === 'undefined' && typeof initialSlide !== 'undefined') {
     params.initialSlide = initialSlide;
   }
 
-  const swiper = app.swiper.create($swiperEl[0], params);
+  const swiper = isElement ? $swiperEl[0].swiper : app.swiper.create($swiperEl[0], params);
+
+  if (isElement) {
+    swiper.slideTo(initialSlide, 0);
+  }
+
   function updateSwiper() {
     swiper.update();
   }
+
+  const $tabEl = $swiperEl
+    .parents('.tab')
+    .filter((tabEl) => {
+      return (
+        $(tabEl).parent('.tabs').parent('.tabs-animated-wrap, swiper-container.tabs').length === 0
+      );
+    })
+    .eq(0);
   $swiperEl.parents('.popup, .login-screen, .sheet-modal, .popover').on('modal:open', updateSwiper);
   $swiperEl.parents('.panel').on('panel:open', updateSwiper);
-  $swiperEl.parents('.tab').on('tab:show', updateSwiper);
+  if ($tabEl && $tabEl.length) {
+    $tabEl.on('tab:show', updateSwiper);
+  }
+
   swiper.on('beforeDestroy', () => {
-    $swiperEl.parents('.popup, .login-screen, .sheet-modal, .popover').off('modal:open', updateSwiper);
+    $swiperEl
+      .parents('.popup, .login-screen, .sheet-modal, .popover')
+      .off('modal:open', updateSwiper);
     $swiperEl.parents('.panel').off('panel:open', updateSwiper);
-    $swiperEl.parents('.tab').off('tab:show', updateSwiper);
+    if ($tabEl && $tabEl.length) {
+      $tabEl.off('tab:show', updateSwiper);
+    }
   });
   if (isTabs) {
     swiper.on('slideChange', () => {
@@ -66,15 +86,15 @@ function initSwiper(swiperEl) {
         let view = app.views.get($swiperEl.parents('.view'));
         if (!view) view = app.views.main;
         const router = view.router;
-        const tabRoute = router.findTabRoute(swiper.slides.eq(swiper.activeIndex)[0]);
-        if (tabRoute) {
+        const tabRouteUrl = router.findTabRouteUrl($(swiper.slides).eq(swiper.activeIndex)[0]);
+        if (tabRouteUrl) {
           setTimeout(() => {
-            router.navigate(tabRoute.path);
+            router.navigate(tabRouteUrl);
           }, 0);
         }
       } else {
         app.tab.show({
-          tabEl: swiper.slides.eq(swiper.activeIndex),
+          tabEl: $(swiper.slides).eq(swiper.activeIndex),
         });
       }
     });
@@ -89,81 +109,55 @@ export default {
   create() {
     const app = this;
     app.swiper = Constructors({
-      defaultSelector: '.swiper-container',
+      defaultSelector: '.swiper',
       constructor: Swiper,
       domProp: 'swiper',
     });
   },
   on: {
-    pageBeforeRemove(page) {
-      const app = this;
-      page.$el.find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
-        app.swiper.destroy(swiperEl);
-      });
-    },
     pageMounted(page) {
       const app = this;
-      page.$el.find('.tabs-swipeable-wrap').each((index, swiperEl) => {
+      page.$el.find('swiper-container.tabs').forEach((swiperEl) => {
         initSwiper.call(app, swiperEl);
       });
     },
     pageInit(page) {
       const app = this;
-      page.$el.find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
+      page.$el.find('swiper-container.tabs').forEach((swiperEl) => {
         initSwiper.call(app, swiperEl);
       });
     },
     pageReinit(page) {
       const app = this;
-      page.$el.find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
+      page.$el.find('swiper-container.tabs').forEach((swiperEl) => {
         const swiper = app.swiper.get(swiperEl);
         if (swiper && swiper.update) swiper.update();
       });
     },
     tabMounted(tabEl) {
       const app = this;
-      $(tabEl).find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
+      $(tabEl)
+        .find('swiper-container.tabs')
+        .forEach((swiperEl) => {
         initSwiper.call(app, swiperEl);
       });
     },
     tabShow(tabEl) {
       const app = this;
-      $(tabEl).find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
+      $(tabEl)
+        .find('swiper-container.tabs')
+        .forEach((swiperEl) => {
         const swiper = app.swiper.get(swiperEl);
         if (swiper && swiper.update) swiper.update();
       });
     },
     tabBeforeRemove(tabEl) {
       const app = this;
-      $(tabEl).find('.swiper-init, .tabs-swipeable-wrap').each((index, swiperEl) => {
+      $(tabEl)
+        .find('swiper-container.tabs')
+        .forEach((swiperEl) => {
         app.swiper.destroy(swiperEl);
       });
-    },
-  },
-  vnode: {
-    'swiper-init': {
-      insert(vnode) {
-        const app = this;
-        const swiperEl = vnode.elm;
-        initSwiper.call(app, swiperEl);
-      },
-      destroy(vnode) {
-        const app = this;
-        const swiperEl = vnode.elm;
-        app.swiper.destroy(swiperEl);
-      },
-    },
-    'tabs-swipeable-wrap': {
-      insert(vnode) {
-        const app = this;
-        const swiperEl = vnode.elm;
-        initSwiper.call(app, swiperEl);
-      },
-      destroy(vnode) {
-        const app = this;
-        const swiperEl = vnode.elm;
-        app.swiper.destroy(swiperEl);
-      },
     },
   },
 };

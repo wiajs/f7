@@ -20,8 +20,8 @@
     @ruleset();
   }
 }
-.if-aurora-theme(@ruleset) {
-  & when (@includeAuroraTheme) {
+.if-pc-theme(@ruleset) {
+  & when (@includePcTheme) {
     @ruleset();
   }
 }
@@ -44,16 +44,26 @@
     }
   }
 }
-.aurora-vars(@ruleset) {
-  & when (@includeAuroraTheme) {
-    .aurora {
+.pc-vars(@ruleset) {
+  & when (@includePcTheme) {
+    .pc {
+      @ruleset();
+    }
+  }
+}
+.md-color-vars(@ruleset) {
+  & when (@includeMdTheme) {
+    .md,
+    .md .dark,
+    .md [class*='color-'] {
       @ruleset();
     }
   }
 }
 .dark-vars(@ruleset) {
   & when (@includeDarkTheme) {
-    .theme-dark, &.theme-dark {
+    .dark,
+    &.dark {
       @ruleset();
     }
   }
@@ -98,7 +108,6 @@
     visibility: visible;
     opacity: 1;
   }
-
 }
 // No Hairlines
 .no-hairlines() {
@@ -171,7 +180,7 @@
     height: 1px;
     width: 100%;
     transform-origin: 50% 0%;
-    transform: scaleY(calc(1 / var(--f7-device-pixel-ratio)))
+    transform: scaleY(calc(1 / var(--f7-device-pixel-ratio)));
   }
 }
 .hairline(@position, @color) when (@position = left) {
@@ -180,7 +189,7 @@
     width: 1px;
     height: 100%;
     transform-origin: 0% 50%;
-    transform: scaleX(calc(1 / var(--f7-device-pixel-ratio)))
+    transform: scaleX(calc(1 / var(--f7-device-pixel-ratio)));
   }
 }
 .hairline(@position, @color) when (@position = bottom) {
@@ -189,7 +198,7 @@
     height: 1px;
     width: 100%;
     transform-origin: 50% 100%;
-    transform: scaleY(calc(1 / var(--f7-device-pixel-ratio)))
+    transform: scaleY(calc(1 / var(--f7-device-pixel-ratio)));
   }
 }
 .hairline(@position, @color) when (@position = right) {
@@ -198,11 +207,12 @@
     width: 1px;
     height: 100%;
     transform-origin: 100% 50%;
-    transform: scaleX(calc(1 / var(--f7-device-pixel-ratio)))
+    transform: scaleX(calc(1 / var(--f7-device-pixel-ratio)));
   }
 }
 .hairline-remove-top-bottom() {
-  &:before, &:after {
+  &:before,
+  &:after {
     display: none !important;
   }
 }
@@ -236,16 +246,36 @@
     content: '';
     width: 152%;
     height: 152%;
-    position: absolute;
     left: -26%;
     top: -26%;
-    background-image: radial-gradient(circle at center, var(--f7-link-highlight-color) 66%, rgba(255,255,255,0) 66%);
+    position: absolute;
+    background-image: radial-gradient(
+      circle at center,
+      var(--f7-link-highlight-color) 66%,
+      rgba(255, 255, 255, 0) 66%
+    );
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
     opacity: 0;
     pointer-events: none;
-    transition-duration: 600ms;
+    transition-duration: 300ms;
+    transition-property: opacity;
+  }
+  &.icon-only:before,
+  &.ripple-inset:before,
+  &.searchbar-disable-button:before,
+  &.input-clear-button:before,
+  &.notification-close-button:before {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: radial-gradient(
+      circle at center,
+      var(--f7-link-highlight-color) 71%,
+      rgba(255, 255, 255, 0) 71%
+    );
   }
   &.active-state:before {
     opacity: 1;
@@ -277,10 +307,11 @@
     top: auto;
     pointer-events: none;
     background: @image;
+    transform: translate3d(0, 0, 0);
   }
 }
 .core-icons-font() {
-  font-family: 'framework7-core-icons';
+  font-family: 'f7-core-icons';
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -292,7 +323,7 @@
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "liga";
+  font-feature-settings: 'liga';
   text-align: center;
   display: block;
   width: 100%;
@@ -314,5 +345,27 @@
       background-color: rgba(@color, 0.8);
       backdrop-filter: saturate(180%) blur(20px);
     }
+  }
+}
+
+.no-scrollbar() {
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+  &::-webkit-scrollbar {
+    appearance: none;
+    width: 0px;
+    display: none;
+    opacity: 0;
+    background: transparent;
+  }
+  &::-webkit-scrollbar-track {
+    box-shadow: none;
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    outline: none;
+    border-radius: 9999px;
+    position: relative;
   }
 }

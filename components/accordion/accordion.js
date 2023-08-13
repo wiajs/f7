@@ -1,5 +1,7 @@
 import {Utils} from '@wiajs/core';
 
+const { nextFrame, bindMethods } = Utils;
+
 const Accordion = {
   toggleClicked($clickedEl) {
     const app = this;
@@ -43,7 +45,7 @@ const Accordion = {
       if ($el.hasClass('accordion-item-opened')) {
         $contentEl.transition(0);
         $contentEl.css('height', 'auto');
-        Utils.nextFrame(() => {
+        nextFrame(() => {
           $contentEl.transition('');
           $el.trigger('accordion:opened');
           app.emit('accordionOpened', $el[0]);
@@ -80,7 +82,7 @@ const Accordion = {
       if ($el.hasClass('accordion-item-opened')) {
         $contentEl.transition(0);
         $contentEl.css('height', 'auto');
-        Utils.nextFrame(() => {
+        nextFrame(() => {
           $contentEl.transition('');
           $el.trigger('accordion:opened');
           app.emit('accordionOpened', $el[0]);
@@ -91,7 +93,7 @@ const Accordion = {
         app.emit('accordionClosed', $el[0]);
       }
     });
-    Utils.nextFrame(() => {
+    nextFrame(() => {
       $contentEl.transition('');
       $contentEl.css('height', '');
       $el.trigger('accordion:close');
@@ -111,7 +113,7 @@ export default {
   name: 'accordion',
   create() {
     const app = this;
-    Utils.bindMethods(app, {
+    bindMethods(app, {
       accordion: Accordion,
     });
   },
