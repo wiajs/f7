@@ -144,7 +144,7 @@
 
 F7 Has Full Featured Mobile HTML Framework For Building iOS & Android Apps. Wia only use its HTML Components.
 
-## Framework7 Development
+## F7 Development
 
 F7 uses `gulp` and `rollup` to build a development (build) and production versions.
 
@@ -206,9 +206,9 @@ To Run Kitchen Sink with production builds (already compiled `/packages/` will b
 
 Whole source code is located under `/src/` folder.
 
-Framework7 uses Phenome compiler to generate React & Vue components. So all the React & Vue related code is under the `/src/phenome/` folder
+F7 uses Phenome compiler to generate React & Vue components. So all the React & Vue related code is under the `/src/phenome/` folder
 
-Framework7 core library source code is under `/src/core/` folder
+F7 core library source code is under `/src/core/` folder
 
 ## Contributing
 
@@ -216,7 +216,7 @@ Before you open an issue please review the [contributing](https://github.com/fra
 
 **All changes should be committed to `src/` files only!**.
 
-Framework7 uses LESS for CSS compilations, and ES modules JS files.
+F7 uses LESS for CSS compilations, and ES modules JS files.
 
 The project uses [.editorconfig](http://editorconfig.org/) and [ESLint](https://eslint.org/) to define and lint the coding style of each file. We recommend that you install the Editor Config and ESLint extension for your preferred IDE.
 
