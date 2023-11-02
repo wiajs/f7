@@ -8,15 +8,9 @@
 
 <h1 align="center">F7</h1>
 
-Fork From [Framework7](https://github.com/framework7io/framework7)
+<h1 align="center">Fork From Framework7</h1>
 
-<p align="center">Over 80 Mobile HTML Components For Building iOS & Android Apps</p>
-
-<h2 align="center">Supporting Framework7</h2>
-
-Framework7 is an MIT-licensed open source project with its ongoing development made possible entirely by the support of these awesome [backers](https://github.com/framework7io/framework7/blob/master/BACKERS.md). If you'd like to join them, please consider [becoming a backer or sponsor on Patreon.](https://www.patreon.com/vladimirkharlampidi)
-
-<h3 align="center">Sponsors</h3>
+<p align="center"> [Framework7](https://github.com/framework7io/framework7), Over 80 Mobile HTML Components For Building iOS & Android Apps</p>
 
 <table>
   <tr>
@@ -148,11 +142,11 @@ Framework7 is an MIT-licensed open source project with its ongoing development m
 
 - [Getting Started Guide](https://www.wia.pub/doc/f7.html)
 
-Framework7 Has Full Featured Mobile HTML Framework For Building iOS & Android Apps. Wia only use its HTML Components.
+F7 Has Full Featured Mobile HTML Framework For Building iOS & Android Apps. Wia only use its HTML Components.
 
 ## Framework7 Development
 
-Framework7 uses `gulp` and `rollup` to build a development (build) and production versions.
+F7 uses `gulp` and `rollup` to build a development (build) and production versions.
 
 First you need to have `gulp-cli` which you should install globally.
 
