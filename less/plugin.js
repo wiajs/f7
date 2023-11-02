@@ -9,17 +9,10 @@ function base64Encode(file) {
 
 module.exports = {
   install(less, pluginManager, functions) {
-    functions.add('framework7_encodeURIComponent', svg => encodeURIComponent(svg.value));
-    functions.add('framework7_floor', n => new less.tree.Dimension(Math.floor(n.value)));
-    functions.add('framework7_calculateN', n => new less.tree.Dimension(100 / parseFloat(n.value)));
-    functions.add('framework7_coreIconsFont', () => {		
-			console.log(process.cwd());
-      const iconsFontBase64 = ''; // base64Encode('../icons/font/framework7-core-icons.woff');
-      return iconsFontBase64;
-    });
-    functions.add('framework7_skeletonFont', () => {
-      const iconsFontBase64 = ''; // base64Encode('../icons/font/framework7-skeleton.woff');
-      return iconsFontBase64;
-    });
+    //functions.add('f7_coreIconsFont', () => {		
+		//	console.log(`f7 plutin coreIconsFont ${process.cwd()}`);
+    //  const iconsFontBase64 = base64Encode('../icons/font/f7-core-icons.woff2');
+    //  return iconsFontBase64;
+    //});
   },
 };

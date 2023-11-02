@@ -4,6 +4,7 @@ const rules = {
   // "arrow-parens": [2, "as-needed"],
   // 'arrow-parens': [2, 'as-needed', {requireForBlockBody: false}],
   'arrow-body-style': [2, 'as-needed'],
+  'global-require': 0,
   'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   quotes: [1, 'single'],
@@ -21,7 +22,6 @@ const rules = {
   'no-plusplus': 0,
   'no-multi-spaces': 0,
   'no-trailing-spaces': 0,
-  'no-param-reassign': [0, {props: false}],
   'no-param-reassign': ['warn', {props: false}],
   'no-use-before-define': [2, {functions: false, classes: true}],
   'no-unused-expressions': ['error', {allowShortCircuit: true}],
@@ -52,12 +52,14 @@ const rules = {
 
 module.exports = {
   root: true, // 停止父目录查找配置
-  parser: 'babel-eslint', // "typescript-eslint-parser", "babel-eslint",
+  parser: '@babel/eslint-parser', // "typescript-eslint-parser", "babel-eslint",
   env: {
     es6: true,
     es2017: true,
     es2020: true,
+    es2021: true,
     browser: true, // 浏览器环境中的全局变量
+    worker: true,
     node: true,
     commonjs: true,
     mongo: true,
@@ -75,7 +77,7 @@ module.exports = {
     window: true,
   },
   parserOptions: {
-    ecmaVersion: 2019,
+    ecmaVersion: 'latest',
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
@@ -89,16 +91,22 @@ module.exports = {
   extends: [
     // 继承规则 // 'airbnb', 'eslint:recommended'
     'plugin:react/recommended',
-    'airbnb-base',
+    'airbnb',
     'plugin:prettier/recommended',
+    'plugin:import/recommended',
   ],
   rules: {
     ...rules,
   },
   overrides: [
     {
-      files: ['components/**/*.js'],
-      extends: ['plugin:react/recommended', 'airbnb-base', 'plugin:prettier/recommended'],
+      files: ['src/**/*.js'],
+      extends: [
+        'plugin:react/recommended',
+        'airbnb-base',
+        'plugin:prettier/recommended',
+        'plugin:import/recommended'
+      ],
       plugins: ['react'],
       rules: {
         ...rules,

@@ -27,8 +27,8 @@ export interface Utils {
   mdPreloaderContent: () => string
   /** Returns preloader inner content for iOS theme */
   iosPreloaderContent: () => string
-  /** Returns preloader inner content for Aurora theme */
-  auroraPreloaderContent: () => string
+  /** Returns preloader inner content for Pc theme */
+  pcPreloaderContent: () => string
   /** Deletes object properties */
   deleteProps: (obj: object) => void
   /**  */

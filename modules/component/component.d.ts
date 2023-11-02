@@ -24,11 +24,11 @@ export class ComponentClass {
   $f7: Framework7
   /** Framework7 app instance */
   $app: Framework7
-  /** Object with md, ios and aurora boolean properties which indicating current theme.  */
+  /** Object with md, ios and pc boolean properties which indicating current theme.  */
   $theme: {
     ios: boolean
     md: boolean
-    aurora: boolean
+    pc: boolean
   }
   $options: ComponentOptions
   /** Root data and methods you have specified in data and methods properties on app init */

@@ -77,7 +77,7 @@ function createBaseLess() {
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
-  const includeAuroraTheme = cfg.themes.indexOf('aurora') >= 0;
+  const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
   const {rtl} = cfg;
@@ -88,7 +88,7 @@ function createBaseLess() {
   lessContent = lessContent
     .replace('$includeIosTheme', includeIosTheme)
     .replace('$includeMdTheme', includeMdTheme)
-    .replace('$includeAuroraTheme', includeAuroraTheme)
+    .replace('$includePcTheme', includePcTheme)
     .replace('$includeDarkTheme', includeDarkTheme)
     .replace('$includeLightTheme', includeLightTheme)
     .replace('$colors', colors)
@@ -106,7 +106,7 @@ function createPartLess(components) {
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
-  const includeAuroraTheme = cfg.themes.indexOf('aurora') >= 0;
+  const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
   const {rtl} = cfg;
@@ -117,7 +117,7 @@ function createPartLess(components) {
   lessContent = lessContent
     .replace('$includeIosTheme', includeIosTheme)
     .replace('$includeMdTheme', includeMdTheme)
-    .replace('$includeAuroraTheme', includeAuroraTheme)
+    .replace('$includePcTheme', includePcTheme)
     .replace('$includeDarkTheme', includeDarkTheme)
     .replace('$includeLightTheme', includeLightTheme)
     .replace('$colors', colors)
@@ -130,7 +130,7 @@ function createPartLess(components) {
     components
       .map(
         component =>
-          `@import url('./components/${component}/${component}.less');`
+          `@import './dist/${component}/${component}.less';`
       )
       .join('\n')
   );
@@ -145,7 +145,7 @@ function createVarsLess() {
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
-  const includeAuroraTheme = cfg.themes.indexOf('aurora') >= 0;
+  const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
   const {rtl} = cfg;
@@ -156,7 +156,7 @@ function createVarsLess() {
   lessContent = lessContent
     .replace('$includeIosTheme', includeIosTheme)
     .replace('$includeMdTheme', includeMdTheme)
-    .replace('$includeAuroraTheme', includeAuroraTheme)
+    .replace('$includePcTheme', includePcTheme)
     .replace('$includeDarkTheme', includeDarkTheme)
     .replace('$includeLightTheme', includeLightTheme)
     .replace('$colors', colors)
@@ -233,7 +233,7 @@ function addAppModule(components) {
   let appContent = fs.readFileSync(`${_dir}/src/app.js`);
   let ms = components
     .map(m => {
-      return `import ${m.cap} from '@wiajs/f7/components/${m.name}/${m.name}';`;
+      return `import ${m.cap} from '@wiajs/f7/${m.name}';`;
     })
     .join('\n');
 
@@ -262,7 +262,7 @@ async function makeApp(cb) {
   // 通过项目配置获取组件样式
 
   cfg.components.forEach(name => {
-    const dir = path.resolve(__dirname, `./components/${name}`);
+    const dir = path.resolve(__dirname, `./dist/${name}`);
     if (fs.existsSync(`${dir}/${name}.js`)) {
       const cap = capitalized(name);
       components.push({name, cap});
@@ -281,7 +281,7 @@ async function buildPart(cb) {
   const components = [];
   // 通过项目配置获取组件样式
   cfg.components.forEach(name => {
-    const dir = path.resolve(__dirname, `./components/${name}`);
+    const dir = path.resolve(__dirname, `./dist/${name}`);
 
     if (fs.existsSync(`${dir}/${name}.less`)) {
       components.push(name);

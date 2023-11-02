@@ -129,7 +129,7 @@ const config = {
   themes: [
     'ios', // ios苹果手机样式
     'md',  // 安卓md样式
-    'aurora', // 桌面样式
+    'pc', // 桌面样式
   ],
   themeColor: '#007aff', // 默认蓝色主题，f7内置15个颜色主题
 	// 项目中用到哪个颜色主题，就选择哪个

@@ -732,11 +732,11 @@ class Router extends Framework7Class {
     const theme = router.app.theme;
     let toRemove;
     if (theme === 'ios') {
-      toRemove = '.md-only, .aurora-only, .if-md, .if-aurora, .if-not-ios, .not-ios';
+      toRemove = '.md-only, .pc-only, .if-md, .if-pc, .if-not-ios, .not-ios';
     } else if (theme === 'md') {
-      toRemove = '.ios-only, .aurora-only, .if-ios, .if-aurora, .if-not-md, .not-md';
-    } else if (theme === 'aurora') {
-      toRemove = '.ios-only, .md-only, .if-ios, .if-md, .if-not-aurora, .not-aurora';
+      toRemove = '.ios-only, .pc-only, .if-ios, .if-pc, .if-not-md, .not-md';
+    } else if (theme === 'pc') {
+      toRemove = '.ios-only, .md-only, .if-ios, .if-md, .if-not-pc, .not-pc';
     }
     $(el).find(toRemove).remove();
   }
@@ -989,7 +989,7 @@ class Router extends Framework7Class {
     if (
       (view && router.params.iosSwipeBack && app.theme === 'ios')
       || (view && router.params.mdSwipeBack && app.theme === 'md')
-      || (view && router.params.auroraSwipeBack && app.theme === 'aurora')
+      || (view && router.params.pcSwipeBack && app.theme === 'pc')
     ) {
       SwipeBack(router);
     }
