@@ -10,7 +10,7 @@
 
 <h1 align="center">Fork From Framework7</h1>
 
-<p align="center"> [Framework7](https://github.com/framework7io/framework7), Over 80 Mobile HTML Components For Building iOS & Android Apps</p>
+<p align="center">Over 80 Mobile HTML Components For Building iOS & Android Apps</p>
 
 <table>
   <tr>
