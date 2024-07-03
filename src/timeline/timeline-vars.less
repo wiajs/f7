@@ -63,6 +63,7 @@
   --f7-timeline-item-time-text-color: var(--f7-md-on-surface-variant);
 });
 .pc-vars({
+  --f7-timeline-divider-color: #bbb;
   --f7-timeline-padding-horizontal: 16px;
   --f7-timeline-margin-vertical: 32px;
   --f7-timeline-item-inner-border-radius: 8px;
@@ -80,11 +81,15 @@
   --f7-timeline-horizontal-item-padding: 12px;
   --f7-timeline-horizontal-item-date-shadow-image: none;
   .light-vars({
-    --f7-timeline-item-time-text-color: rgba(0,0,0,0.5);
-    --f7-timeline-horizontal-item-border-color: rgba(0,0,0,0.2);
-    --f7-timeline-horizontal-item-date-border-color: rgba(0,0,0,0.2);
+    --f7-timeline-item-inner-bg-color: #fff;
+    --f7-timeline-item-time-text-color: rgba(0,0,0,0.45);
+    --f7-timeline-horizontal-item-border-color: rgba(0,0,0,0.22);
+    --f7-timeline-horizontal-item-date-border-color: rgba(0,0,0,0.22);
   });
   .dark-vars({
-    --f7-timeline-item-time-text-color: rgba(255,255,255,0.54);
+    --f7-timeline-horizontal-item-border-color: rgba(255, 255, 255, 0.15);
+    --f7-timeline-horizontal-item-date-border-color: rgba(255, 255, 255, 0.15);
+    --f7-timeline-item-inner-bg-color: #1c1c1d;
+    --f7-timeline-item-time-text-color: rgba(255,255,255,0.55);
   });
 });

@@ -1,4 +1,4 @@
-import {Utils, Event, Device as device} from '@wiajs/core';
+import { Utils, Event, Device as device } from '@wiajs/core';
 import removeDiacritics from './remove-diacritics';
 
 const { extend, now, nextTick } = Utils;
@@ -224,7 +224,7 @@ class Searchbar extends Event {
           sb.$el
             .parents('.navbar')
             .removeClass(
-              'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition',
+              'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition'
             );
         }
       }
@@ -299,7 +299,7 @@ class Searchbar extends Event {
     sb.$disableButtonEl.transition(0).show();
     sb.$disableButtonEl.css(
       `margin-${app.rtl ? 'left' : 'right'}`,
-      `${-sb.disableButtonEl.offsetWidth}px`,
+      `${-sb.disableButtonEl.offsetWidth}px`
     );
     /* eslint no-underscore-dangle: ["error", { "allow": ["_clientLeft"] }] */
     sb._clientLeft = sb.$disableButtonEl[0].clientLeft;
@@ -353,7 +353,7 @@ class Searchbar extends Event {
             setTimeout(() => {
               $pageContentEl.transition('');
             }, 200);
-        }
+          }
         }
         if (app.theme === 'md' && $navbarEl.length) {
           $navbarEl.addClass('with-searchbar-expandable-enabled');
@@ -428,7 +428,7 @@ class Searchbar extends Event {
               $pageContentEl.transition('');
             }, 200);
           }
-      }
+        }
         $pageContentEl
           .removeClass('with-searchbar-expandable-enabled')
           .addClass('with-searchbar-expandable-closing');
@@ -436,7 +436,7 @@ class Searchbar extends Event {
       if (app.theme === 'md' && $navbarEl.length) {
         $navbarEl
           .removeClass(
-            'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition',
+            'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition'
           )
           .addClass('with-searchbar-expandable-closing');
         sb.$el.transitionEnd(() => {
@@ -445,7 +445,7 @@ class Searchbar extends Event {
       } else {
         $navbarEl
           .removeClass(
-            'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition',
+            'with-searchbar-expandable-enabled with-searchbar-expandable-enabled-no-transition'
           )
           .addClass('with-searchbar-expandable-closing');
         sb.$el.transitionEnd(() => {
@@ -464,7 +464,7 @@ class Searchbar extends Event {
     ) {
       sb.$disableButtonEl.css(
         `margin-${app.rtl ? 'left' : 'right'}`,
-        `${-sb.disableButtonEl.offsetWidth}px`,
+        `${-sb.disableButtonEl.offsetWidth}px`
       );
     }
     if (
@@ -582,28 +582,28 @@ class Searchbar extends Event {
         .find(sb.params.searchItem)
         .removeClass('hidden-by-searchbar')
         .forEach((itemEl) => {
-        const $itemEl = $(itemEl);
-        let compareWithText = [];
-        let $searchIn = sb.params.searchIn ? $itemEl.find(sb.params.searchIn) : $itemEl;
-        if (sb.params.searchIn === sb.params.searchItem) {
-          $searchIn = $itemEl;
-        }
+          const $itemEl = $(itemEl);
+          let compareWithText = [];
+          let $searchIn = sb.params.searchIn ? $itemEl.find(sb.params.searchIn) : $itemEl;
+          if (sb.params.searchIn === sb.params.searchItem) {
+            $searchIn = $itemEl;
+          }
           $searchIn.forEach((searchInEl) => {
-          let itemText = $(searchInEl).text().trim().toLowerCase();
+            let itemText = $(searchInEl).text().trim().toLowerCase();
             if (sb.params.removeDiacritics) itemText = removeDiacritics(itemText);
-          compareWithText.push(itemText);
+            compareWithText.push(itemText);
+          });
+          compareWithText = compareWithText.join(' ');
+          let wordsMatch = 0;
+          for (let i = 0; i < values.length; i += 1) {
+            if (compareWithText.indexOf(values[i]) >= 0) wordsMatch += 1;
+          }
+          if (wordsMatch !== values.length && !(sb.params.ignore && $itemEl.is(sb.params.ignore))) {
+            $itemEl.addClass('hidden-by-searchbar');
+          } else {
+            foundItems.push($itemEl[0]);
+          }
         });
-        compareWithText = compareWithText.join(' ');
-        let wordsMatch = 0;
-        for (let i = 0; i < values.length; i += 1) {
-          if (compareWithText.indexOf(values[i]) >= 0) wordsMatch += 1;
-        }
-        if (wordsMatch !== values.length && !(sb.params.ignore && $itemEl.is(sb.params.ignore))) {
-          $itemEl.addClass('hidden-by-searchbar');
-        } else {
-          foundItems.push($itemEl[0]);
-        }
-      });
 
       if (sb.params.hideGroupTitles) {
         $searchContainer.find(sb.params.searchGroupTitle).forEach((titleEl) => {

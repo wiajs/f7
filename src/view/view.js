@@ -1,3 +1,8 @@
+/**
+ * view 在wia 中没用，只使用page，部分组件(如：panel、searchbar、statusbar、swiper等)
+ * 依赖 view，暂时保留
+ */
+import { Utils } from '@wiajs/core';
 import View from './view-class';
 
 const { extend } = Utils;
@@ -140,7 +145,7 @@ export default {
       $('.view-init').forEach((viewEl) => {
         if (viewEl.f7View) return;
         const viewParams = $(viewEl).dataset();
-        app.views.create(viewEl, viewParams);
+        app.view?.create(viewEl, viewParams);
       });
     },
     'modalOpen panelOpen': function onOpen(instance) {
@@ -148,7 +153,7 @@ export default {
       instance.$el.find('.view-init').forEach((viewEl) => {
         if (viewEl.f7View) return;
         const viewParams = $(viewEl).dataset();
-        app.views.create(viewEl, viewParams);
+        app.view?.create(viewEl, viewParams);
       });
     },
     'modalBeforeDestroy panelBeforeDestroy': function onClose(instance) {
@@ -167,7 +172,7 @@ export default {
         const viewEl = vnode.elm;
         if (viewEl.f7View) return;
         const viewParams = $(viewEl).dataset();
-        app.views.create(viewEl, viewParams);
+        app.views?.create(viewEl, viewParams);
       },
       destroy(vnode) {
         const viewEl = vnode.elm;

@@ -8,7 +8,7 @@ const less = require('./utils/less');
 const autoprefixer = require('./utils/autoprefixer');
 const cleanCSS = require('./utils/clean-css');
 const fs = require('./utils/fs-extra');
-let cfg = require('./config.js');
+let cfg = require('./config');
 const pkg = require('./package.json');
 
 const env = process.env.NODE_ENV || 'production'; // 'dev'; // 默认开发环境
@@ -42,9 +42,10 @@ function getBanner() {
   let R = '';
   const date = {
     day: new Date().getDate(),
-    month: 'January February March April May June July August September October November December'.split(
-      ' '
-    )[new Date().getMonth()],
+    month:
+      'January February March April May June July August September October November December'.split(
+        ' '
+      )[new Date().getMonth()],
     year: new Date().getFullYear(),
   };
 
@@ -73,14 +74,14 @@ function getBanner() {
  */
 function createBaseLess() {
   const colors = `{\n${Object.keys(cfg.colors)
-    .map(colorName => `  ${colorName}: ${cfg.colors[colorName]};`)
+    .map((colorName) => `  ${colorName}: ${cfg.colors[colorName]};`)
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
   const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
-  const {rtl} = cfg;
+  const { rtl } = cfg;
 
   // Core LESS
   let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.less'));
@@ -102,14 +103,14 @@ function createBaseLess() {
 
 function createPartLess(components) {
   const colors = `{\n${Object.keys(cfg.colors)
-    .map(colorName => `  ${colorName}: ${cfg.colors[colorName]};`)
+    .map((colorName) => `  ${colorName}: ${cfg.colors[colorName]};`)
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
   const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
-  const {rtl} = cfg;
+  const { rtl } = cfg;
 
   // Part LESS
   let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.part.less'));
@@ -127,12 +128,7 @@ function createPartLess(components) {
   // Bundle LESS，加入项目选择组件 less
   const lessBundleContent = lessContent.replace(
     '//IMPORT_COMPONENTS',
-    components
-      .map(
-        component =>
-          `@import './dist/${component}/${component}.less';`
-      )
-      .join('\n')
+    components.map((component) => `@import './lib/${component}/${component}.less';`).join('\n')
   );
   fs.writeFileSync(`${output}/f7.${_prj}.less`, lessBundleContent);
 
@@ -141,14 +137,14 @@ function createPartLess(components) {
 
 function createVarsLess() {
   const colors = `{\n${Object.keys(cfg.colors)
-    .map(colorName => `  ${colorName}: ${cfg.colors[colorName]};`)
+    .map((colorName) => `  ${colorName}: ${cfg.colors[colorName]};`)
     .join('\n')}\n}`;
   const includeIosTheme = cfg.themes.indexOf('ios') >= 0;
   const includeMdTheme = cfg.themes.indexOf('md') >= 0;
   const includePcTheme = cfg.themes.indexOf('pc') >= 0;
   const includeDarkTheme = cfg.darkTheme;
   const includeLightTheme = cfg.lightTheme;
-  const {rtl} = cfg;
+  const { rtl } = cfg;
 
   // Part LESS
   let lessContent = fs.readFileSync(path.resolve(__dirname, './f7.vars.less'));
@@ -180,9 +176,7 @@ async function buildBase(cb) {
 
   let cssContent;
   try {
-    cssContent = await autoprefixer(
-      await less(lessContent, path.resolve(__dirname, '.'))
-    );
+    cssContent = await autoprefixer(await less(lessContent, path.resolve(__dirname, '.')));
   } catch (e) {
     console.log(e);
   }
@@ -205,10 +199,7 @@ async function buildBase(cb) {
   const minifiedContent = await cleanCSS(cssContent);
 
   // Write file
-  fs.writeFileSync(
-    `${output}/f7${cfg.rtl ? '.rtl' : ''}.min.css`,
-    `${banner}\n${minifiedContent}`
-  );
+  fs.writeFileSync(`${output}/f7${cfg.rtl ? '.rtl' : ''}.min.css`, `${banner}\n${minifiedContent}`);
 
   if (cb) cb();
 }
@@ -216,7 +207,7 @@ async function buildBase(cb) {
 function capitalized(name) {
   return name
     .split('-')
-    .map(word =>
+    .map((word) =>
       // eslint-disable-next-line
       word
         .split('')
@@ -232,8 +223,8 @@ function capitalized(name) {
 function addAppModule(components) {
   let appContent = fs.readFileSync(`${_dir}/src/app.js`);
   let ms = components
-    .map(m => {
-      return `import ${m.cap} from '@wiajs/f7/${m.name}';`;
+    .map((m) => {
+      return `import ${m.cap} from '@wiajs/f7/${m.name}'`;
     })
     .join('\n');
 
@@ -243,7 +234,7 @@ function addAppModule(components) {
     `// IMPORT_COMPONENTS_BEGIN\n${ms}\n// IMPORT_COMPONENTS_END`
   );
 
-  ms = components.map(m => `  ${m.cap},`).join('\n');
+  ms = components.map((m) => `  ${m.cap},`).join('\n');
   appContent = appContent.replace(
     /\/\/\s*INSTALL_COMPONENTS_BEGIN[\s\S]*\/\/\s*INSTALL_COMPONENTS_END/g,
     `// INSTALL_COMPONENTS_BEGIN\n${ms}\n// INSTALL_COMPONENTS_END`
@@ -261,14 +252,14 @@ async function makeApp(cb) {
   const components = [];
   // 通过项目配置获取组件样式
 
-  cfg.components.forEach(name => {
-    const dir = path.resolve(__dirname, `./dist/${name}`);
+  cfg.components.forEach((name) => {
+    const dir = path.resolve(__dirname, `./lib/${name}`);
     if (fs.existsSync(`${dir}/${name}.js`)) {
       const cap = capitalized(name);
-      components.push({name, cap});
+      components.push({ name, cap });
     }
   });
-  console.log('makeApp:', {components});
+  console.log('makeApp:', { components });
 
   // 根据项目配置生成 转换 less 文件
   const appContent = addAppModule(components);
@@ -280,33 +271,28 @@ async function makeApp(cb) {
 async function buildPart(cb) {
   const components = [];
   // 通过项目配置获取组件样式
-  cfg.components.forEach(name => {
-    const dir = path.resolve(__dirname, `./dist/${name}`);
+  cfg.components.forEach((name) => {
+    const dir = path.resolve(__dirname, `./lib/${name}`);
 
     if (fs.existsSync(`${dir}/${name}.less`)) {
       components.push(name);
     }
   });
 
-  console.log('buildPart:', {components});
+  console.log('buildPart:', { components });
   // 根据项目配置生成 转换 less 文件
   const lessContent = createPartLess(components);
   const outputFileName = `f7.${_prj}${cfg.rtl ? '.rtl' : ''}`;
 
   let cssContent;
   try {
-    cssContent = await autoprefixer(
-      await less(lessContent, path.resolve(__dirname, '.'))
-    );
+    cssContent = await autoprefixer(await less(lessContent, path.resolve(__dirname, '.')));
   } catch (err) {
     console.log(err);
   }
 
   // Write file
-  fs.writeFileSync(
-    `${output}/${outputFileName}.css`,
-    `${banner}\n${cssContent}`
-  );
+  fs.writeFileSync(`${output}/${outputFileName}.css`, `${banner}\n${cssContent}`);
 
   // if (dev) {
   //   if (cb) cb();
@@ -330,18 +316,13 @@ async function buildVars(cb) {
 
   let cssContent;
   try {
-    cssContent = await autoprefixer(
-      await less(lessContent, path.resolve(__dirname, '.'))
-    );
+    cssContent = await autoprefixer(await less(lessContent, path.resolve(__dirname, '.')));
   } catch (err) {
     console.log(err);
   }
 
   // Write file
-  fs.writeFileSync(
-    `${output}/${outputFileName}.css`,
-    `${banner}\n${cssContent}`
-  );
+  fs.writeFileSync(`${output}/${outputFileName}.css`, `${banner}\n${cssContent}`);
 
   // if (dev) {
   //   if (cb) cb();

@@ -5,6 +5,15 @@
       margin-top: 0;
     }
   }
+ .item-floating-label {
+    transform: scale(var(--f7-floating-label-scale)) translateY(calc(var(--f7-label-height) + 25%));
+  }
+  .item-input:not(.item-input-outline) {
+    .item-content,
+    &.item-content {
+      background: var(--f7-input-item-bg-color);
+    }
+  }
   .input:not(.input-outline) {
     .hairline(bottom, var(--f7-list-item-border-color));
     &:after {
@@ -80,6 +89,26 @@
       margin-top: -22px;
     }
   }
+
+.item-input-outline .item-input-wrap:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--f7-input-outline-border-color);
+  border-radius: var(--f7-input-outline-border-radius);
+  transition-duration: 200ms;
+  pointer-events: none;
+}
+
+.input-outline.input-focused:after,
+.item-input-outline.item-input-focused .item-input-wrap:after {
+  border-width: 2px;
+  border-color: var(--f7-input-outline-focused-border-color, var(--f7-theme-color));
+}
 
   .item-input-outline,
   .input-outline {

@@ -1,8 +1,14 @@
-import {Utils} from '@wiajs/core';
+import { Utils } from '@wiajs/core';
 
 const { nextFrame, bindMethods } = Utils;
 
 const Toolbar = {
+  /**
+   * 根据活动链接设置选项卡链接的突出显示。 这仅在 MD 主题中有效
+   * 增加一个 span，作用不明，工具条产生作偏移
+   * @param {*} tabbarEl
+   * @returns
+   */
   setHighlight(tabbarEl) {
     const app = this;
     const $tabbarEl = $(tabbarEl);
@@ -47,7 +53,9 @@ const Toolbar = {
   },
   init(tabbarEl) {
     const app = this;
-    app.toolbar.setHighlight(tabbarEl);
+    // 根据活动链接设置选项卡链接的突出显示。 这仅在 MD 主题中有效
+    // 增加一个 span，作用不明，工具条产生作偏移
+    // app.toolbar.setHighlight(tabbarEl);
   },
   hide(el, animate = true) {
     const app = this;

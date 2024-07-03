@@ -1,7 +1,7 @@
 [
   {
     "$schema": "https://json.schemastore.org/swcrc",
-		"test": ".*[.]js$",
+    "test": ".*[.]js$",
     "exclude": [".*[.]d[.]ts$"],
     "jsc": {
       "parser": {
@@ -19,7 +19,7 @@
       },
       "transform": {
         "react": {
-          // "runtime": "automatic", // or classic
+          "runtime": "automatic", // or classic
           "throwIfNamespace": true,
           "useBuiltins": false,
           "development": false

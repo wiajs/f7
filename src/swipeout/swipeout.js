@@ -367,7 +367,7 @@ const Swipeout = {
         }
       }
     });
-    $(document).on(app.touchEvents.start, 'li.swipeout', handleTouchStart, passiveListener);
+    $(document).on(app.touchEvents.start, 'li.swipeout,div.swipeout', handleTouchStart, passiveListener);
     app.on('touchmove:active', handleTouchMove);
     app.on('touchend:passive', handleTouchEnd);
   },

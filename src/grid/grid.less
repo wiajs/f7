@@ -1,6 +1,7 @@
 /* === Grid === */
 @import './grid-vars.less';
 
+/* keep old grid */
 @cols: 5, 10, 15, 20, 25, 30, 100/3, 35, 40, 45, 50, 55, 60, 65, 100 * (2/3), 70, 75, 80, 85, 90, 95,
   100;
 
@@ -195,6 +196,77 @@
   > .resize-handler {
     display: none;
   }
+}
+
+
+/* === Grid v8 === */
+@cols2: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20;
+
+.grid {
+  display: grid;
+  &.grid-gap {
+    gap: var(--f7-grid-gap);
+  }
+}
+each(@cols2, {
+  .grid-cols-@{value} {
+    grid-template-columns: repeat(@value, minmax(0,1fr));
+  }
+});
+each(@cols2, {
+  .grid-rows-@{value} {
+    grid-template-rows: repeat(@value, minmax(0,1fr));
+  }
+});
+@media (min-width: @breakpoints[xsmall]) {
+  each(@cols2, {
+    .xsmall-grid-cols-@{value} {
+      grid-template-columns: repeat(@value, minmax(0,1fr));
+    }
+    .xsmall-grid-rows-@{value} {
+      grid-template-rows: repeat(@value, minmax(0,1fr));
+    }
+  });
+}
+@media (min-width: @breakpoints[small]) {
+  each(@cols2, {
+    .small-grid-cols-@{value} {
+      grid-template-columns: repeat(@value, minmax(0,1fr));
+    }
+    .small-grid-rows-@{value} {
+      grid-template-rows: repeat(@value, minmax(0,1fr));
+    }
+  });
+}
+@media (min-width: @breakpoints[medium]) {
+  each(@cols2, {
+    .medium-grid-cols-@{value} {
+      grid-template-columns: repeat(@value, minmax(0,1fr));
+    }
+    .medium-grid-rows-@{value} {
+      grid-template-rows: repeat(@value, minmax(0,1fr));
+    }
+  });
+}
+@media (min-width: @breakpoints[large]) {
+  each(@cols2, {
+    .large-grid-cols-@{value} {
+      grid-template-columns: repeat(@value, minmax(0,1fr));
+    }
+    .large-grid-rows-@{value} {
+      grid-template-rows: repeat(@value, minmax(0,1fr));
+    }
+  });
+}
+@media (min-width: @breakpoints[xlarge]) {
+  each(@cols2, {
+    .xlarge-grid-cols-@{value} {
+      grid-template-columns: repeat(@value, minmax(0,1fr));
+    }
+    .xlarge-grid-rows-@{value} {
+      grid-template-rows: repeat(@value, minmax(0,1fr));
+    }
+  });
 }
 
 .if-ios-theme({

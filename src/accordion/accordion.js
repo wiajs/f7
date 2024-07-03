@@ -1,4 +1,4 @@
-import {Utils} from '@wiajs/core';
+import { Utils } from '@wiajs/core';
 
 const { nextFrame, bindMethods } = Utils;
 
@@ -32,8 +32,9 @@ const Accordion = {
     $contentEl.removeAttr('aria-hidden');
     if ($contentEl.length === 0) $contentEl = $el.find('.accordion-item-content');
     if ($contentEl.length === 0) return;
+    // wia mod!!!
     let $openedItem = $list.length > 0 && $el.parent().children('.accordion-item-opened');
-    
+
     $openedItem = $openedItem.filter((i, n) => {
       n = $(n);
       return !n.hasAttr('close') || n.attr('close') !== '0';
@@ -120,8 +121,8 @@ export default {
   clicks: {
     '.accordion-item .item-link, .accordion-item-toggle, .links-list.accordion-list > ul > li > a':
       function open($clickedEl) {
-      const app = this;
-      Accordion.toggleClicked.call(app, $clickedEl);
-    },
+        const app = this;
+        Accordion.toggleClicked.call(app, $clickedEl);
+      },
   },
 };

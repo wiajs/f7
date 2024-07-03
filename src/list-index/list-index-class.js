@@ -103,7 +103,7 @@ class ListIndex extends Event {
       const $clickedLi = $(e.target).closest('li');
       if (!$clickedLi.length) return;
 
-      // 无需计算，直接读取，更快
+      // 鏃犻渶璁＄畻锛岀洿鎺ヨ鍙栵紝鏇村揩
       let itemIndex = $clickedLi.attr('i'); // $clickedLi.index();
       if (index.skipRate > 0) {
         const percentage = itemIndex / ($clickedLi.siblings('li').length - 1);

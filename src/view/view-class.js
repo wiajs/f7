@@ -1,24 +1,22 @@
-import {Utils, Event} from '@wiajs/core';
-import Router from '@wiajs/router';
-import resizableView from './resizable-view.js';
+import { Utils, Event } from '@wiajs/core';
+import resizableView from './resizable-view';
+
+const { extend } = Utils;
 
 class View extends Event {
-  constructor(app, router, el, viewParams = {}) {
+  constructor(app, el, viewParams = {}) {
     super(viewParams, [app]);
 
-    const $el = $(el);
     const view = this;
-    view.router = router;
 
     const defaults = {
       routes: [],
       routesAdd: [],
     };
 
-    if (!ssr) {
-      const $el = $(el);
-      if (!$el.length) {
-        let message = "F7: can't create a View instance because ";
+    const $el = $(el);
+    if (!$el.length) {
+      let message = "F7: can't create a View instance because ";
       message +=
         typeof el === 'string'
           ? `the selector "${el}" didn't match any element`
@@ -26,51 +24,18 @@ class View extends Event {
 
       throw new Error(message);
     }
-    }
 
     // Default View params
     view.params = extend({ el }, defaults, app.params.view, viewParams);
 
-    // Routes
-    if (view.params.routes.length > 0) {
-      view.routes = view.params.routes;
-    } else {
-      view.routes = [].concat(app.routes, view.params.routesAdd);
-    }
-
-    // Selector
-    let selector;
-    if (typeof el === 'string') selector = el;
-    else {
-      // Supposed to be HTMLElement or Dom7
-      selector = ($el.attr('id') ? `#${$el.attr('id')}` : '') + ($el.attr('class') ? `.${$el.attr('class').replace(/ /g, '.').replace('.active', '')}` : '');
-    }
-
-    // DynamicNavbar
-    let $navbarsEl;
-    if (app.theme === 'ios' && view.params.iosDynamicNavbar) {
-      $navbarsEl = $el.children('.navbars').eq(0);
-      if ($navbarsEl.length === 0) {
-        $navbarsEl = $('<div class="navbars"></div>');
-      }
-    }
-
     // View Props
     extend(false, view, {
       app,
-      $el,
-      el: $el[0],
       name: view.params.name,
-      main: view.params.main || $el.hasClass('view-main'),
-      $navbarsEl,
-      navbarsEl: $navbarsEl ? $navbarsEl[0] : undefined,
-      selector,
+      main: view.params.main,
       history: [],
       scrollHistory: {},
     });
-
-    // Save in DOM
-    $el[0].f7View = view;
 
     // Add to app
     app.views.push(view);
@@ -131,11 +96,6 @@ class View extends Event {
 
     app.views.splice(app.views.indexOf(view), 1);
 
-    // Destroy Router
-    if (view.params.router && view.router) {
-      view.router.destroy();
-    }
-
     view.emit('local::destroy viewDestroy', view);
 
     // Delete props & methods
@@ -149,7 +109,7 @@ class View extends Event {
 
   checkMasterDetailBreakpoint(force) {
     const view = this;
-    const app = view.app;
+    const { app } = view;
     const wasMasterDetail = view.$el.hasClass('view-master-detail');
     const isMasterDetail =
       app.width >= view.params.masterDetailBreakpoint && view.$el.children('.page-master').length;
@@ -170,7 +130,7 @@ class View extends Event {
 
   initMasterDetail() {
     const view = this;
-    const app = view.app;
+    const { app } = view;
     view.checkMasterDetailBreakpoint = view.checkMasterDetailBreakpoint.bind(view);
     view.checkMasterDetailBreakpoint();
     if (view.params.masterDetailResizable) {
@@ -181,7 +141,7 @@ class View extends Event {
 
   mount(viewEl) {
     const view = this;
-    const app = view.app;
+    const { app } = view;
     const el = view.params.el || viewEl;
     const $el = $(el);
 
@@ -230,25 +190,8 @@ class View extends Event {
   init(viewEl) {
     const view = this;
     view.mount(viewEl);
-    if (view.params.router) {
-      if (view.params.masterDetailBreakpoint > 0) {
-        view.initMasterDetail();
-      }
-      if (
-        view.params.initRouterOnTabShow &&
-        view.$el.hasClass('tab') &&
-        !view.$el.hasClass('tab-active')
-      ) {
-        view.$el.once('tab:show', () => {
-      view.router.init();
-        });
-      } else {
-        view.router.init();
-      }
-
-      view.$el.trigger('view:init');
-      view.emit('local::init viewInit', view);
-    }
+    view.$el.trigger('view:init');
+    view.emit('local::init viewInit', view);
   }
 }
 

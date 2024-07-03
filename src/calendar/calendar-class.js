@@ -47,7 +47,7 @@ class Calendar extends Event {
     });
     calendar.dayFormatter = (date) => {
       const formatter = new Intl.DateTimeFormat(calendar.params.locale, { day: 'numeric' });
-      return formatter.format(date).replace(/ÈÕ/, '');
+      return formatter.format(date).replace(/æ—¥/, '');
     };
     calendar.monthFormatter = (date) => {
       const formatter = new Intl.DateTimeFormat(calendar.params.locale, { month: 'long' });
