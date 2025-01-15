@@ -1,5 +1,6 @@
-/** @jsx jsx */
-import {Utils, Event, jsx, Support as support, Device as device} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Event, Support as support, Device as device } from '@wiajs/core';
 
 const { extend, nextTick, deleteProps } = Utils;
 
@@ -59,9 +60,9 @@ class Calendar extends Event {
     };
     calendar.timeSelectorFormatter = (date) => {
       const formatter = new Intl.DateTimeFormat(
-      calendar.params.locale,
-      calendar.params.timePickerFormat,
-    );
+        calendar.params.locale,
+        calendar.params.timePickerFormat
+      );
       return formatter.format(date);
     };
     const timeFormatCheckDate = calendar.timeSelectorFormatter(new Date()).toLowerCase();
@@ -213,7 +214,7 @@ class Calendar extends Event {
 
         // Transform wrapper
         $wrapperEl.transform(
-          `translate3d(${isH ? currentTranslate : 0}%, ${isH ? 0 : currentTranslate}%, 0)`,
+          `translate3d(${isH ? currentTranslate : 0}%, ${isH ? 0 : currentTranslate}%, 0)`
         );
       }
       function handleTouchEnd(e) {
@@ -271,7 +272,7 @@ class Calendar extends Event {
           $dayEl[0],
           dateYear,
           dateMonth,
-          dateDay,
+          dateDay
         );
         if (
           !$dayEl.hasClass('calendar-day-selected') ||
@@ -538,7 +539,7 @@ class Calendar extends Event {
         Object.keys(tokens)
           .map((t) => `(${t})`)
           .join('|'),
-        'g',
+        'g'
       );
       return dateFormat.replace(regexp, (token) => {
         if (token in tokens) return tokens[token];
@@ -637,7 +638,7 @@ class Calendar extends Event {
       $wrapperEl
         .find('.calendar-day-selected')
         .removeClass(
-          'calendar-day-selected calendar-day-selected-range calendar-day-selected-left calendar-day-selected-right',
+          'calendar-day-selected calendar-day-selected-range calendar-day-selected-left calendar-day-selected-right'
         );
       let valueDate;
 
@@ -650,7 +651,7 @@ class Calendar extends Event {
           if (leftDate !== rightDate) {
             if (i !== leftDate && i !== rightDate) {
               addClass += ' calendar-day-selected-range';
-        }
+            }
             if (i === leftDate) {
               addClass += ' calendar-day-selected-left';
             }
@@ -660,21 +661,21 @@ class Calendar extends Event {
           }
           $wrapperEl
             .find(
-              `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`,
+              `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`
             )
             .addClass(addClass);
         }
         valueDate = new Date(leftDate);
         $wrapperEl
           .find(
-            `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`,
+            `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`
           )
           .removeClass('calendar-day-selected-range')
           .addClass('calendar-day-selected calendar-day-selected-left');
         valueDate = new Date(rightDate);
         $wrapperEl
           .find(
-            `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`,
+            `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`
           )
           .removeClass('calendar-day-selected-range')
           .addClass('calendar-day-selected calendar-day-selected-right');
@@ -683,7 +684,7 @@ class Calendar extends Event {
           valueDate = new Date(value[i]);
           $wrapperEl
             .find(
-              `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`,
+              `.calendar-day[data-date="${valueDate.getFullYear()}-${valueDate.getMonth()}-${valueDate.getDate()}"]`
             )
             .addClass('calendar-day-selected');
         }
@@ -699,7 +700,7 @@ class Calendar extends Event {
         .text(
           value && value.length
             ? calendar.timeSelectorFormatter(value[0])
-            : calendar.params.timePickerPlaceholder,
+            : calendar.params.timePickerPlaceholder
         );
     }
 
@@ -728,11 +729,11 @@ class Calendar extends Event {
     } else {
       calendar.currentMonth = parseInt(
         $months.eq(dir === 'next' ? $months.length - 1 : 0).attr('data-month'),
-        10,
+        10
       );
       calendar.currentYear = parseInt(
         $months.eq(dir === 'next' ? $months.length - 1 : 0).attr('data-year'),
-        10,
+        10
       );
       currentLocaleMonth = $months
         .eq(dir === 'next' ? $months.length - 1 : 0)
@@ -781,7 +782,7 @@ class Calendar extends Event {
       'local::monthYearChangeStart calendarMonthYearChangeStart',
       calendar,
       currentYear,
-      currentMonth,
+      currentMonth
     );
   }
 
@@ -794,7 +795,7 @@ class Calendar extends Event {
     let currentMonthHtml;
     $wrapperEl
       .find(
-        '.calendar-month:not(.calendar-month-prev):not(.calendar-month-current):not(.calendar-month-next)',
+        '.calendar-month:not(.calendar-month-prev):not(.calendar-month-current):not(.calendar-month-next)'
       )
       .remove();
 
@@ -821,13 +822,13 @@ class Calendar extends Event {
     calendar.emit(
       'local::monthAdd calendarMonthAdd',
       calendar,
-      dir === 'next' ? $months.eq($months.length - 1)[0] : $months.eq(0)[0],
+      dir === 'next' ? $months.eq($months.length - 1)[0] : $months.eq(0)[0]
     );
     calendar.emit(
       'local::monthYearChangeEnd calendarMonthYearChangeEnd',
       calendar,
       currentYear,
-      currentMonth,
+      currentMonth
     );
   }
 
@@ -846,19 +847,19 @@ class Calendar extends Event {
     $months
       .eq(0)
       .transform(
-        `translate3d(${isH ? prevMonthTranslate : 0}%, ${isH ? 0 : prevMonthTranslate}%, 0)`,
+        `translate3d(${isH ? prevMonthTranslate : 0}%, ${isH ? 0 : prevMonthTranslate}%, 0)`
       )
       .addClass('calendar-month-prev');
     $months
       .eq(1)
       .transform(
-        `translate3d(${isH ? currentMonthTranslate : 0}%, ${isH ? 0 : currentMonthTranslate}%, 0)`,
+        `translate3d(${isH ? currentMonthTranslate : 0}%, ${isH ? 0 : currentMonthTranslate}%, 0)`
       )
       .addClass('calendar-month-current');
     $months
       .eq(2)
       .transform(
-        `translate3d(${isH ? nextMonthTranslate : 0}%, ${isH ? 0 : nextMonthTranslate}%, 0)`,
+        `translate3d(${isH ? nextMonthTranslate : 0}%, ${isH ? 0 : nextMonthTranslate}%, 0)`
       )
       .addClass('calendar-month-next');
   }
@@ -872,11 +873,11 @@ class Calendar extends Event {
     }
     const nextMonth = parseInt(
       calendar.$months.eq(calendar.$months.length - 1).attr('data-month'),
-      10,
+      10
     );
     const nextYear = parseInt(
       calendar.$months.eq(calendar.$months.length - 1).attr('data-year'),
-      10,
+      10
     );
     const nextDate = new Date(nextYear, nextMonth);
     const nextDateTime = nextDate.getTime();
@@ -892,14 +893,14 @@ class Calendar extends Event {
       const nextMonthTranslate = -calendar.monthsTranslate * 100 * inverter;
       const nextMonthHtml = $(calendar.renderMonth(nextDateTime, 'next'))
         .transform(
-          `translate3d(${isH ? nextMonthTranslate : 0}%, ${isH ? 0 : nextMonthTranslate}%, 0)`,
+          `translate3d(${isH ? nextMonthTranslate : 0}%, ${isH ? 0 : nextMonthTranslate}%, 0)`
         )
         .addClass('calendar-month-next');
       $wrapperEl.append(nextMonthHtml[0]);
       calendar.$months = $wrapperEl.find('.calendar-month');
       calendar.emit(
         'local::monthAdd calendarMonthAdd',
-        calendar.$months.eq(calendar.$months.length - 1)[0],
+        calendar.$months.eq(calendar.$months.length - 1)[0]
       );
     }
     calendar.animating = true;
@@ -944,7 +945,7 @@ class Calendar extends Event {
       const prevMonthTranslate = -calendar.monthsTranslate * 100 * inverter;
       const prevMonthHtml = $(calendar.renderMonth(prevDateTime, 'prev'))
         .transform(
-          `translate3d(${isH ? prevMonthTranslate : 0}%, ${isH ? 0 : prevMonthTranslate}%, 0)`,
+          `translate3d(${isH ? prevMonthTranslate : 0}%, ${isH ? 0 : prevMonthTranslate}%, 0)`
         )
         .addClass('calendar-month-prev');
       $wrapperEl.prepend(prevMonthHtml[0]);
@@ -1039,7 +1040,7 @@ class Calendar extends Event {
       'local::monthAdd calendarMonthAdd',
       dir === 'next'
         ? calendar.$months.eq(calendar.$months.length - 1)[0]
-        : calendar.$months.eq(0)[0],
+        : calendar.$months.eq(0)[0]
     );
 
     calendar.animating = true;
@@ -1132,11 +1133,11 @@ class Calendar extends Event {
       return calendar.params.renderMonths.call(calendar, date);
     }
     return (
-    <div class="calendar-months-wrapper">
+      <div class="calendar-months-wrapper">
         {calendar.renderMonth(date, 'prev')}
         {calendar.renderMonth(date)}
         {calendar.renderMonth(date, 'next')}
-    </div>
+      </div>
     );
   }
 
@@ -1176,7 +1177,7 @@ class Calendar extends Event {
     const rows = 6;
     const cols = 7;
     const daysInPrevMonth = calendar.daysInMonth(
-      new Date(date.getFullYear(), date.getMonth()).getTime() - 10 * 24 * 60 * 60 * 1000,
+      new Date(date.getFullYear(), date.getMonth()).getTime() - 10 * 24 * 60 * 60 * 1000
     );
     const daysInMonth = calendar.daysInMonth(date);
     const minDayNumber = params.firstDay === 6 ? 0 : 1;
@@ -1215,7 +1216,7 @@ class Calendar extends Event {
           dayDate = new Date(
             month - 1 < 0 ? year - 1 : year,
             month - 1 < 0 ? 11 : month - 1,
-            dayNumber,
+            dayNumber
           ).getTime();
         } else {
           dayNumber += 1;
@@ -1225,7 +1226,7 @@ class Calendar extends Event {
             dayDate = new Date(
               month + 1 > 11 ? year + 1 : year,
               month + 1 > 11 ? 0 : month + 1,
-              dayNumber,
+              dayNumber
             ).getTime();
           } else {
             dayDate = new Date(year, month, dayNumber).getTime();
@@ -1348,19 +1349,19 @@ class Calendar extends Event {
       return calendar.params.renderMonthSelector.call(calendar);
     }
     return (
-    <div class="calendar-month-selector">
-      <a class="link icon-only calendar-prev-month-button">
-        <i class="icon icon-prev"></i>
-      </a>
+      <div class="calendar-month-selector">
+        <a class="link icon-only calendar-prev-month-button">
+          <i class="icon icon-prev"></i>
+        </a>
         {calendar.params.monthPicker ? (
-        <a class="current-month-value link"></a>
+          <a class="current-month-value link"></a>
         ) : (
-        <span class="current-month-value"></span>
+          <span class="current-month-value"></span>
         )}
-      <a class="link icon-only calendar-next-month-button">
-        <i class="icon icon-next"></i>
-      </a>
-    </div>
+        <a class="link icon-only calendar-next-month-button">
+          <i class="icon icon-next"></i>
+        </a>
+      </div>
     );
   }
 
@@ -1370,19 +1371,19 @@ class Calendar extends Event {
       return calendar.params.renderYearSelector.call(calendar);
     }
     return (
-    <div class="calendar-year-selector">
-      <a class="link icon-only calendar-prev-year-button">
-        <i class="icon icon-prev"></i>
-      </a>
+      <div class="calendar-year-selector">
+        <a class="link icon-only calendar-prev-year-button">
+          <i class="icon icon-prev"></i>
+        </a>
         {calendar.params.yearPicker ? (
-        <a class="current-year-value link"></a>
+          <a class="current-year-value link"></a>
         ) : (
-        <span class="current-year-value"></span>
+          <span class="current-year-value"></span>
         )}
-      <a class="link icon-only calendar-next-year-button">
-        <i class="icon icon-next"></i>
-      </a>
-    </div>
+        <a class="link icon-only calendar-next-year-button">
+          <i class="icon icon-next"></i>
+        </a>
+      </div>
     );
   }
 
@@ -1406,9 +1407,9 @@ class Calendar extends Event {
       return calendar.params.renderHeader.call(calendar);
     }
     return (
-    <div class="calendar-header">
+      <div class="calendar-header">
         <div class="calendar-selected-date">{calendar.params.headerPlaceholder}</div>
-    </div>
+      </div>
     );
   }
 
@@ -1419,15 +1420,14 @@ class Calendar extends Event {
       return calendar.params.renderFooter.call(calendar);
     }
     return (
-    <div class="calendar-footer">
+      <div class="calendar-footer">
         <a
           class={`${
             app.theme === 'md' ? 'button button-round' : 'link'
-          } calendar-close sheet-close popover-close`}
-        >
+          } calendar-close sheet-close popover-close`}>
           {calendar.params.toolbarCloseText}
         </a>
-    </div>
+      </div>
     );
   }
 
@@ -1454,15 +1454,14 @@ class Calendar extends Event {
     const date = value && value.length ? value[0] : new Date().setHours(0, 0, 0);
     return (
       <div
-        class={`calendar calendar-inline ${rangePicker ? 'calendar-range' : ''} ${cssClass || ''}`}
-      >
+        class={`calendar calendar-inline ${rangePicker ? 'calendar-range' : ''} ${cssClass || ''}`}>
         {header && calendar.renderHeader()}
         {toolbar && calendar.renderToolbar()}
         {weekHeader && calendar.renderWeekHeader()}
         <div class="calendar-months">{calendar.renderMonths(date)}</div>
         {hasTimePicker && calendar.renderTimeSelector()}
         {footer && calendar.renderFooter()}
-    </div>
+      </div>
     );
   }
 
@@ -1473,15 +1472,14 @@ class Calendar extends Event {
     const date = value && value.length ? value[0] : new Date().setHours(0, 0, 0);
     return (
       <div
-        class={`calendar calendar-modal ${rangePicker ? 'calendar-range' : ''} ${cssClass || ''}`}
-      >
+        class={`calendar calendar-modal ${rangePicker ? 'calendar-range' : ''} ${cssClass || ''}`}>
         {header && calendar.renderHeader()}
         {toolbar && calendar.renderToolbar()}
         {weekHeader && calendar.renderWeekHeader()}
         <div class="calendar-months">{calendar.renderMonths(date)}</div>
         {hasTimePicker && calendar.renderTimeSelector()}
         {footer && calendar.renderFooter()}
-    </div>
+      </div>
     );
   }
 
@@ -1494,15 +1492,14 @@ class Calendar extends Event {
       <div
         class={`sheet-modal calendar calendar-sheet ${rangePicker ? 'calendar-range' : ''} ${
           cssClass || ''
-        }`}
-      >
+        }`}>
         {header && calendar.renderHeader()}
         {toolbar && calendar.renderToolbar()}
         {weekHeader && calendar.renderWeekHeader()}
         <div class="sheet-modal-inner calendar-months">{calendar.renderMonths(date)}</div>
         {hasTimePicker && calendar.renderTimeSelector()}
         {footer && calendar.renderFooter()}
-    </div>
+      </div>
     );
   }
 
@@ -1512,8 +1509,8 @@ class Calendar extends Event {
     const { value, hasTimePicker } = calendar;
     const date = value && value.length ? value[0] : new Date().setHours(0, 0, 0);
     return (
-    <div class="popover calendar-popover">
-      <div class="popover-inner">
+      <div class="popover calendar-popover">
+        <div class="popover-inner">
           <div class={`calendar ${rangePicker ? 'calendar-range' : ''} ${cssClass || ''}`}>
             {header && calendar.renderHeader()}
             {toolbar && calendar.renderToolbar()}
@@ -1521,9 +1518,9 @@ class Calendar extends Event {
             <div class="calendar-months">{calendar.renderMonths(date)}</div>
             {hasTimePicker && calendar.renderTimeSelector()}
             {footer && calendar.renderFooter()}
+          </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -1548,7 +1545,7 @@ class Calendar extends Event {
     if (!$el || !$el.length) return;
 
     $el.append(
-      '<div class="popover calendar-popover calendar-month-picker-popover"><div class="popover-inner"><div class="calendar-month-picker"></div></div></div>',
+      '<div class="popover calendar-popover calendar-month-picker-popover"><div class="popover-inner"><div class="calendar-month-picker"></div></div></div>'
     );
 
     calendar.monthPickerPopover = app.popover.create({
@@ -1576,7 +1573,7 @@ class Calendar extends Event {
 
     const localeMonth = parseInt(
       calendar.$el.find('.calendar-month-current').attr('data-locale-month'),
-      10,
+      10
     );
 
     const values = [];
@@ -1609,7 +1606,7 @@ class Calendar extends Event {
     const index = calendar.monthPickerInstance.value[0];
     const localeMonthIndex = parseInt(
       calendar.$el.find('.calendar-month-current').attr('data-locale-month'),
-      10,
+      10
     );
     const monthIndex = calendar.currentMonth;
     const diff = localeMonthIndex - monthIndex;
@@ -1623,7 +1620,7 @@ class Calendar extends Event {
     if (!$el || !$el.length) return;
 
     $el.append(
-      '<div class="popover calendar-popover calendar-year-picker-popover"><div class="popover-inner"><div class="calendar-year-picker"></div></div></div>',
+      '<div class="popover calendar-popover calendar-year-picker-popover"><div class="popover-inner"><div class="calendar-year-picker"></div></div></div>'
     );
 
     calendar.yearPickerPopover = app.popover.create({
@@ -1689,7 +1686,7 @@ class Calendar extends Event {
     const { $el, app, is12HoursFormat } = calendar;
     if (!$el || !$el.length) return;
     $el.append(
-      '<div class="popover calendar-popover calendar-time-picker-popover"><div class="popover-inner"><div class="calendar-time-picker"></div></div></div>',
+      '<div class="popover calendar-popover calendar-time-picker-popover"><div class="popover-inner"><div class="calendar-time-picker"></div></div></div>'
     );
     const hoursArr = [];
     const minutesArr = [];
@@ -1869,7 +1866,7 @@ class Calendar extends Event {
 
     if (calendar.$inputEl) {
       if (app.theme === 'md') {
-      calendar.$inputEl.trigger('blur');
+        calendar.$inputEl.trigger('blur');
       } else {
         const validate = calendar.$inputEl.attr('validate');
         const required = calendar.$inputEl.attr('required');
@@ -1962,8 +1959,8 @@ class Calendar extends Event {
             $(calendar.$el)
               .find('.calendar-close')
               .once('click', () => {
-              calendar.close();
-            });
+                calendar.close();
+              });
           }
           calendar.onOpen();
         },

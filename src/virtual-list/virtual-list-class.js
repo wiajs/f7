@@ -129,7 +129,7 @@ class VirtualList extends Event {
       $pageEl = vl.$el.parents('.page').eq(0);
       $tabEl = vl.$el
         .parents('.tab')
-        .filter((tabEl) => {
+        .filter((idx, tabEl) => {
           return (
             $(tabEl).parent('.tabs').parent('.tabs-animated-wrap, swiper-container.tabs').length ===
             0

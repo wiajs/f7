@@ -1,5 +1,6 @@
-/** @jsx jsx */
-import {Utils, Event, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Event } from '@wiajs/core';
 import removeDiacritics from '../searchbar/remove-diacritics.js';
 
 const { extend, deleteProps, id, nextTick } = Utils;
@@ -11,9 +12,9 @@ class SmartSelect extends Event {
 
     const defaults = extend(
       {
-      on: {},
+        on: {},
       },
-      app.params.smartSelect,
+      app.params.smartSelect
     );
 
     ss.params = extend({}, defaults, params);
@@ -119,7 +120,7 @@ class SmartSelect extends Event {
       } else {
         optionEl = ss.$selectEl.find(`option[value="${value}"]`)[0];
         if (!optionEl) {
-          optionEl = ss.$selectEl.find('option').filter((optEl) => optEl.value === value)[0];
+          optionEl = ss.$selectEl.find('option').filter((idx, optEl) => optEl.value === value)[0];
         }
         displayAs = optionEl.dataset ? optionEl.dataset.displayAs : $(optionEl).data('display-as');
         text = displayAs && typeof displayAs !== 'undefined' ? displayAs : optionEl.textContent;
@@ -140,14 +141,14 @@ class SmartSelect extends Event {
       ss.$containerEl.on(
         'change',
         'input[type="checkbox"], input[type="radio"]',
-        handleInputChange,
+        handleInputChange
       );
     };
     ss.detachInputsEvents = function detachInputsEvents() {
       ss.$containerEl.off(
         'change',
         'input[type="checkbox"], input[type="radio"]',
-        handleInputChange,
+        handleInputChange
       );
     };
 
@@ -211,7 +212,7 @@ class SmartSelect extends Event {
     if (ss.$containerEl) {
       ss.$containerEl
         .find(
-          `input[name="${ss.inputName}"][type="checkbox"], input[name="${ss.inputName}"][type="radio"]`,
+          `input[name="${ss.inputName}"][type="checkbox"], input[name="${ss.inputName}"][type="radio"]`
         )
         .prop('checked', false);
     }
@@ -430,8 +431,7 @@ class SmartSelect extends Event {
           <label
             class={`item-${item.inputType} ${
               item.inputIconPosition ? `item-${item.inputType}-icon-${item.inputIconPosition}` : ''
-            } item-content`}
-          >
+            } item-content`}>
             <input
               type={item.inputType}
               name={item.inputName}
@@ -479,19 +479,16 @@ class SmartSelect extends Event {
       <div
         class={`page smart-select-page ${cssClass}`}
         data-name="smart-select-page"
-        data-select-name={ss.selectName}
-      >
+        data-select-name={ss.selectName}>
         <div
           class={`navbar ${
             ss.params.navbarColorTheme ? `color-${ss.params.navbarColorTheme}` : ''
-          }`}
-        >
+          }`}>
           <div class="navbar-bg"></div>
           <div
             class={`navbar-inner sliding ${
               ss.params.navbarColorTheme ? `color-${ss.params.navbarColorTheme}` : ''
-            }`}
-          >
+            }`}>
             <div class="left">
               <a class="link back">
                 <i class="icon icon-back"></i>
@@ -509,8 +506,7 @@ class SmartSelect extends Event {
               ss.id
             } ${ss.params.virtualList ? ' virtual-list' : ''} ${
               ss.params.formColorTheme ? `color-${ss.params.formColorTheme}` : ''
-            }`}
-          >
+            }`}>
             <ul>{!ss.params.virtualList && ss.renderItems(ss.items)}</ul>
           </div>
         </div>
@@ -532,26 +528,22 @@ class SmartSelect extends Event {
         class={`popup smart-select-popup ${cssClass} ${
           ss.params.popupTabletFullscreen ? 'popup-tablet-fullscreen' : ''
         }`}
-        data-select-name={ss.selectName}
-      >
+        data-select-name={ss.selectName}>
         <div class="view">
           <div
             class={`page smart-select-page ${ss.params.searchbar ? 'page-with-subnavbar' : ''}`}
-            data-name="smart-select-page"
-          >
+            data-name="smart-select-page">
             <div
               class={`navbar ${
                 ss.params.navbarColorTheme ? `color-${ss.params.navbarColorTheme}` : ''
-              }`}
-            >
+              }`}>
               <div class="navbar-bg"></div>
               <div class="navbar-inner sliding">
                 {pageTitle && <div class="title">{pageTitle}</div>}
                 <div class="right">
                   <a
                     class="link popup-close"
-                    data-popup={`.smart-select-popup[data-select-name='${ss.selectName}']`}
-                  >
+                    data-popup={`.smart-select-popup[data-select-name='${ss.selectName}']`}>
                     {ss.params.popupCloseLinkText}
                   </a>
                 </div>
@@ -565,8 +557,7 @@ class SmartSelect extends Event {
                   ss.id
                 } ${ss.params.virtualList ? ' virtual-list' : ''} ${
                   ss.params.formColorTheme ? `color-${ss.params.formColorTheme}` : ''
-                }`}
-              >
+                }`}>
                 <ul>{!ss.params.virtualList && ss.renderItems(ss.items)}</ul>
               </div>
             </div>
@@ -641,7 +632,7 @@ class SmartSelect extends Event {
       $scrollableEl.scrollTop(
         $selectedItemEl.offset().top -
           $scrollableEl.offset().top -
-          parseInt($scrollableEl.css('padding-top'), 10),
+          parseInt($scrollableEl.css('padding-top'), 10)
       );
     }
     return ss;
@@ -688,7 +679,7 @@ class SmartSelect extends Event {
 
         if (typeof ss.params.appendSearchbarNotFound === 'string') {
           $notFoundEl = $(
-            `<div class="block searchbar-not-found">${ss.params.appendSearchbarNotFound}</div>`,
+            `<div class="block searchbar-not-found">${ss.params.appendSearchbarNotFound}</div>`
           );
         } else if (typeof ss.params.appendSearchbarNotFound === 'boolean') {
           $notFoundEl = $('<div class="block searchbar-not-found">Nothing found</div>');
@@ -703,12 +694,12 @@ class SmartSelect extends Event {
 
       const searchbarParams = extend(
         {
-        el: $searchbarEl,
-        backdropEl: $containerEl.find('.searchbar-backdrop'),
-        searchContainer: `.smart-select-list-${ss.id}`,
-        searchIn: '.item-title',
+          el: $searchbarEl,
+          backdropEl: $containerEl.find('.searchbar-backdrop'),
+          searchContainer: `.smart-select-list-${ss.id}`,
+          searchIn: '.item-title',
         },
-        typeof ss.params.searchbar === 'object' ? ss.params.searchbar : {},
+        typeof ss.params.searchbar === 'object' ? ss.params.searchbar : {}
       );
 
       ss.searchbar = app.searchbar.create(searchbarParams);
@@ -725,8 +716,8 @@ class SmartSelect extends Event {
         .find(`input[type="radio"][name="${ss.inputName}"]:checked`)
         .parents('label')
         .once('click', () => {
-        ss.close();
-      });
+          ss.close();
+        });
     }
 
     // Attach input events
@@ -948,8 +939,8 @@ class SmartSelect extends Event {
       `open${openIn
         .split('')
         .map((el, index) => {
-      if (index === 0) return el.toUpperCase();
-      return el;
+          if (index === 0) return el.toUpperCase();
+          return el;
         })
         .join('')}`
     ]();

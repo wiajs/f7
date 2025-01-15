@@ -1,13 +1,13 @@
 /**
-* F7 Build Configuration
-* Don't modify this file!
-* If you want to build custom version of F7, just put f7.config.js with the required configuration in your prj folder. Or build it using command line:
-*/
+ * F7 Build Configuration
+ * Don't modify this file!
+ * If you want to build custom version of F7, just put f7.config.js with the required configuration in your prj folder. Or build it using command line:
+ */
 
 const config = {
   rtl: false, // 从右到左
   // 根据项目需要，选择需要的组件
-	components: [
+  components: [
     // Appbar
     'appbar',
 
@@ -128,12 +128,13 @@ const config = {
   lightTheme: true,
   themes: [
     'ios', // ios苹果手机样式
-    'md',  // 安卓md样式
+    'md', // 安卓md样式
     'pc', // 桌面样式
   ],
   themeColor: '#007aff', // 默认蓝色主题，f7内置15个颜色主题
-	// 项目中用到哪个颜色主题，就选择哪个
+  // 项目中用到哪个颜色主题，就选择哪个
   colors: {
+    primary: '#007aff',
     red: '#ff3b30',
     green: '#4cd964',
     blue: '#2196f3',
@@ -146,9 +147,9 @@ const config = {
     teal: '#009688',
     lime: '#cddc39',
     deeporange: '#ff6b22',
-    gray: '#8e8e93',
     white: '#ffffff',
     black: '#000000',
+    gray: '#8e8e93',
   },
 };
 

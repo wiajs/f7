@@ -1,7 +1,8 @@
-/** @jsx jsx */
-import {Utils, Support as support, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Support as support } from '@wiajs/core';
 
-const {colorHsbToHsl} = Utils;
+const { colorHsbToHsl } = Utils;
 
 export default {
   render() {
@@ -121,10 +122,10 @@ export default {
       .find('.color-picker-hs-spectrum-handle')
       .css(
         'background-color',
-        `hsl(${hslBright[0]}, ${hslBright[1] * 100}%, ${hslBright[2] * 100}%)`,
+        `hsl(${hslBright[0]}, ${hslBright[1] * 100}%, ${hslBright[2] * 100}%)`
       )
       .transform(
-        `translate(${specterWidth * (hsb[0] / 360)}px, ${specterHeight * (1 - hsb[1])}px)`,
+        `translate(${specterWidth * (hsb[0] / 360)}px, ${specterHeight * (1 - hsb[1])}px)`
       );
   },
   destroy(self) {

@@ -1,3 +1,5 @@
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 import {Utils, Event} from '@wiajs/core';
 import pickerColumn from './picker-column';
 
@@ -7,7 +9,7 @@ class Picker extends Event {
   constructor(app, params = {}) {
     super(params, [app]);
     const picker = this;
-    const device = app.device();
+    const {device} = app;
     picker.params = extend({}, app.params.picker, params);
 
     let $containerEl;
@@ -57,6 +59,10 @@ class Picker extends Event {
     function onInputFocus(e) {
       e.preventDefault();
     }
+    let htmlTouchStartTarget = null;
+    function onHtmlTouchStart(e) {
+      htmlTouchStartTarget = e.target;
+    }
     function onHtmlClick(e) {
       if (picker.destroyed || !picker.params) return;
       const $targetEl = $(e.target);
@@ -64,7 +70,9 @@ class Picker extends Event {
       if (!picker.opened || picker.closing) return;
       if ($targetEl.closest('[class*="backdrop"]').length) return;
       if ($inputEl && $inputEl.length > 0) {
-        if ($targetEl[0] !== $inputEl[0] && $targetEl.closest('.sheet-modal').length === 0) {
+        if (htmlTouchStartTarget === e.target && 
+          $targetEl[0] !== $inputEl[0] && 
+          $targetEl.closest('.sheet-modal').length === 0) {
           picker.close();
         }
       } else if ($(e.target).closest('.sheet-modal').length === 0) {
@@ -143,7 +151,7 @@ class Picker extends Event {
   isPopover() {
     const picker = this;
     const { app, modal, params } = picker;
-    const device = app.device();
+    const {device} = app;
     if (params.openIn === 'sheet') return false;
     if (modal && modal.type !== 'popover') return false;
 
@@ -198,7 +206,7 @@ class Picker extends Event {
     const newDisplayValue = [];
     let column;
     if (picker.cols.length === 0) {
-      const noDividerColumns = picker.params.cols.filter((c) => !c.divider);
+      const noDividerColumns = picker.params.cols.filter((idx, c) => !c.divider);
       for (let i = 0; i < noDividerColumns.length; i += 1) {
         column = noDividerColumns[i];
         if (

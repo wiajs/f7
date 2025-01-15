@@ -1,7 +1,8 @@
-/** @jsx jsx */
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 
 /* eslint "no-useless-escape": "off" */
-import {Utils, Event, Device as device, jsx} from '@wiajs/core';
+import { Utils, Event, Device as device } from '@wiajs/core';
 
 const { extend, id, nextTick, deleteProps, iosPreloaderContent, mdPreloaderContent } = Utils;
 
@@ -12,13 +13,13 @@ class Autocomplete extends Event {
     const ac = this;
     ac.app = app;
 
-    const device = getDevice();
+    const {device} = app;
 
     const defaults = extend(
       {
-      on: {},
+        on: {},
       },
-      app.params.autocomplete,
+      app.params.autocomplete
     );
 
     if (typeof defaults.searchbarDisableButton === 'undefined') {
@@ -94,10 +95,10 @@ class Autocomplete extends Event {
           }
           itemsHTML += ac.renderItem(
             {
-            value: itemValue,
-            text: ac.params.highlightMatches ? itemText.replace(regExp, '<b>$1</b>') : itemText,
+              value: itemValue,
+              text: ac.params.highlightMatches ? itemText.replace(regExp, '<b>$1</b>') : itemText,
             },
-            i,
+            i
           );
         }
         if (itemsHTML === '' && query === '' && ac.params.dropdownPlaceholderText) {
@@ -269,7 +270,7 @@ class Autocomplete extends Event {
       }
       if (ac.params.updateInputValueOnSelect) {
         ac.$inputEl.val(
-          typeof clickedItem === 'object' ? clickedItem[ac.params.valueProperty] : clickedItem,
+          typeof clickedItem === 'object' ? clickedItem[ac.params.valueProperty] : clickedItem
         );
         ac.$inputEl.trigger('input change');
       }
@@ -428,14 +429,14 @@ class Autocomplete extends Event {
         }
         itemsHTML += ac.renderItem(
           {
-          value: itemValue,
-          text: typeof items[i] === 'object' ? items[i][ac.params.textProperty] : items[i],
-          inputType: ac.inputType,
-          id: ac.id,
-          inputName: ac.inputName,
-          selected,
+            value: itemValue,
+            text: typeof items[i] === 'object' ? items[i][ac.params.textProperty] : items[i],
+            inputType: ac.inputType,
+            id: ac.id,
+            inputName: ac.inputName,
+            selected,
           },
-          i,
+          i
         );
       }
       $el.find('.autocomplete-found ul').html(itemsHTML);
@@ -462,13 +463,13 @@ class Autocomplete extends Event {
         {
           value:
             typeof ac.value[i] === 'object' ? ac.value[i][ac.params.valueProperty] : ac.value[i],
-        text: typeof ac.value[i] === 'object' ? ac.value[i][ac.params.textProperty] : ac.value[i],
-        inputType: ac.inputType,
-        id: ac.id,
-        inputName: `${ac.inputName}-checked}`,
-        selected: true,
+          text: typeof ac.value[i] === 'object' ? ac.value[i][ac.params.textProperty] : ac.value[i],
+          inputType: ac.inputType,
+          id: ac.id,
+          inputName: `${ac.inputName}-checked}`,
+          selected: true,
         },
-        i,
+        i
       );
     }
     ac.$el.find('.autocomplete-values ul').html(valuesHTML);
@@ -503,8 +504,7 @@ class Autocomplete extends Event {
       <div
         class={`autocomplete-preloader preloader ${
           ac.params.preloaderColor ? `color-${ac.params.preloaderColor}` : ''
-        }`}
-      >
+        }`}>
         {preloaders[`${ac.app.theme}PreloaderContent`] || ''}
       </div>
     );
@@ -560,7 +560,7 @@ class Autocomplete extends Event {
         </li>
       );
     }
-      // Dropdown
+    // Dropdown
     if (!item.placeholder) {
       return (
         <li>
@@ -573,15 +573,15 @@ class Autocomplete extends Event {
       );
     }
 
-      // Dropwdown placeholder
+    // Dropwdown placeholder
     return (
-        <li class="autocomplete-dropdown-placeholder">
-          <label class="item-content">
-            <div class="item-inner">
+      <li class="autocomplete-dropdown-placeholder">
+        <label class="item-content">
+          <div class="item-inner">
             <div class="item-title">{item.text}</div>
-            </div>
-          </label>
-        </li>
+          </div>
+        </label>
+      </li>
     );
   }
 
@@ -598,32 +598,30 @@ class Autocomplete extends Event {
     const navbarLeft = inPopup ? (
       ac.params.preloader && <div class="left">{ac.renderPreloader()}</div>
     ) : (
-        <div class="left sliding">
-          <a class="link back">
-            <i class="icon icon-back"></i>
+      <div class="left sliding">
+        <a class="link back">
+          <i class="icon icon-back"></i>
           <span class="if-not-md">{ac.params.pageBackLinkText}</span>
-          </a>
-        </div>
+        </a>
+      </div>
     );
     const navbarRight = inPopup ? (
-        <div class="right">
-          <a class="link popup-close" data-popup=".autocomplete-popup">
+      <div class="right">
+        <a class="link popup-close" data-popup=".autocomplete-popup">
           {ac.params.popupCloseLinkText}
-          </a>
-        </div>
+        </a>
+      </div>
     ) : (
       ac.params.preloader && <div class="right">{ac.renderPreloader()}</div>
     );
     return (
       <div
-        class={`navbar ${ac.params.navbarColorTheme ? `color-${ac.params.navbarColorTheme}` : ''}`}
-      >
+        class={`navbar ${ac.params.navbarColorTheme ? `color-${ac.params.navbarColorTheme}` : ''}`}>
         <div class="navbar-bg"></div>
         <div
           class={`navbar-inner ${
             ac.params.navbarColorTheme ? `color-${ac.params.navbarColorTheme}` : ''
-          }`}
-        >
+          }`}>
           {navbarLeft}
           {pageTitle && <div class="title sliding">{pageTitle}</div>}
           {navbarRight}
@@ -661,8 +659,7 @@ class Autocomplete extends Event {
           <div
             class={`list autocomplete-list autocomplete-found autocomplete-list-${ac.id} ${
               ac.params.formColorTheme ? `color-${ac.params.formColorTheme}` : ''
-            }`}
-          >
+            }`}>
             <ul></ul>
           </div>
           <div class="list autocomplete-not-found">
@@ -688,7 +685,7 @@ class Autocomplete extends Event {
     return (
       <div class="popup autocomplete-popup">
         <div class="view">{ac.renderPage(true)};</div>
-        </div>
+      </div>
     );
   }
 
@@ -889,8 +886,8 @@ class Autocomplete extends Event {
       `open${openIn
         .split('')
         .map((el, index) => {
-      if (index === 0) return el.toUpperCase();
-      return el;
+          if (index === 0) return el.toUpperCase();
+          return el;
         })
         .join('')}`
     ]();

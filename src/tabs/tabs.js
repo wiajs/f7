@@ -155,7 +155,7 @@ const Tab = {
       }
       if ($tabLinkEl.length > 1 && $newTabEl.parents('.page').length) {
         // eslint-disable-next-line
-        $tabLinkEl = $tabLinkEl.filter((tabLinkElement) => {
+        $tabLinkEl = $tabLinkEl.filter((idx, tabLinkElement) => {
           return $(tabLinkElement).parents('.page')[0] === $newTabEl.parents('.page')[0];
         });
         if (app.theme === 'ios' && $tabLinkEl.length === 0 && tabRoute) {
@@ -201,7 +201,7 @@ const Tab = {
         $oldTabEl.parents('.page').length
       ) {
         // eslint-disable-next-line
-        $oldTabLinkEl = $oldTabLinkEl.filter((tabLinkElement) => {
+        $oldTabLinkEl = $oldTabLinkEl.filter((idx, tabLinkElement) => {
           return $(tabLinkElement).parents('.page')[0] === $oldTabEl.parents('.page')[0];
         });
       }

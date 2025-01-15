@@ -1,5 +1,6 @@
-/** @jsx jsx */
-import {Utils, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils } from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 const { extend, now, nextTick } = Utils;
@@ -8,10 +9,10 @@ class Notification extends Modal {
   constructor(app, params) {
     const extendedParams = extend(
       {
-      on: {},
+        on: {},
       },
       app.params.notification,
-      params,
+      params
     );
 
     // Extends with open/close Modal methods;

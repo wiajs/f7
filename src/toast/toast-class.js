@@ -1,6 +1,6 @@
-/** @jsx $jsx */
-
-import {Utils, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils } from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 const { extend, nextTick } = Utils;
@@ -9,10 +9,10 @@ class Toast extends Modal {
   constructor(app, params) {
     const extendedParams = extend(
       {
-      on: {},
+        on: {},
       },
       app.params.toast,
-      params,
+      params
     );
 
     // Extends with open/close Modal methods;
@@ -111,8 +111,7 @@ class Toast extends Modal {
       <div
         class={`toast toast-${position} ${horizontalClass} ${cssClass || ''} ${
           icon ? 'toast-with-icon' : ''
-        }`}
-      >
+        }`}>
         <div class="toast-content">
           {icon && <div class="toast-icon">{icon}</div>}
           <div class="toast-text">{text}</div>

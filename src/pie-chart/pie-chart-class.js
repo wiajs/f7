@@ -1,5 +1,7 @@
-/** @jsx jsx */
-import { Utils, Event, jsx } from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Event } from '@wiajs/core';
+
 const { extend, deleteProps } = Utils;
 
 class PieChart extends Event {
@@ -152,8 +154,7 @@ class PieChart extends Event {
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         viewBox={`-${size / 3} -${size / 3} ${(size * 2) / 3} ${(size * 2) / 3}`}
-        style="transform: rotate(-90deg)"
-      >
+        style="transform: rotate(-90deg)">
         {paths.map((path, index) => (
           <path d={path.points} fill={path.color} data-index={index} />
         ))}

@@ -1,7 +1,8 @@
-/** @jsx jsx */
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 
 /* eslint indent: ["off"] */
-import {Utils, Event, jsx} from '@wiajs/core';
+import { Utils, Event } from '@wiajs/core';
 
 const { extend, now, nextTick, deleteProps } = Utils;
 
@@ -14,9 +15,9 @@ class PhotoBrowser extends Event {
 
     const defaults = extend(
       {
-      on: {},
+        on: {},
       },
-      app.params.photoBrowser,
+      app.params.photoBrowser
     );
 
     pb.params = extend(defaults, params);
@@ -197,36 +198,34 @@ class PhotoBrowser extends Event {
       <div
         class={`navbar navbar-photo-browser ${
           pb.params.theme === 'dark' ? 'navbar-photo-browser-dark' : ''
-        }`}
-      >
+        }`}>
         <div class="navbar-bg"></div>
         <div class="navbar-inner navbar-inner-centered-title sliding">
           {!isPopup && (
-          <div class="left">
+            <div class="left">
               <a class={`link ${!pageBackLinkText ? 'icon-only' : ''} back`}>
                 <i class={`icon icon-back ${iconsColor ? `color-${iconsColor}` : ''}`}></i>
                 {pageBackLinkText && <span>{pageBackLinkText}</span>}
-            </a>
-          </div>
+              </a>
+            </div>
           )}
           {renderNavbarCount && (
-          <div class="title">
-            <span class="photo-browser-current"></span>
+            <div class="title">
+              <span class="photo-browser-current"></span>
               <span class="photo-browser-of">{pb.params.navbarOfText}</span>
-            <span class="photo-browser-total"></span>
-          </div>
+              <span class="photo-browser-total"></span>
+            </div>
           )}
           {isPopup && (pb.params.popupCloseLinkText || pb.params.popupCloseLinkIcon) && (
-          <div class="right">
-            <a class="link popup-close" data-popup=".photo-browser-popup">
+            <div class="right">
+              <a class="link popup-close" data-popup=".photo-browser-popup">
                 {pb.params.popupCloseLinkIcon && pb.app.theme === 'ios' && (
                   <i>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="56"
                       height="56"
-                      viewBox="0 0 56 56"
-                    >
+                      viewBox="0 0 56 56">
                       <path
                         fill="currentColor"
                         d="M 10.0234 43.0234 C 9.2266 43.8203 9.2031 45.1797 10.0234 45.9766 C 10.8438 46.7734 12.1797 46.7734 13.0000 45.9766 L 28.0000 30.9766 L 43.0000 45.9766 C 43.7969 46.7734 45.1563 46.7969 45.9766 45.9766 C 46.7734 45.1562 46.7734 43.8203 45.9766 43.0234 L 30.9531 28.0000 L 45.9766 13.0000 C 46.7734 12.2031 46.7969 10.8437 45.9766 10.0469 C 45.1328 9.2266 43.7969 9.2266 43.0000 10.0469 L 28.0000 25.0469 L 13.0000 10.0469 C 12.1797 9.2266 10.8203 9.2031 10.0234 10.0469 C 9.2266 10.8672 9.2266 12.2031 10.0234 13.0000 L 25.0234 28.0000 Z"
@@ -241,16 +240,15 @@ class PhotoBrowser extends Event {
                       height="24px"
                       viewBox="0 0 24 24"
                       width="24px"
-                      fill="currentColor"
-                    >
+                      fill="currentColor">
                       <path d="M0 0h24v24H0V0z" fill="none" />
                       <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
                     </svg>
                   </i>
                 )}
                 {pb.params.popupCloseLinkText && <span>{pb.params.popupCloseLinkText}</span>}
-            </a>
-          </div>
+              </a>
+            </div>
           )}
         </div>
       </div>
@@ -307,8 +305,7 @@ class PhotoBrowser extends Event {
     return (
       <div
         class="photo-browser-slide photo-browser-object-slide swiper-slide"
-        data-swiper-slide-index={index}
-      >
+        data-swiper-slide-index={index}>
         {photo.html ? photo.html : photo}
       </div>
     );
@@ -320,10 +317,9 @@ class PhotoBrowser extends Event {
     return (
       <div
         class="photo-browser-slide photo-browser-slide-lazy swiper-slide"
-        data-swiper-slide-index={index}
-      >
-          <div class="swiper-lazy-preloader"></div>
-          <span class="swiper-zoom-container">
+        data-swiper-slide-index={index}>
+        <div class="swiper-lazy-preloader"></div>
+        <span class="swiper-zoom-container">
           <img loading="lazy" src={photo.url ? photo.url : photo} />
         </span>
       </div>
@@ -363,16 +359,14 @@ class PhotoBrowser extends Event {
             class={`page photo-browser-page photo-browser-page-${pb.params.theme} no-toolbar ${
               !pb.params.navbar ? 'no-navbar' : ''
             }`}
-            data-name="photo-browser-page"
-          >
+            data-name="photo-browser-page">
             {pb.params.navbar && pb.renderNavbar()}
             {pb.params.toolbar && pb.renderToolbar()}
             {pb.params.thumbs && pb.params.thumbs.length && pb.renderThumbs()}
             <div
               class={`photo-browser-captions photo-browser-captions-${
                 pb.params.captionsTheme || pb.params.theme
-              }`}
-            >
+              }`}>
               {pb.params.photos.map((photo, index) => {
                 if (photo.caption) return pb.renderCaption(photo.caption, index);
                 return '';
@@ -388,12 +382,12 @@ class PhotoBrowser extends Event {
                         photo.indexOf('<') >= 0 &&
                         photo.indexOf('>') >= 0)
                     ) {
-                    return pb.renderObject(photo, index);
-                  }
+                      return pb.renderObject(photo, index);
+                    }
                     if (pb.params.lazy === true) {
-                    return pb.renderLazyPhoto(photo, index);
-                  }
-                  return pb.renderPhoto(photo, index);
+                      return pb.renderLazyPhoto(photo, index);
+                    }
+                    return pb.renderPhoto(photo, index);
                   })}
               </div>
             </div>
@@ -646,7 +640,7 @@ class PhotoBrowser extends Event {
         on: {
           pageBeforeIn(e, page) {
             pb.view.$el.addClass(
-              `with-photo-browser-page with-photo-browser-page-${pb.params.theme}`,
+              `with-photo-browser-page with-photo-browser-page-${pb.params.theme}`
             );
             pb.onOpen('page', page.el);
           },
@@ -655,7 +649,7 @@ class PhotoBrowser extends Event {
           },
           pageBeforeOut(e, page) {
             pb.view.$el.removeClass(
-              `with-photo-browser-page with-photo-browser-page-exposed with-photo-browser-page-${pb.params.theme}`,
+              `with-photo-browser-page with-photo-browser-page-exposed with-photo-browser-page-${pb.params.theme}`
             );
             pb.onClose('page', page.el);
           },

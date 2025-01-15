@@ -19,7 +19,7 @@
       },
       "transform": {
         "react": {
-          "runtime": "automatic", // or classic
+          "runtime": "automatic", // or classic automatic
           "throwIfNamespace": true,
           "useBuiltins": false,
           "development": false

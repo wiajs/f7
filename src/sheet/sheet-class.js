@@ -21,7 +21,7 @@ class Sheet extends Modal {
     let $el;
     if (!sheet.params.el) {
       $el = $(sheet.params.content)
-        .filter((node) => node.nodeType === 1)
+        .filter((idx, node) => node.nodeType === 1)
         .eq(0);
     } else {
       $el = $(sheet.params.el).eq(0);

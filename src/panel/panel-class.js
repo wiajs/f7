@@ -24,7 +24,7 @@ class Panel extends Event {
       $el = $(panel.params.el).eq(0);
     } else if (panel.params.content) {
       $el = $(panel.params.content)
-        .filter((node) => node.nodeType === 1)
+        .filter((idx, node) => node.nodeType === 1)
         .eq(0);
     }
 

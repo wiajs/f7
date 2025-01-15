@@ -1,5 +1,6 @@
-/** @jsx jsx */
-import {Utils, Support as support, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Support as support, jsx } from '@wiajs/core';
 
 export default {
   render() {

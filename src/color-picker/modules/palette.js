@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import {Utils, jsx} from '@wiajs/core';
-
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 export default {
   render(self) {
     return (
@@ -20,8 +19,7 @@ export default {
               <div
                 class="color-picker-palette-value"
                 data-palette-color={p}
-                style={`background-color: ${p}`}
-              ></div>
+                style={`background-color: ${p}`}></div>
             );
           })}
         </div>
@@ -39,7 +37,7 @@ export default {
     self.$el.on(
       'click',
       '.color-picker-module-palette .color-picker-palette-value',
-      handlePaletteClick,
+      handlePaletteClick
     );
 
     self.destroyPaletteEvents = function destroyPaletteEvents() {

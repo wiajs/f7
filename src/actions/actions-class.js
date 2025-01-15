@@ -1,7 +1,8 @@
-/** @jsx jsx */
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 
 /* eslint indent: ["off"] */
-import {Utils, Device as device, jsx} from '@wiajs/core';
+import { Utils, Device as device } from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 const { extend, nextTick } = Utils;
@@ -31,7 +32,7 @@ class Actions extends Modal {
       $el = $(actions.params.el).eq(0);
     } else if (actions.params.content) {
       $el = $(actions.params.content)
-        .filter((node) => node.nodeType === 1)
+        .filter((idx, node) => node.nodeType === 1)
         .eq(0);
     } else if (actions.params.buttons) {
       if (actions.params.convertToPopover) {

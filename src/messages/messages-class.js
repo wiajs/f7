@@ -1,6 +1,7 @@
-/** @jsx jsx */
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 
-import {Utils, Event, jsx} from '@wiajs/core';
+import { Utils, Event } from '@wiajs/core';
 
 const { extend, deleteProps } = Utils;
 
@@ -73,13 +74,13 @@ class Messages extends Event {
     if (data.text && data.textHeader) {
       data.text = data.text.replace(
         `<div class="message-text-header">${data.textHeader}</div>`,
-        '',
+        ''
       );
     }
     if (data.text && data.textFooter) {
       data.text = data.text.replace(
         `<div class="message-text-footer">${data.textFooter}</div>`,
-        '',
+        ''
       );
     }
     let avatar = $messageEl.find('.message-avatar').css('background-image');
@@ -107,10 +108,10 @@ class Messages extends Event {
     const m = this;
     const message = extend(
       {
-      type: 'sent',
-      attrs: {},
+        type: 'sent',
+        attrs: {},
       },
-      messageToRender,
+      messageToRender
     );
     if (m.params.renderMessage) {
       return m.params.renderMessage.call(m, message);
@@ -123,8 +124,7 @@ class Messages extends Event {
         class={`message message-${message.type} ${message.isTyping ? 'message-typing' : ''} ${
           message.cssClass || ''
         }`}
-        {...message.attrs}
-      >
+        {...message.attrs}>
         {message.avatar && (
           <div class="message-avatar" style={`background-image:url(${message.avatar})`}></div>
         )}
@@ -137,7 +137,7 @@ class Messages extends Event {
             {message.imageSrc && !message.image && (
               <div class="message-image">
                 <img src={message.imageSrc} />
-          </div>
+              </div>
             )}
             {(message.text || message.isTyping) && (
               <div class="message-text">
@@ -161,7 +161,7 @@ class Messages extends Event {
 
   renderMessages(
     messagesToRender = this.messages,
-    method = this.params.newMessagesFirst ? 'prepend' : 'append',
+    method = this.params.newMessagesFirst ? 'prepend' : 'append'
   ) {
     const m = this;
     const html = messagesToRender.map((message) => m.renderMessage(message)).join('');
@@ -258,7 +258,7 @@ class Messages extends Event {
         });
       }
       $messageEl.removeClass(
-        'message-first message-last message-tail message-same-name message-same-header message-same-footer message-same-avatar',
+        'message-first message-last message-tail message-same-name message-same-header message-same-footer message-same-avatar'
       );
       classes.forEach((className) => {
         $messageEl.addClass(className);
@@ -374,7 +374,7 @@ class Messages extends Event {
 
     // Add message to DOM and data
     let messagesHTML = '';
-    const typingMessage = m.messages.filter((el) => el.isTyping)[0];
+    const typingMessage = m.messages.filter((idx, el) => el.isTyping)[0];
     messagesToAdd.forEach((messageToAdd) => {
       if (typingMessage) {
         if (method === 'append') {
@@ -427,18 +427,18 @@ class Messages extends Event {
 
   showTyping(message = {}) {
     const m = this;
-    const typingMessage = m.messages.filter((el) => el.isTyping)[0];
+    const typingMessage = m.messages.filter((idx, el) => el.isTyping)[0];
     if (typingMessage) {
       m.removeMessage(m.messages.indexOf(typingMessage));
     }
     m.addMessage(
       extend(
         {
-      type: 'received',
-      isTyping: true,
+          type: 'received',
+          isTyping: true,
         },
-        message,
-      ),
+        message
+      )
     );
     return m;
   }

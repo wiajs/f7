@@ -1,7 +1,8 @@
-/** @jsx jsx */
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 
 /* eslint no-nested-ternary: off */
-import {Utils, Event, jsx} from '@wiajs/core';
+import { Utils, Event } from '@wiajs/core';
 
 const { extend, deleteProps } = Utils;
 
@@ -81,8 +82,7 @@ class Gauge extends Event {
         class="gauge-svg"
         width={`${size}px`}
         height={`${semiCircle ? size / 2 : size}px`}
-        viewBox={`0 0 ${size} ${semiCircle ? size / 2 : size}`}
-      >
+        viewBox={`0 0 ${size} ${semiCircle ? size / 2 : size}`}>
         {semiCircle && (
           <path
             class="gauge-back-semi"
@@ -104,8 +104,8 @@ class Gauge extends Event {
           />
         )}
         {!semiCircle && borderBgColor && (
-            <circle
-              class="gauge-back-circle"
+          <circle
+            class="gauge-back-circle"
             stroke={borderBgColor}
             stroke-width={borderWidth}
             fill={bgColor || 'none'}
@@ -139,8 +139,7 @@ class Gauge extends Event {
             fill={valueTextColor}
             dy={semiCircle ? (labelText ? -labelFontSize - 15 : -5) : 0}
             text-anchor="middle"
-            dominant-baseline={!semiCircle && 'middle'}
-          >
+            dominant-baseline={!semiCircle && 'middle'}>
             {valueText}
           </text>
         )}
@@ -154,8 +153,7 @@ class Gauge extends Event {
             fill={labelTextColor}
             dy={semiCircle ? -5 : valueText ? valueFontSize / 2 + 10 : 0}
             text-anchor="middle"
-            dominant-baseline={!semiCircle && 'middle'}
-          >
+            dominant-baseline={!semiCircle && 'middle'}>
             {labelText}
           </text>
         )}

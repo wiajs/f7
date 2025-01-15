@@ -18,7 +18,7 @@ class Popover extends Modal {
     let $el;
     if (!popover.params.el) {
       $el = $(popover.params.content)
-        .filter((node) => node.nodeType === 1)
+        .filter((idx, node) => node.nodeType === 1)
         .eq(0);
     } else {
       $el = $(popover.params.el).eq(0);
@@ -39,7 +39,7 @@ class Popover extends Modal {
     let $backdropEl;
     const forceBackdropUnique =
       popover.params.backdrop &&
-      app.$el.find('.popover.modal-in').filter((anotherPopoverEl) => anotherPopoverEl !== $el[0])
+      app.$el.find('.popover.modal-in').filter((idx, anotherPopoverEl) => anotherPopoverEl !== $el[0])
         .length > 0;
     if (popover.params.backdrop && popover.params.backdropEl) {
       $backdropEl = $(popover.params.backdropEl);

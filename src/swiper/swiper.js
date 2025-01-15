@@ -1,6 +1,10 @@
 import {Constructors} from '@wiajs/core';
-import Swiper from './swiper-class';
+// eslint-disable-next-line
+import Swiper from 'swiper/bundle';
+// eslint-disable-next-line
+import { register } from 'swiper/element/bundle';
 
+register();
 
 // UMD_ONLY_START
 /* eslint-disable */
@@ -59,7 +63,7 @@ function initSwiper(swiperEl) {
 
   const $tabEl = $swiperEl
     .parents('.tab')
-    .filter((tabEl) => {
+    .filter((idx, tabEl) => {
       return (
         $(tabEl).parent('.tabs').parent('.tabs-animated-wrap, swiper-container.tabs').length === 0
       );

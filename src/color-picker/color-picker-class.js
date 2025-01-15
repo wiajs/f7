@@ -1,6 +1,6 @@
-/** @jsx jsx */
-
-import {Utils, Event, Device as device, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Event, Device as device } from '@wiajs/core';
 
 const {
   extend,
@@ -420,27 +420,27 @@ class ColorPicker extends Event {
     }
     const { openIn, navbarTitleText, navbarBackLinkText, navbarCloseText } = self.params;
     return (
-    <div class="navbar">
-      <div class="navbar-bg"></div>
-      <div class="navbar-inner sliding">
+      <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner sliding">
           {openIn === 'page' && (
-        <div class="left">
-          <a class="link back">
-            <i class="icon icon-back"></i>
+            <div class="left">
+              <a class="link back">
+                <i class="icon icon-back"></i>
                 <span class="if-not-md">{navbarBackLinkText}</span>
-          </a>
-        </div>
+              </a>
+            </div>
           )}
           <div class="title">{navbarTitleText}</div>
           {openIn !== 'page' && (
-        <div class="right">
+            <div class="right">
               <a class="link popup-close" data-popup=".color-picker-popup">
                 {navbarCloseText}
               </a>
-        </div>
+            </div>
           )}
+        </div>
       </div>
-    </div>
     );
   }
 
@@ -451,19 +451,18 @@ class ColorPicker extends Event {
     }
     return (
       <div class="toolbar toolbar-top">
-      <div class="toolbar-inner">
-        <div class="left"></div>
-        <div class="right">
+        <div class="toolbar-inner">
+          <div class="left"></div>
+          <div class="right">
             <a
               class="link sheet-close popover-close"
               data-sheet=".color-picker-sheet-modal"
-              data-popover=".color-picker-popover"
-            >
+              data-popover=".color-picker-popover">
               {self.params.toolbarCloseText}
             </a>
+          </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -474,10 +473,9 @@ class ColorPicker extends Event {
       <div
         class={`color-picker color-picker-inline ${
           groupedModules ? 'color-picker-grouped-modules' : ''
-        } ${cssClass || ''}`}
-      >
+        } ${cssClass || ''}`}>
         {self.renderPicker()}
-    </div>
+      </div>
     );
   }
 
@@ -488,10 +486,9 @@ class ColorPicker extends Event {
       <div
         class={`sheet-modal color-picker color-picker-sheet-modal ${
           groupedModules ? 'color-picker-grouped-modules' : ''
-        } ${cssClass || ''}`}
-      >
+        } ${cssClass || ''}`}>
         {toolbarSheet && self.renderToolbar()}
-      <div class="sheet-modal-inner">
+        <div class="sheet-modal-inner">
           <div class="page-content">{self.renderPicker()}</div>
         </div>
       </div>
@@ -503,13 +500,13 @@ class ColorPicker extends Event {
     const { cssClass, toolbarPopover, groupedModules } = self.params;
     return (
       <div class={`popover color-picker-popover ${cssClass || ''}`}>
-      <div class="popover-inner">
+        <div class="popover-inner">
           <div class={`color-picker ${groupedModules ? 'color-picker-grouped-modules' : ''}`}>
             {toolbarPopover && self.renderToolbar()}
             <div class="page-content">{self.renderPicker()}</div>
+          </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -518,13 +515,13 @@ class ColorPicker extends Event {
     const { cssClass, navbarPopup, groupedModules } = self.params;
     return (
       <div class={`popup color-picker-popup ${cssClass || ''}`}>
-      <div class="page">
+        <div class="page">
           {navbarPopup && self.renderNavbar()}
           <div class={`color-picker ${groupedModules ? 'color-picker-grouped-modules' : ''}`}>
             <div class="page-content">{self.renderPicker()}</div>
+          </div>
         </div>
       </div>
-    </div>
     );
   }
 
@@ -536,8 +533,8 @@ class ColorPicker extends Event {
         {self.renderNavbar()}
         <div class={`color-picker ${groupedModules ? 'color-picker-grouped-modules' : ''}`}>
           <div class="page-content">{self.renderPicker()}</div>
+        </div>
       </div>
-    </div>
     );
   }
 
@@ -639,7 +636,7 @@ class ColorPicker extends Event {
 
     if (self.$inputEl) {
       if (app.theme === 'md') {
-      self.$inputEl.trigger('blur');
+        self.$inputEl.trigger('blur');
       } else {
         const validate = self.$inputEl.attr('validate');
         const required = self.$inputEl.attr('required');

@@ -18,7 +18,7 @@ class Popup extends Modal {
     let $el;
     if (!popup.params.el) {
       $el = $(popup.params.content)
-        .filter((node) => node.nodeType === 1)
+        .filter((idx, node) => node.nodeType === 1)
         .eq(0);
     } else {
       $el = $(popup.params.el).eq(0);

@@ -28,7 +28,7 @@ function getConfig() {
     delete require.cache[require.resolve(`${_dir}/src/config/f7.js`)];
     const prjConfig = require(`${_dir}/src/config/f7.js`);
     cfg = Object.assign({}, cfg, prjConfig);
-    console.log(cfg);
+    console.log({cfg, prjConfig}, 'getConfig');
   } catch (err) {
     // No local config
   }

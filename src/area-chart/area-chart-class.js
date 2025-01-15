@@ -1,5 +1,6 @@
-/** @jsx jsx */
-import { Utils, Event, jsx } from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Event } from '@wiajs/core';
 
 const { extend, deleteProps } = Utils;
 
@@ -47,7 +48,7 @@ class AreaChart extends Event {
     const { maxAxisLabels, axisLabels } = this.params;
     if (!maxAxisLabels || axisLabels.length <= maxAxisLabels) return axisLabels;
     const skipStep = Math.ceil(axisLabels.length / maxAxisLabels);
-    const filtered = axisLabels.filter((label, index) => index % skipStep === 0);
+    const filtered = axisLabels.filter((index, label) => index % skipStep === 0);
     return filtered;
   }
 
@@ -56,7 +57,7 @@ class AreaChart extends Event {
     const { hiddenDatasets } = this;
     const summValues = [];
     datasets
-      .filter((dataset, index) => !hiddenDatasets.includes(index))
+      .filter((index, dataset) => !hiddenDatasets.includes(index))
       .forEach(({ values }) => {
         values.forEach((value, valueIndex) => {
           if (!summValues[valueIndex]) summValues[valueIndex] = 0;
@@ -77,7 +78,7 @@ class AreaChart extends Event {
     let maxValue = 0;
     if (lineChart) {
       datasets
-        .filter((dataset, index) => !hiddenDatasets.includes(index))
+        .filter((index, dataset) => !hiddenDatasets.includes(index))
         .forEach(({ values }) => {
           const datasetMaxValue = Math.max(...values);
           if (datasetMaxValue > maxValue) maxValue = datasetMaxValue;
@@ -87,7 +88,7 @@ class AreaChart extends Event {
     }
 
     datasets
-      .filter((dataset, index) => !hiddenDatasets.includes(index))
+      .filter((index, dataset) => !hiddenDatasets.includes(index))
       .forEach(({ label, values, color }) => {
         const points = values.map((originalValue, valueIndex) => {
           lastValues[valueIndex] += originalValue;
@@ -185,7 +186,7 @@ class AreaChart extends Event {
     if (currentIndex === null) return '';
     let total = 0;
     const currentValues = datasets
-      .filter((dataset, index) => !hiddenDatasets.includes(index))
+      .filter((index, dataset) => !hiddenDatasets.includes(index))
       .map((dataset) => ({
         color: dataset.color,
         label: dataset.label,
@@ -239,7 +240,7 @@ class AreaChart extends Event {
     } = self;
     if (!tooltip) return;
     const hasVisibleDataSets =
-      datasets.filter((dataset, index) => !hiddenDatasets.includes(index)).length > 0;
+      datasets.filter((index, dataset) => !hiddenDatasets.includes(index)).length > 0;
     if (!hasVisibleDataSets) {
       if (self.f7Tooltip && self.f7Tooltip.hide) self.f7Tooltip.hide();
       return;
@@ -340,14 +341,13 @@ class AreaChart extends Event {
           width={width}
           height={height}
           viewBox={`0 0 ${width} ${height}`}
-          preserveAspectRatio="none"
-        >
+          preserveAspectRatio="none">
           {chartData.map((data) =>
             lineChart ? (
               <path stroke={data.color} fill-rule="evenodd" d={data.points} />
             ) : (
               <polygon fill={data.color} fill-rule="evenodd" points={data.points} />
-            ),
+            )
           )}
 
           {verticalLines.map((line, index) => (
@@ -369,8 +369,7 @@ class AreaChart extends Event {
               <LegendItemTag
                 data-index={index}
                 class={`area-chart-legend-item ${toggleDatasets ? 'area-chart-legend-button' : ''}`}
-                _type={toggleDatasets ? 'button' : undefined}
-              >
+                _type={toggleDatasets ? 'button' : undefined}>
                 <span style={`background-color: ${dataset.color}`}></span>
                 {self.formatLegendLabel(dataset.label)}
               </LegendItemTag>

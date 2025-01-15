@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import {Utils, jsx} from '@wiajs/core';
-
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 export default {
   render(self) {
     const {
@@ -150,15 +149,15 @@ export default {
 
     redRangeSlider.$el[0].style.setProperty(
       '--f7-range-knob-color',
-      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
     );
     greenRangeSlider.$el[0].style.setProperty(
       '--f7-range-knob-color',
-      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
     );
     blueRangeSlider.$el[0].style.setProperty(
       '--f7-range-knob-color',
-      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+      `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
     );
 
     const direction = app.rtl ? 'to left' : 'to right';
@@ -167,19 +166,19 @@ export default {
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(${direction}, rgb(0, ${rgb[1]}, ${rgb[2]}), rgb(255, ${rgb[1]}, ${rgb[2]}))`,
+        `linear-gradient(${direction}, rgb(0, ${rgb[1]}, ${rgb[2]}), rgb(255, ${rgb[1]}, ${rgb[2]}))`
       );
     greenRangeSlider.$el
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(${direction}, rgb(${rgb[0]}, 0, ${rgb[2]}), rgb(${rgb[0]}, 255, ${rgb[2]}))`,
+        `linear-gradient(${direction}, rgb(${rgb[0]}, 0, ${rgb[2]}), rgb(${rgb[0]}, 255, ${rgb[2]}))`
       );
     blueRangeSlider.$el
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(${direction}, rgb(${rgb[0]}, ${rgb[1]}, 0), rgb(${rgb[0]}, ${rgb[1]}, 255))`,
+        `linear-gradient(${direction}, rgb(${rgb[0]}, ${rgb[1]}, 0), rgb(${rgb[0]}, ${rgb[1]}, 255))`
       );
 
     if (sliderValue && sliderValueEditable) {

@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import {Utils, jsx} from '@wiajs/core';
-
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 export default {
   render(self) {
     const { sliderLabel, sliderValue, sliderValueEditable, hueLabelText } = self.params;

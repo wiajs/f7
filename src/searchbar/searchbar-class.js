@@ -1,7 +1,7 @@
 import { Utils, Event, Device as device } from '@wiajs/core';
 import removeDiacritics from './remove-diacritics';
 
-const { extend, now, nextTick } = Utils;
+const { extend, now, nextTick, deleteProps } = Utils;
 
 class Searchbar extends Event {
   constructor(app, params = {}) {
@@ -627,7 +627,7 @@ class Searchbar extends Event {
           const $groupEl = $(groupEl);
           const ignore = sb.params.ignore && $groupEl.is(sb.params.ignore);
           // eslint-disable-next-line
-          const notHidden = $groupEl.find(sb.params.searchItem).filter((el) => {
+          const notHidden = $groupEl.find(sb.params.searchItem).filter((idx, el) => {
             return !$(el).hasClass('hidden-by-searchbar');
           });
           if (notHidden.length === 0 && !ignore) {

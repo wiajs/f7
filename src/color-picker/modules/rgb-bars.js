@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import {Utils, jsx} from '@wiajs/core';
-
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
 export default {
   render(self) {
     const { barLabel, barValue, barValueEditable, redLabelText, greenLabelText, blueLabelText } =
@@ -149,19 +148,19 @@ export default {
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(to top, rgb(0, ${rgb[1]}, ${rgb[2]}), rgb(255, ${rgb[1]}, ${rgb[2]}))`,
+        `linear-gradient(to top, rgb(0, ${rgb[1]}, ${rgb[2]}), rgb(255, ${rgb[1]}, ${rgb[2]}))`
       );
     greenBar.$el
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(to top, rgb(${rgb[0]}, 0, ${rgb[2]}), rgb(${rgb[0]}, 255, ${rgb[2]}))`,
+        `linear-gradient(to top, rgb(${rgb[0]}, 0, ${rgb[2]}), rgb(${rgb[0]}, 255, ${rgb[2]}))`
       );
     blueBar.$el
       .find('.range-bar')
       .css(
         'background-image',
-        `linear-gradient(to top, rgb(${rgb[0]}, ${rgb[1]}, 0), rgb(${rgb[0]}, ${rgb[1]}, 255))`,
+        `linear-gradient(to top, rgb(${rgb[0]}, ${rgb[1]}, 0), rgb(${rgb[0]}, ${rgb[1]}, 255))`
       );
 
     if (barValue && barValueEditable) {

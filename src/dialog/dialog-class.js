@@ -1,23 +1,25 @@
-/** @jsx jsx */
-import {Utils, Device as device, jsx} from '@wiajs/core';
+/** @jsx-x jsx */
+/** @jsxImportSource @wiajs/core */
+import { Utils, Device as device } from '@wiajs/core';
 import Modal from '../modal/modal-class';
 
 const { extend } = Utils;
 
 class Dialog extends Modal {
   constructor(app, params) {
-    const extendedParams = extend({
-      title: app.params.dialog.title,
-      text: undefined,
-      content: '',
-      buttons: [],
-      verticalButtons: false,
-      onClick: undefined,
-      cssClass: undefined,
-      destroyOnClose: false,
-      on: {},
+    const extendedParams = extend(
+      {
+        title: app.params.dialog.title,
+        text: undefined,
+        content: '',
+        buttons: [],
+        verticalButtons: false,
+        onClick: undefined,
+        cssClass: undefined,
+        destroyOnClose: false,
+        on: {},
       },
-      params,
+      params
     );
     if (typeof extendedParams.closeByBackdropClick === 'undefined') {
       extendedParams.closeByBackdropClick = app.params.dialog.closeByBackdropClick;
@@ -52,8 +54,7 @@ class Dialog extends Modal {
               <span
                 class={`dialog-button${button.strong ? ' dialog-button-strong' : ''}${
                   button.color ? ` color-${button.color}` : ''
-                }${button.cssClass ? ` ${button.cssClass}` : ''}`}
-              >
+                }${button.cssClass ? ` ${button.cssClass}` : ''}`}>
                 {button.text}
               </span>
             ))}
