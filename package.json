@@ -1,6 +1,6 @@
 {
   "name": "@wiajs/f7",
-  "version": "8.3.36",
+  "version": "8.3.39",
   "description": "Fork from framework7. HTML Components for the Wia framework.",
   "type-debug": "module",
   "scripts": {

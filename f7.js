@@ -62,7 +62,7 @@ async function makeApp(cb) {
       components.push({ name, cap });
     }
   });
-  console.log('makeApp:', { components });
+  // console.log('makeApp:', { components });
 
   // 根据项目配置修改 应用app.js
   await addAppModule(components);
@@ -122,7 +122,7 @@ async function buildExtra(cb) {
     if (fs.existsSync(`${dir}/${name}.less`)) components.push(name);
   });
 
-  console.log('buildPart:', { components });
+  // console.log('buildPart:', { components });
   // 根据项目配置生成 转换 less 文件
   const lessContent = await createExtraLess(components);
   const outputFileName = `f7.${_prj}${cfg.rtl ? '.rtl' : ''}`;
@@ -159,7 +159,7 @@ async function getConfig() {
     const appCfg = require(`${_dir}/src/config/f7.js`).default;
     cfg = { ...Cfg, ...appCfg };
     if (appCfg.colors) cfg.colors = { ...Cfg.colors, ...appCfg.colors };
-    console.log({ appCfg, cfg }, 'getConfig');
+    // console.log({ appCfg, cfg }, 'getConfig');
   } catch (e) {
     console.error(`getConfig exp:${e.message}`);
   }
